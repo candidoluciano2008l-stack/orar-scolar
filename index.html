@@ -41,7 +41,8 @@ const schedule={
 "Miercuri":[["07:20","08:10","Statistică"],["08:15","09:05","Economie aplicată"],["09:10","10:00","Franceză"],["10:05","10:55","Statistică"],["11:00","11:50","Engleză"],["11:55","12:45","Română"]],
 "Joi":[["07:20","08:10","Istorie (Frunză)"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
 "Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]};
-const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];\nlet now=new Date(),today=names[now.getDay()];
+const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
+let now=new Date(),today=names[now.getDay()];
 let selected=days.includes(today)?today:"Luni",selectedSubject=null;
 document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);
 document.getElementById("dayLabel").textContent=today;
