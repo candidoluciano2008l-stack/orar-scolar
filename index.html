@@ -37,6 +37,26 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .auth-help{font-size:12px;color:var(--muted);line-height:1.45}.delete-btn{border:0;background:rgba(180,35,24,.12);color:var(--danger);border-radius:9px;padding:6px 9px;font-weight:800;cursor:pointer}.comment-actions{display:flex;align-items:center;gap:8px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
 .dashboard-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.dash-tab{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer}.dash-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.dash-panel{display:none}.dash-panel.active{display:block}.dash-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.dash-item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;padding:11px 12px}.dash-item-main{min-width:0}.dash-item-title{font-weight:800}.dash-item-meta{font-size:12px;color:var(--muted);margin-top:3px}.change-builder{display:flex;flex-direction:column;gap:12px}.change-section{border:1px solid var(--line);border-radius:15px;padding:13px;background:rgba(127,150,180,.04)}.change-section-title{font-weight:800;margin-bottom:9px}.change-section-sub{font-size:12px;color:var(--muted);margin-top:4px}.change-arrow{font-size:20px;color:var(--muted);text-align:center;font-weight:800}.readonly-input{background:rgba(127,150,180,.07);font-weight:700}.field-wrap{display:flex;flex-direction:column;gap:5px}.field-label{font-size:12px;color:var(--muted);font-weight:800}.poll-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}.poll-question{font-size:17px;font-weight:800;line-height:1.35}.poll-options{display:flex;flex-direction:column;gap:8px;margin-top:12px}.poll-option{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:12px;padding:10px 11px;cursor:pointer}.poll-option:hover{background:rgba(127,150,180,.08)}.poll-option input{margin-top:3px}.poll-actions{display:flex;justify-content:flex-end;margin-top:11px}.poll-meta{font-size:12px;color:var(--muted);margin-top:8px}.poll-result{margin-top:9px}.poll-result-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}.poll-bar{height:8px;border-radius:999px;background:rgba(127,150,180,.16);overflow:hidden;margin-top:5px}.poll-bar span{display:block;height:100%;background:var(--blue);border-radius:inherit}.poll-voted{font-size:12px;color:var(--green);font-weight:800;margin-top:10px}.poll-admin-option{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-top:8px}.poll-admin-option:first-child{margin-top:0}.poll-remove-option{border:0;background:rgba(180,35,24,.12);color:var(--danger);border-radius:9px;padding:9px 10px;font-weight:800;cursor:pointer}.poll-admin-results{margin-top:8px}.install-banner{display:none;margin-top:14px}.install-banner.show{display:block}.install-btn{border:0;background:var(--green);color:#fff;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}
 @media(max-width:700px){header{padding:22px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:13px 6px}.comment-count{grid-column:2;width:max-content}.grid,.grid-3{grid-template-columns:1fr}.row{grid-template-columns:1fr}.overlay{padding:0}.modal{max-height:95vh;border-radius:22px 22px 0 0}.top{align-items:flex-start}.top-actions{gap:6px}}
+<style>
+body{background:var(--bg)}
+.app-shell{min-height:100vh;display:grid;grid-template-columns:232px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;padding:20px 14px;display:flex;flex-direction:column;background:#091321;color:#dfe9f4;border-right:1px solid rgba(255,255,255,.06)}
+:root[data-theme="light"] .sidebar{background:#0b1624;color:#e9f1f8}
+.sidebar-brand{display:flex;gap:11px;align-items:center;padding:4px 8px 22px}
+.brand-mark{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#236aa3;color:#fff;font-weight:900;font-size:19px}
+.brand-title{font-weight:900;font-size:17px}.brand-sub{font-size:9px;letter-spacing:.12em;opacity:.55;margin-top:2px}
+.side-nav{display:flex;flex-direction:column;gap:6px}.side-link{width:100%;border:1px solid transparent;background:transparent;color:inherit;text-align:left;border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px}.side-link span{font-weight:800;font-size:14px}.side-link small{font-size:11px;color:#93a8bb}.side-link:hover{background:rgba(255,255,255,.05)}.side-link.active{background:#1e5e93;box-shadow:inset 3px 0 0 #7cc3ff}.side-link.active small{color:#d7ecff}.sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:6px}.side-muted{opacity:.9}.side-admin{background:rgba(255,255,255,.04)}
+.main-shell{min-width:0}.topbar{height:72px;padding:0 26px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}.topbar-left,.topbar-actions,.topbar-date{display:flex;align-items:center;gap:14px}.topbar-date{flex-direction:column;align-items:flex-start;gap:0}.topbar-date div:first-child{font-size:14px;font-weight:800}.topbar-date div:last-child{font-size:12px;color:var(--muted)}.mobile-brand{display:none;font-weight:900}.status-pill{padding:7px 10px;border-radius:999px;background:rgba(22,133,91,.12);color:var(--green);font-size:11px;font-weight:800}
+.dashboard-main{max-width:1250px;margin:0 auto;padding:24px 26px 44px}.welcome-card{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;border-radius:22px;padding:26px 28px;background:linear-gradient(135deg,#0d2942,#173f61 58%,#245b82);color:#fff;box-shadow:0 16px 38px rgba(13,41,66,.2);margin-bottom:16px}.welcome-card .eyebrow{color:#b8d2e8}.welcome-card h1{font-size:34px;line-height:1;margin:5px 0 8px}.welcome-card p{margin:0;color:#d4e4f2}.welcome-date{text-align:right;font-weight:800}.welcome-day{font-size:18px}.welcome-date div:last-child{font-size:12px;opacity:.72;margin-top:3px}
+.stat-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:12px;margin-bottom:16px}.stat-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;min-height:118px;box-shadow:var(--shadow)}.stat-card.stat-primary{box-shadow:inset 4px 0 0 var(--blue),var(--shadow)}.stat-label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.stat-value{font-size:22px;font-weight:900;margin-top:8px}.stat-sub{font-size:13px;color:var(--muted);margin-top:4px}.stat-note{font-size:11px;color:var(--muted);margin-top:7px}
+.dashboard-grid{display:grid;gap:14px;margin-bottom:14px}.dashboard-grid-main{grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr)}.dashboard-grid-lower{grid-template-columns:1fr 1fr}.dashboard-card{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:16px;box-shadow:var(--shadow)}.schedule-card{min-width:0}.section-subtitle{font-size:11px;color:var(--muted);margin-top:3px}.dashboard-card .section-head{margin-bottom:12px}.dashboard-card .section-title{font-size:18px}.schedule-card .tabs{margin-bottom:4px;padding-bottom:10px}
+.schedule-card .lesson{border-top:1px solid var(--line);padding:12px 8px}.schedule-card .lesson:first-of-type{border-top:0}.schedule-card .lesson:hover{background:rgba(127,150,180,.06)}
+.dashboard-card .notice-card,.dashboard-card .change-card,.dashboard-card .poll-card{margin-bottom:8px}.dashboard-card .empty{padding:20px 12px}.dashboard-card .dash-list{margin-top:0}
+#taskPreview{display:flex;flex-direction:column;gap:8px}.task-preview-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:rgba(127,150,180,.03)}.task-preview-main{min-width:0}.task-preview-title{font-weight:800;font-size:14px}.task-preview-meta{font-size:11px;color:var(--muted);margin-top:3px}.task-preview-deadline{font-size:11px;font-weight:900;color:var(--blue);white-space:nowrap}
+#changesSection{margin-top:0}.quick{font-size:12px}
+@media(max-width:1000px){.app-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid-main{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr 1fr}.stat-card:last-child{grid-column:1/-1}}
+@media(max-width:760px){.app-shell{display:block}.sidebar{position:sticky;top:0;z-index:30;height:auto;padding:10px 10px;border-right:0;border-bottom:1px solid rgba(255,255,255,.08)}.sidebar-brand{padding:0 4px 9px}.brand-mark{width:34px;height:34px}.side-nav{display:grid;grid-template-columns:repeat(6,minmax(100px,1fr));overflow:auto;gap:5px}.side-link{padding:8px 9px;min-width:100px}.side-link small{display:none}.sidebar-bottom{display:none}.topbar{height:54px;padding:0 14px;position:sticky;top:0}.mobile-brand{display:block}.topbar .status-pill{display:none}.dashboard-main{padding:14px 12px 28px}.welcome-card{padding:20px;border-radius:18px}.welcome-card h1{font-size:28px}.welcome-date{display:none}.stat-grid,.dashboard-grid-lower{grid-template-columns:1fr}.stat-card:last-child{grid-column:auto}.dashboard-card{border-radius:16px;padding:13px}.dashboard-grid-main{grid-template-columns:1fr}.topbar-date{margin-left:auto}.schedule-card .lesson{grid-template-columns:82px 1fr;gap:8px}.schedule-card .comment-count{grid-column:2;width:max-content}}
+</style>
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -47,19 +67,84 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 </head>
 <body>
-<header><div class="wrap"><div class="top"><div><div class="eyebrow">PROGRAM ȘCOLAR</div><div class="title">Orarul meu</div><div class="date" id="date"></div></div><div class="top-actions"><div id="dayLabel" class="date"></div><button class="icon-btn" id="themeBtn" title="Schimbă tema">◐</button><button class="admin-btn" id="adminBtn">Admin</button></div></div></div></header>
-<main class="container">
-<nav class="tabs" id="tabs"></nav>
-<div class="quick-nav"><button class="quick primary" id="todayBtn">Acum la școală</button><button class="quick" id="announcementsBtn">Anunțuri importante</button><button class="quick" id="changesBtn">Schimbări de orar</button><button class="quick" id="pollsBtn">Polluri</button></div>
-<section class="hero">
-  <div class="card"><div class="label">Acum la școală</div><div class="next" id="next">—</div><div class="small" id="nextTime">—</div><div class="small" id="schoolContext">—</div></div>
-  <div class="card"><div class="label">Stare</div><div class="count" id="count">—</div><div class="small" id="state">—</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
-</section>
-<section class="card schedule"><div class="schedule-head"><div class="schedule-title" id="selectedTitle">Luni</div></div><div id="lessons"></div><div class="notice">Apasă pe o materie pentru teme, proiecte și comentarii.</div></section>
-<section class="section" id="announcementsSection"><div class="section-head"><div class="section-title">Anunțuri importante</div><button class="quick" id="openAnnouncements">Vezi toate</button></div><div id="announcementPreview"></div></section>
-<section class="section" id="changesSection"><div class="section-head"><div class="section-title">Schimbări de orar</div><button class="quick" id="openChanges">Vezi toate</button></div><div id="changePreview"></div></section>
-<section class="section" id="pollsSection"><div class="section-head"><div class="section-title">Polluri</div><button class="quick" id="openPolls">Vezi toate</button></div><div id="pollPreview"></div></section>
-</main>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="brand-mark">O</div><div><div class="brand-title">Orarul meu</div><div class="brand-sub">PROGRAM ȘCOLAR</div></div></div>
+    <nav class="side-nav">
+      <button class="side-link active" id="todayBtn"><span>Acasă</span><small>Dashboard</small></button>
+      <button class="side-link" onclick="document.getElementById('scheduleSection').scrollIntoView({behavior:'smooth'})"><span>Orar</span><small>Programul săptămânii</small></button>
+      <button class="side-link" onclick="document.getElementById('tasksSection').scrollIntoView({behavior:'smooth'})"><span>Teme</span><small>Teme și proiecte</small></button>
+      <button class="side-link" id="announcementsBtn"><span>Anunțuri</span><small>Informații importante</small></button>
+      <button class="side-link" id="pollsBtn"><span>Polluri</span><small>Votează</small></button>
+      <button class="side-link" id="changesBtn"><span>Schimbări</span><small>Modificări de program</small></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="side-link side-muted" id="themeBtn"><span>Temă</span><small>Schimbă aspectul</small></button>
+      <button class="side-link side-admin" id="adminBtn"><span>Admin</span><small>Panou de administrare</small></button>
+    </div>
+  </aside>
+
+  <div class="main-shell">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="mobile-brand">Orarul meu</div>
+        <div class="topbar-date"><div id="dayLabel"></div><div id="date"></div></div>
+      </div>
+      <div class="topbar-actions"><div class="status-pill">Online</div></div>
+    </header>
+
+    <main class="dashboard-main">
+      <section class="welcome-card">
+        <div class="welcome-copy">
+          <div class="eyebrow">PROGRAMUL TĂU</div>
+          <h1>Bun venit.</h1>
+          <p>Iată ce se întâmplă astăzi la școală.</p>
+        </div>
+        <div class="welcome-date"><div class="welcome-day" id="welcomeDay">—</div><div id="welcomeDate">—</div></div>
+      </section>
+
+      <section class="stat-grid">
+        <div class="stat-card stat-primary"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div><div class="stat-note" id="schoolContext">—</div></div>
+        <div class="stat-card"><div class="stat-label">Stare</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state">—</div><div class="stat-note">Programul se actualizează automat.</div></div>
+        <div class="stat-card"><div class="stat-label">Aplicație</div><div class="stat-value">PWA</div><div class="stat-sub">Instalabilă pe dispozitiv</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
+      </section>
+
+      <div class="dashboard-grid dashboard-grid-main">
+        <section class="dashboard-card schedule-card" id="scheduleSection">
+          <div class="section-head">
+            <div><div class="section-title">Orarul de azi</div><div class="section-subtitle">Alege o zi pentru a vedea programul complet.</div></div>
+            <div class="schedule-title" id="selectedTitle">Luni</div>
+          </div>
+          <nav class="tabs" id="tabs"></nav>
+          <div id="lessons"></div>
+          <div class="notice">Apasă pe o materie pentru teme, proiecte și comentarii.</div>
+        </section>
+
+        <section class="dashboard-card" id="announcementsSection">
+          <div class="section-head"><div><div class="section-title">Anunțuri</div><div class="section-subtitle">Cele mai recente informații.</div></div><button class="quick" id="openAnnouncements">Vezi toate</button></div>
+          <div id="announcementPreview"></div>
+        </section>
+      </div>
+
+      <div class="dashboard-grid dashboard-grid-lower">
+        <section class="dashboard-card" id="tasksSection">
+          <div class="section-head"><div><div class="section-title">Teme și proiecte</div><div class="section-subtitle">Ce trebuie predat în perioada următoare.</div></div></div>
+          <div id="taskPreview"></div>
+        </section>
+
+        <section class="dashboard-card" id="pollsSection">
+          <div class="section-head"><div><div class="section-title">Polluri</div><div class="section-subtitle">Votează asupra întrebărilor publicate.</div></div><button class="quick" id="openPolls">Vezi toate</button></div>
+          <div id="pollPreview"></div>
+        </section>
+      </div>
+
+      <section class="dashboard-card" id="changesSection">
+        <div class="section-head"><div><div class="section-title">Schimbări recente</div><div class="section-subtitle">Modificări aplicate programului.</div></div><button class="quick" id="openChanges">Vezi toate</button></div>
+        <div id="changePreview"></div>
+      </section>
+    </main>
+  </div>
+</div>
 
 <div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div class="modal-title" id="modalTitle">—</div><button class="close" id="close">×</button></div><div class="modal-body"><div id="subjectTasks"></div><h3 style="margin:18px 0 8px">Comentarii</h3><div class="comments" id="comments" style="padding:0;overflow:visible"><div class="no-comments">Se încarcă…</div></div></div><form class="form" id="commentForm"><div class="row"><input class="input" id="name" maxlength="30" placeholder="Numele tău" autocomplete="nickname" required><textarea class="textarea" id="message" maxlength="500" placeholder="Scrie tema, un anunț sau un comentariu..." required></textarea></div><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="actions"><div class="hint">Max. 500 caractere.</div><button class="send" id="send" type="submit">Adaugă comentariu</button></div><div class="error" id="error"></div></form></section></div>
 
@@ -409,6 +494,11 @@ async function renderPreviews(){
   const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
   document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
   document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
+  const taskBox=document.getElementById("taskPreview");
+  if(taskBox){
+    const upcoming=tasks.filter(t=>t.deadline).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,5);
+    taskBox.innerHTML=upcoming.length?upcoming.map(t=>"<article class='task-preview-item'><div class='task-preview-main'><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type)+"</div></div><div class='task-preview-deadline'>"+fmtDate(t.deadline)+"</div></article>").join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
+  }
   await renderPollPreview();
 }
 async function getPollResults(pollId){
@@ -775,9 +865,13 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPro
 document.getElementById("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBanner").classList.remove("show")};
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}))}
 
-document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);
+const welcomeDateFormat=new Intl.DateTimeFormat("ro-RO",{day:"numeric",month:"long",year:"numeric"});
+const welcomeDayFormat=new Intl.DateTimeFormat("ro-RO",{weekday:"long"});
+document.getElementById("date").textContent=welcomeDateFormat.format(now);
 document.getElementById("dayLabel").textContent=today;
+document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
+document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);
 refreshAuth();loadData().then(()=>{renderTabs();render()});
-setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);document.getElementById("dayLabel").textContent=today;renderTabs();render()},30000);
+setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render()},30000);
 </script>
 </body></html>
