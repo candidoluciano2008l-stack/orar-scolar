@@ -286,7 +286,7 @@ async function renderAdminAdmins(){
   if(r.error){box.innerHTML="<div class='empty'>Nu am putut încărca administratorii.</div>";return}
   box.innerHTML=r.data?.length?r.data.map(a=>{
     const self=currentUser?.email?.toLowerCase()===a.email.toLowerCase();
-    return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.email)+"</div><div class='dash-item-meta'>"+(a.role==="superadmin"?"Super Admin":"Administrator")+" · "+formatTime(a.created_at)+(self?" · Tu":"")+"</div></div>"+(self?"<span class='badge'>Contul tău</span>":"<button class='delete-btn' onclick='removeAdmin(""+escapeHtml(a.email)+"")'>Șterge</button>")+"</div>";
+    return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.email)+"</div><div class='dash-item-meta'>"+(a.role==="superadmin"?"Super Admin":"Administrator")+" · "+formatTime(a.created_at)+(self?" · Tu":"")+"</div></div>"+(self?"<span class='badge'>Contul tău</span>":"<button class='delete-btn' onclick='removeAdmin("+JSON.stringify(a.email)+")'>Șterge</button>")+"</div>";
   }).join(""):"<div class='empty'>Nu există administratori.</div>";
 }
 window.removeTask=async id=>{await adminDelete("tasks",id);await loadData();await render();await renderAdminTasks()};
