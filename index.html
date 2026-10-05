@@ -104,6 +104,10 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
       <input class="input" id="toDate" type="date">
       <select class="select" id="toInterval"></select>
     </div>
+    <div class="grid" style="margin-top:9px">
+      <input class="input" id="toOriginalSubjectPreview" type="text" placeholder="Materia aflată inițial la destinație" readonly>
+      <div class="auth-help" style="padding:10px 12px;border:1px dashed var(--line);border-radius:12px">Aceasta este materia din orarul normal care se află inițial în intervalul ales.</div>
+    </div>
   </div>
   <textarea class="textarea" id="changeNote" maxlength="500" placeholder="Notă (opțional)" style="margin-top:9px"></textarea>
   <div class="actions"><span></span><button class="send" type="submit">Salvează schimbarea</button></div>
@@ -278,7 +282,9 @@ function baseSubjectForDateInterval(dateValue,start,end){
 }
 function destinationOriginalSubject(change){
   const n=normalizeChange(change);
-  return n.to_original_subject || baseSubjectForDateInterval(n.to_date,n.to_start,n.to_end);
+  // Orarul normal este sursa de adevăr pentru materia aflată inițial la destinație.
+  // Valoarea salvată este doar fallback pentru înregistrări vechi sau intervale speciale.
+  return baseSubjectForDateInterval(n.to_date,n.to_start,n.to_end) || n.to_original_subject || "";
 }
 function getChangeForLesson(day,lesson){
   const dateKey=weekDateForDay(day),start=lesson[0],end=lesson[1],subject=lesson[2];
@@ -538,10 +544,19 @@ function populateChangeSubjects(){
   const subjects=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2])));
   document.getElementById("subjectsList").innerHTML=subjects.map(s=>"<option value='"+escapeHtml(s)+"'></option>").join("");
 }
+function updateDestinationPreview(){
+  const preview=document.getElementById("toOriginalSubjectPreview");
+  if(!preview)return;
+  if(document.getElementById("changeType").value!=="move"){preview.value="";return}
+  const date=document.getElementById("toDate").value;
+  const {start,end}=getIntervalValue("toInterval");
+  preview.value=baseSubjectForDateInterval(date,start,end)||"(interval liber în orarul normal)";
+}
 function refreshChangeIntervals(){
   populateIntervalSelect("fromInterval",document.getElementById("fromDate").value);
   populateIntervalSelect("toInterval",document.getElementById("toDate").value);
   populateFromSubjects();
+  updateDestinationPreview();
 }
 function findSubjectForSelectedInterval(){
   const arr=intervalOptionsForDate(document.getElementById("fromDate").value);
@@ -566,7 +581,8 @@ document.getElementById("changeType").addEventListener("change",()=>{
 document.getElementById("fromDate").value=localDateKey(now);
 document.getElementById("toDate").value=localDateKey(now);
 document.getElementById("fromDate").addEventListener("change",()=>{refreshChangeIntervals();findSubjectForSelectedInterval()});
-document.getElementById("toDate").addEventListener("change",()=>populateIntervalSelect("toInterval",document.getElementById("toDate").value));
+document.getElementById("toDate").addEventListener("change",()=>{populateIntervalSelect("toInterval",document.getElementById("toDate").value);updateDestinationPreview()});
+document.getElementById("toInterval").addEventListener("change",updateDestinationPreview);
 document.getElementById("fromInterval").addEventListener("change",()=>{populateFromSubjects();findSubjectForSelectedInterval()});
 populateChangeSubjects();refreshChangeIntervals();findSubjectForSelectedInterval();
 
