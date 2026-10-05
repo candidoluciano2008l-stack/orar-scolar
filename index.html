@@ -725,9 +725,19 @@ function renderSchoolState(){
       const e=getChangeForLesson(today,s.next);
       next.textContent=e.subject;
       nextTime.textContent=s.next[0]+"–"+s.next[1];
-      count.textContent="Pauză";
-      state.textContent="Urmează următoarea oră";
-      ctx.textContent=e.status==="moved-away"?"Această oră a fost mutată la "+dayNameFromDate(e.change.to_date):"Până la "+s.next[0];
+      const arr=lessonsForDay(today);
+      const nextIndex=arr.findIndex(x=>x[0]===s.next[0]&&x[1]===s.next[1]&&x[2]===s.next[2]);
+      const previous=nextIndex>0?arr[nextIndex-1]:null;
+      const curSeconds=now.getHours()*3600+now.getMinutes()*60+now.getSeconds();
+      const nextSeconds=mins(s.next[0])*60;
+      const previousEndSeconds=previous?mins(previous[1])*60:null;
+      const inBreak=previousEndSeconds!==null && curSeconds>=previousEndSeconds && curSeconds<nextSeconds;
+      count.textContent=inBreak?"Pauză":"Înainte de prima oră";
+      state.textContent=inBreak?"Urmează următoarea oră":"Prima oră începe în curând";
+      const remaining=Math.max(0,nextSeconds-curSeconds);
+      const mm=String(Math.floor(remaining/60)).padStart(2,"0");
+      const ss=String(remaining%60).padStart(2,"0");
+      ctx.textContent=(inBreak?"Până la ":"Începe la ")+s.next[0]+" · Mai sunt "+mm+":"+ss;
     }else{next.textContent="—";nextTime.textContent="—";count.textContent="—";state.textContent="—";ctx.textContent=""}
   }else if(s.kind==="after"){
     next.textContent="Program încheiat";nextTime.textContent="";count.textContent="Liber";state.textContent="Orele de azi s-au terminat";ctx.textContent="";
@@ -1178,6 +1188,7 @@ document.getElementById("dayLabel").textContent=today;
 document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
 document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);
 setSideNavActive("home");refreshAuth();loadData().then(()=>{renderTabs();render()});
+setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderSchoolState()},1000);
 setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render()},30000);
 </script>
 </body></html>
