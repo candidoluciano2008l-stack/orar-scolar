@@ -120,6 +120,15 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
     <div class="error" id="adminManageError"></div>
   </form>
   <div class="dash-list" id="adminList"></div>
+  <form class="form" id="resetAdminPasswordForm" style="margin-top:12px">
+    <div class="auth-help" style="margin-bottom:8px">Resetează parola unui administrator fără email.</div>
+    <div class="grid">
+      <select class="select" id="resetAdminEmail"></select>
+      <input class="input" id="resetAdminPassword" type="password" placeholder="Parolă nouă" autocomplete="new-password" minlength="8" required>
+    </div>
+    <div class="actions"><span class="hint">Doar Super Admin</span><button class="send" type="submit">Resetează parola</button></div>
+    <div class="error" id="resetAdminPasswordError"></div>
+  </form>
 </div>
 </div></section></div>
 
@@ -299,14 +308,16 @@ async function renderAdminChanges(){document.getElementById("changeList").innerH
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 async function renderAdminComments(){const r=await supabaseClient.from("comments").select("id,subject,name,message,created_at").order("created_at",{ascending:false});const box=document.getElementById("adminCommentList");box.innerHTML=r.data?.length?r.data.map(c=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(c.subject)+" — "+escapeHtml(c.name)+"</div><div class='dash-item-meta'>"+formatTime(c.created_at)+"</div><div style='margin-top:5px;white-space:pre-wrap'>"+escapeHtml(c.message)+"</div></div><button class='delete-btn' onclick='removeCommentAdmin("+c.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există comentarii.</div>"}
 async function renderAdminAdmins(){
-  const box=document.getElementById("adminList");
-  if(!isSuperAdmin){box.innerHTML="";return}
+  const box=document.getElementById("adminList"),resetSelect=document.getElementById("resetAdminEmail");
+  if(!isSuperAdmin){box.innerHTML="";resetSelect.innerHTML="";return}
   const r=await supabaseClient.from("admins").select("email,role,created_at").order("role",{ascending:true}).order("email",{ascending:true});
-  if(r.error){box.innerHTML="<div class='empty'>Nu am putut încărca administratorii.</div>";return}
-  box.innerHTML=r.data?.length?r.data.map(a=>{
+  if(r.error){box.innerHTML="<div class='empty'>Nu am putut încărca administratorii.</div>";resetSelect.innerHTML="";return}
+  const rows=r.data||[];
+  box.innerHTML=rows.length?rows.map(a=>{
     const self=currentUser?.email?.toLowerCase()===a.email.toLowerCase();
     return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.email)+"</div><div class='dash-item-meta'>"+(a.role==="superadmin"?"Super Admin":"Administrator")+" · "+formatTime(a.created_at)+(self?" · Tu":"")+"</div></div>"+(self?"<span class='badge'>Contul tău</span>":"<button class='delete-btn' onclick='removeAdmin("+JSON.stringify(a.email)+")'>Șterge</button>")+"</div>";
   }).join(""):"<div class='empty'>Nu există administratori.</div>";
+  resetSelect.innerHTML=rows.filter(a=>a.email.toLowerCase()!=="candidoluciano2008l@gmail.com").map(a=>"<option value='"+escapeHtml(a.email)+"'>"+escapeHtml(a.email)+"</option>").join("");
 }
 window.removeTask=async id=>{await adminDelete("tasks",id);await loadData();await render();await renderAdminTasks()};
 window.removeChange=async id=>{await adminDelete("schedule_changes",id);await loadData();await render();await renderAdminChanges()};
@@ -353,6 +364,21 @@ window.removeAdmin=async email=>{
   try{await callAdminAuth("delete_user",{email});await renderAdminAdmins()}
   catch(error){err.textContent=error.message}
 };
+
+document.getElementById("resetAdminPasswordForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!isSuperAdmin)return;
+  const err=document.getElementById("resetAdminPasswordError");err.textContent="";
+  const email=document.getElementById("resetAdminEmail").value;
+  const password=document.getElementById("resetAdminPassword").value;
+  if(password.length<8){err.textContent="Parola trebuie să aibă cel puțin 8 caractere.";return}
+  try{
+    await callAdminAuth("set_user_password",{email,password});
+    e.target.reset();
+    err.textContent="Parola a fost resetată.";
+    err.style.color="var(--green)";
+  }catch(error){err.textContent=error.message;err.style.color="var(--danger)"}
+});
 
 document.getElementById("passwordForm").addEventListener("submit",async e=>{
   e.preventDefault();
