@@ -508,15 +508,72 @@ document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefau
 document.getElementById("dashboardClose").onclick=()=>{document.getElementById("dashboardOverlay").classList.remove("open");document.body.style.overflow=""};document.getElementById("logoutBtn").onclick=async()=>{await supabaseClient.auth.signOut();document.getElementById("dashboardOverlay").classList.remove("open");document.body.style.overflow="";await refreshAuth()};
 
 async function openDashboard(){
+  await loadData();
   fillTaskSubjects();
   document.getElementById("adminsTab").style.display=isSuperAdmin?"inline-flex":"none";
-  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminComments(),renderAdminAdmins()]);
+  resetPollOptionFields();
+  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins()]);
 }
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
+function addPollOptionInput(value=""){
+  const box=document.getElementById("pollOptionFields");
+  if(box.children.length>=6)return;
+  const row=document.createElement("div");row.className="poll-admin-option";
+  row.innerHTML="<div class='field-wrap'><div class='field-label'>Varianta "+(box.children.length+1)+"</div><input class='input poll-option-input' maxlength='160' placeholder='Răspuns' value='"+escapeHtml(value)+"'></div>"+(box.children.length>=2?"<button class='poll-remove-option' type='button'>Șterge</button>":"<span></span>");
+  const remove=row.querySelector(".poll-remove-option");
+  if(remove)remove.onclick=()=>{row.remove();renumberPollOptions()};
+  box.appendChild(row);
+}
+function renumberPollOptions(){
+  document.querySelectorAll("#pollOptionFields .poll-admin-option").forEach((row,i)=>{const label=row.querySelector(".field-label");if(label)label.textContent="Varianta "+(i+1)});
+}
+function resetPollOptionFields(){
+  const box=document.getElementById("pollOptionFields");if(!box)return;
+  box.innerHTML="";addPollOptionInput();addPollOptionInput();
+}
+async function renderAdminPolls(){
+  const box=document.getElementById("pollList");
+  if(!box)return;
+  if(!polls.length){box.innerHTML="<div class='empty'>Nu există polluri.</div>";return}
+  const items=await Promise.all(polls.map(async p=>{
+    const counts=await getPollResults(p.id),total=counts.reduce((sum,x)=>sum+Number(x.vote_count||0),0);
+    return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(p.question)+"</div><div class='dash-item-meta'>"+(p.closed?"Închis":"Activ")+" · "+(total===1?"1 vot":total+" voturi")+" · "+formatTime(p.created_at)+"</div></div><div style='display:flex;gap:7px;flex-wrap:wrap'>"+(p.closed?"<button class='quick' onclick='setPollClosed("+p.id+",false)'>Redeschide</button>":"<button class='quick' onclick='setPollClosed("+p.id+",true)'>Închide</button>")+"<button class='delete-btn' onclick='removePoll("+p.id+")'>Șterge</button></div></div>";
+  }));
+  box.innerHTML=items.join("");
+}
+window.setPollClosed=async(id,closed)=>{
+  const r=await supabaseClient.from("polls").update({closed}).eq("id",id);
+  if(r.error)return;
+  await loadData();await render();await renderAdminPolls();
+};
+window.removePoll=async id=>{
+  await adminDelete("polls",id);await loadData();await render();await renderAdminPolls();
+};
+document.getElementById("addPollOptionBtn").onclick=()=>addPollOptionInput();
+document.getElementById("pollAdminForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const err=document.getElementById("pollError");err.textContent="";
+  const question=document.getElementById("pollQuestion").value.trim();
+  const inputs=[...document.querySelectorAll("#pollOptionFields .poll-option-input")];
+  const options=inputs.map(x=>x.value.trim()).filter(Boolean);
+  const unique=[...new Set(options)];
+  if(!question){err.textContent="Scrie întrebarea.";return}
+  if(unique.length<2){err.textContent="Adaugă cel puțin 2 variante.";return}
+  if(unique.length>6){err.textContent="Poți avea maximum 6 variante.";return}
+  if(unique.length!==options.length){err.textContent="Variantele trebuie să fie diferite.";return}
+  const created=await supabaseClient.from("polls").insert({question}).select("id").single();
+  if(created.error){err.textContent=created.error.message;return}
+  const pollId=created.data.id;
+  const inserted=await supabaseClient.from("poll_options").insert(options.map((text,i)=>({poll_id:pollId,option_text:text,position:i})));
+  if(inserted.error){await adminDelete("polls",pollId);err.textContent=inserted.error.message;return}
+  e.target.reset();resetPollOptionFields();await loadData();await render();await renderAdminPolls();
+});
+resetPollOptionFields();
+
 async function renderAdminComments(){const r=await supabaseClient.from("comments").select("id,subject,name,message,created_at").order("created_at",{ascending:false});const box=document.getElementById("adminCommentList");box.innerHTML=r.data?.length?r.data.map(c=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(c.subject)+" — "+escapeHtml(c.name)+"</div><div class='dash-item-meta'>"+formatTime(c.created_at)+"</div><div style='margin-top:5px;white-space:pre-wrap'>"+escapeHtml(c.message)+"</div></div><button class='delete-btn' onclick='removeCommentAdmin("+c.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există comentarii.</div>"}
 async function renderAdminAdmins(){
   const box=document.getElementById("adminList"),resetSelect=document.getElementById("resetAdminEmail");
@@ -709,7 +766,9 @@ document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
 });
 
 supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
-supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()}).subscribe();
+supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()})
+.on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls()})
+.on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls()}).subscribe();
 
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBanner").classList.add("show")});
 document.getElementById("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBanner").classList.remove("show")};
