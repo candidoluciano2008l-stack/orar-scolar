@@ -64,22 +64,82 @@ body{background:var(--bg)}
 <meta name="apple-mobile-web-app-title" content="Orarul meu">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<style>
+/* Model A refinement */
+.sidebar{grid-column:1;background:linear-gradient(180deg,#091321 0%,#0b1727 100%);width:100%}
+.sidebar-brand{padding-bottom:24px}
+.brand-mark{background:linear-gradient(145deg,#2b85c9,#1c598b);box-shadow:0 5px 16px rgba(35,106,163,.28)}
+.side-link{flex-direction:row;align-items:center;gap:11px;min-height:44px;padding:10px 12px}
+.side-link span{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.05);color:#91a8bd;font-size:12px;font-weight:900}
+.side-link b{font-size:13px;font-weight:800;letter-spacing:.01em}
+.side-link small{display:none}
+.side-link.active{background:linear-gradient(90deg,#1b5c92,#185078);box-shadow:none}
+.side-link.active span{background:rgba(255,255,255,.12);color:#fff}
+.side-link.active b{color:#fff}
+.side-admin{margin-top:2px}
+.main-shell{background:var(--bg)}
+.topbar{background:rgba(10,18,31,.88);border-bottom-color:rgba(255,255,255,.05)}
+:root[data-theme="light"] .topbar{background:rgba(245,247,251,.92)}
+.site-search{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08);box-shadow:none}
+:root[data-theme="light"] .site-search{background:var(--card);border-color:var(--line)}
+.site-search input{color:#edf3fb}
+:root[data-theme="light"] .site-search input{color:var(--text)}
+.topbar-date div:first-child{color:#edf3fb}
+:root[data-theme="light"] .topbar-date div:first-child{color:var(--text)}
+.welcome-card{position:relative;overflow:hidden;min-height:152px;align-items:center;padding:26px 28px;background:radial-gradient(circle at 82% 24%,rgba(122,194,241,.30),transparent 26%),linear-gradient(125deg,#0b2034 0%,#123d5f 54%,#1a5e88 100%);border-radius:19px}
+.welcome-copy{position:relative;z-index:3}
+.welcome-copy h1{font-size:35px;letter-spacing:-.02em;margin-bottom:6px}
+.welcome-copy p{font-size:14px}
+.welcome-date{position:relative;z-index:4;align-self:flex-start;background:rgba(7,18,30,.38);border:1px solid rgba(255,255,255,.12);padding:9px 12px;border-radius:12px;backdrop-filter:blur(8px)}
+.welcome-art{position:absolute;right:120px;bottom:-16px;width:320px;height:138px;opacity:.72}
+.art-sun{position:absolute;width:74px;height:74px;border-radius:50%;right:60px;top:-6px;background:rgba(255,220,132,.42);filter:blur(1px)}
+.art-building{position:absolute;left:0;right:0;bottom:0;height:92px;border-radius:14px 14px 0 0;background:linear-gradient(180deg,rgba(23,59,84,.15),rgba(6,21,35,.60)),repeating-linear-gradient(90deg,rgba(214,235,246,.34) 0 20px,rgba(255,255,255,.03) 20px 31px);clip-path:polygon(5% 35%,23% 20%,39% 31%,56% 8%,76% 24%,95% 15%,100% 100%,0 100%)}
+.art-building i{display:block;position:absolute;top:44px;width:12px;height:22px;background:rgba(234,246,255,.30);border-radius:2px}
+.art-building i:nth-child(1){left:18%}.art-building i:nth-child(2){left:34%}.art-building i:nth-child(3){left:50%}.art-building i:nth-child(4){left:66%}.art-building i:nth-child(5){left:80%}.art-building i:nth-child(6){left:12%;top:58px}
+.stat-grid{gap:11px}
+.stat-card{min-height:100px;padding:15px 17px;border-radius:16px}
+.stat-card.stat-primary{box-shadow:inset 3px 0 0 var(--blue),var(--shadow)}
+.stat-label{font-size:10px}
+.stat-value{font-size:21px}
+.dashboard-grid-main{grid-template-columns:minmax(0,1.45fr) minmax(300px,.55fr)}
+.dashboard-grid-lower{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.dashboard-card{border-radius:16px}
+.schedule-card .lesson{padding:10px 8px}
+.schedule-card .time{font-size:12px}
+.schedule-card .subject{font-size:14px}
+.schedule-card .comment-count{font-size:10px;padding:4px 7px}
+.dashboard-card .notice-card{padding:12px 13px;border-radius:13px}
+.dashboard-card .notice-title{font-size:14px}
+.dashboard-card .notice-message{font-size:12px}
+.task-preview-item{padding:10px 11px}
+#pollPreview .poll-card{padding:12px 13px}
+.change-card{padding:11px 13px;border-radius:13px}
+@media(max-width:1000px){
+  .welcome-art{right:70px;opacity:.48}
+}
+@media(max-width:560px){
+  .side-link{min-height:40px}
+  .welcome-art{display:none}
+  .welcome-card{min-height:132px;padding:20px}
+  .welcome-date{display:none}
+}
+</style>
 </head>
 <body>
 <div class="app-shell">
   <aside class="sidebar">
     <div class="sidebar-brand"><div class="brand-mark">O</div><div><div class="brand-title">Orarul meu</div><div class="brand-sub">PROGRAM ȘCOLAR</div></div></div>
     <nav class="side-nav">
-      <button class="side-link active" id="todayBtn"><span>Acasă</span><small>Dashboard</small></button>
-      <button class="side-link" onclick="document.getElementById('scheduleSection').scrollIntoView({behavior:'smooth'})"><span>Orar</span><small>Programul săptămânii</small></button>
-      <button class="side-link" onclick="document.getElementById('tasksSection').scrollIntoView({behavior:'smooth'})"><span>Teme</span><small>Teme și proiecte</small></button>
-      <button class="side-link" id="announcementsBtn"><span>Anunțuri</span><small>Informații importante</small></button>
-      <button class="side-link" id="pollsBtn"><span>Polluri</span><small>Votează</small></button>
-      <button class="side-link" id="changesBtn"><span>Schimbări</span><small>Modificări de program</small></button>
+      <button class="side-link active" id="todayBtn"><span>⌂</span><b>Acasă</b></button>
+      <button class="side-link" onclick="document.getElementById('scheduleSection').scrollIntoView({behavior:'smooth'})"><span>▣</span><b>Orar</b></button>
+      <button class="side-link" onclick="document.getElementById('tasksSection').scrollIntoView({behavior:'smooth'})"><span>✓</span><b>Teme</b></button>
+      <button class="side-link" id="announcementsBtn"><span>!</span><b>Anunțuri</b></button>
+      <button class="side-link" id="pollsBtn"><span>◫</span><b>Polluri</b></button>
+      <button class="side-link" id="changesBtn"><span>↻</span><b>Schimbări</b></button>
     </nav>
     <div class="sidebar-bottom">
-      <button class="side-link side-muted" id="themeBtn"><span id="themeBtnLabel">Temă</span><small>Schimbă aspectul</small></button>
-      <button class="side-link side-admin" id="adminBtn"><span id="adminBtnLabel">Admin</span><small>Panou de administrare</small></button>
+      <button class="side-link side-muted" id="themeBtn"><span>☾</span><b id="themeBtnLabel">Temă</b></button>
+      <button class="side-link side-admin" id="adminBtn"><span>⚙</span><b id="adminBtnLabel">Admin</b></button>
     </div>
   </aside>
 
@@ -99,9 +159,10 @@ body{background:var(--bg)}
       <section class="welcome-card">
         <div class="welcome-copy">
           <div class="eyebrow">PROGRAMUL TĂU</div>
-          <h1>Bun venit.</h1>
+          <h1>Bun venit!</h1>
           <p>Iată ce se întâmplă astăzi la școală.</p>
         </div>
+        <div class="welcome-art" aria-hidden="true"><div class="art-sun"></div><div class="art-building"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
         <div class="welcome-date"><div class="welcome-day" id="welcomeDay">—</div><div id="welcomeDate">—</div></div>
       </section>
 
