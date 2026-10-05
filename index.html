@@ -409,6 +409,7 @@ async function renderPreviews(){
   const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
   document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
   document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
+  await renderPollPreview();
 }
 async function getPollResults(pollId){
   const r=await supabaseClient.rpc("get_poll_results",{p_poll_id:pollId});
@@ -451,10 +452,10 @@ async function votePoll(form){
   const r=await supabaseClient.from("poll_votes").insert({poll_id:pollId,option_id:Number(checked.value),voter_id:getPollVoterId()});
   button.disabled=false;
   if(r.error){
-    if(r.error.code==="23505"){setPollVote(pollId,checked.value);await loadData();await renderPollPreview();return}
+    if(r.error.code==="23505"){setPollVote(pollId,checked.value);await loadData();await renderPollPreview();if(document.getElementById("listOverlay").classList.contains("open")&&document.getElementById("listTitle").textContent==="Polluri")await openList("polls");return}
     error.textContent="Nu s-a putut înregistra votul. Încearcă din nou.";return;
   }
-  setPollVote(pollId,checked.value);await loadData();await renderPollPreview();
+  setPollVote(pollId,checked.value);await loadData();await renderPollPreview();if(document.getElementById("listOverlay").classList.contains("open")&&document.getElementById("listTitle").textContent==="Polluri")await openList("polls");
 }
 document.addEventListener("submit",e=>{if(e.target.matches(".poll-form")){e.preventDefault();votePoll(e.target)}});
 async function openComments(subject){
