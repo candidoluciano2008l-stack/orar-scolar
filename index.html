@@ -325,6 +325,14 @@ body{background:var(--bg)}
   .dashboard-main{padding-left:7px !important;padding-right:7px !important}
 }
 </style>
+<style>
+.notify-btn{margin-top:14px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.12);color:#fff;border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer;backdrop-filter:blur(6px)}
+.notify-btn:hover{background:rgba(255,255,255,.18)}
+.notify-btn:disabled{opacity:.75;cursor:default}
+.notify-btn.notify-active{background:rgba(53,197,142,.18);border-color:rgba(134,244,194,.28)}
+.notify-help{display:block;margin-top:6px;font-size:11px;color:rgba(255,255,255,.72)}
+@media(max-width:760px){.notify-btn{width:100%;margin-top:12px}.notify-help{line-height:1.35}.welcome-card{align-items:stretch;flex-direction:column}.welcome-date{text-align:left}}
+</style>
 </head>
 <body>
 <div class="app-shell">
@@ -361,6 +369,8 @@ body{background:var(--bg)}
           <div class="eyebrow">PROGRAMUL TĂU</div>
           <h1>Bun venit!</h1>
           <p>Iată ce se întâmplă astăzi la școală.</p>
+          <button class="notify-btn" id="pushBtn" type="button">Activează notificările</button>
+          <span class="notify-help" id="pushHelp">Primești alerte pentru comentarii și anunțuri noi.</span>
         </div>
         <div class="welcome-art" aria-hidden="true"><div class="art-sun"></div><div class="art-building"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
         <div class="welcome-date"><div class="welcome-day" id="welcomeDay">—</div><div id="welcomeDate">—</div></div>
@@ -556,6 +566,7 @@ const SUPABASE_URL="https://ezdlwxbcacsbcnjhqqnq.supabase.co";
 const SUPABASE_KEY="sb_publishable_d_MGU7E-oYQgAtvx4xhqAA_8R4S4TGC";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const SUPERADMIN_EMAIL="candidoluciano2008l@gmail.com";
+const VAPID_PUBLIC_KEY="BKfg9TcuZBFk3EfcnwF-738zahqxAX7McsK7u1KZJy9gjt4rbLZLl1X5VOjVkExewwPGPiZkljAfaxMqjMlaCtA";
 const schedule={
 "Luni":[["07:20","08:10","Negociere"],["08:15","09:05","Română"],["09:10","10:00","Proiecte economice"],["10:05","10:55","Proiecte economice"],["11:00","11:50","Comunism"],["11:55","12:45","Negociere"],["12:50","13:40","Geografie"]],
 "Marți":[["07:20","08:10","Geografie"],["08:15","09:05","Politici de marketing"],["09:10","10:00","Matematică"],["10:05","10:55","Analiză economico-financiară"],["11:00","11:50","Dirigenție"],["11:55","12:45","Dirigenție"],["12:50","13:40","Română"]],
@@ -574,6 +585,44 @@ const fmtDate=d=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"long",yea
 const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 
+function isStandalonePwa(){return window.navigator.standalone===true||window.matchMedia?.("(display-mode: standalone)").matches===true}
+function base64ToUint8Array(value){const pad="=".repeat((4-value.length%4)%4),b64=(value+pad).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(b64);return Uint8Array.from(raw,c=>c.charCodeAt(0))}
+function arrayBufferToBase64Url(value){const bytes=new Uint8Array(value),str=String.fromCharCode(...bytes);return btoa(str).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+async function updatePushButton(){
+  const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
+  if(!btn)return;
+  const supported="Notification" in window&&"serviceWorker" in navigator&&"PushManager" in window;
+  if(!supported){btn.textContent="Notificările nu sunt disponibile";btn.disabled=true;return}
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(ios&&!isStandalonePwa()){btn.textContent="Instalează aplicația pentru notificări";help.textContent="Pe iPhone, notificările funcționează după ce aplicația este adăugată pe ecranul principal.";return}
+  if(Notification.permission==="denied"){btn.textContent="Notificări blocate";help.textContent="Le poți reactiva din setările de notificări ale dispozitivului.";return}
+  try{
+    const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();
+    if(sub){btn.textContent="Notificări active";btn.classList.add("notify-active");help.textContent="Primești alerte pentru comentarii și anunțuri noi.";return}
+  }catch(_){}
+  btn.textContent="Activează notificările";help.textContent="Primești alerte pentru comentarii și anunțuri noi.";
+}
+async function enablePushNotifications(){
+  const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
+  if(!btn)return;
+  try{
+    btn.disabled=true;btn.textContent="Se activează…";
+    if(!("Notification" in window)||!("serviceWorker" in navigator)||!("PushManager" in window))throw new Error("Notificările nu sunt disponibile pe acest dispozitiv.");
+    if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!isStandalonePwa())throw new Error("Pe iPhone trebuie mai întâi să adaugi aplicația pe ecranul principal.");
+    const permission=await Notification.requestPermission();
+    if(permission!=="granted"){throw new Error(permission==="denied"?"Permisiunea pentru notificări a fost refuzată.":"Permisiunea nu a fost acordată.");}
+    const registration=await navigator.serviceWorker.ready;
+    let sub=await registration.pushManager.getSubscription();
+    if(!sub)sub=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:base64ToUint8Array(VAPID_PUBLIC_KEY)});
+    const p256dh=arrayBufferToBase64Url(sub.getKey("p256dh")),auth=arrayBufferToBase64Url(sub.getKey("auth"));
+    const {error}=await supabaseClient.rpc("save_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:p256dh,p_auth:auth});
+    if(error)throw error;
+    btn.disabled=false;btn.classList.add("notify-active");btn.textContent="Notificări active";help.textContent="Primești alerte pentru comentarii și anunțuri noi.";
+  }catch(error){
+    btn.disabled=false;help.textContent=error?.message||"Nu am putut activa notificările.";btn.textContent="Încearcă din nou";
+  }
+}
+
 function applyTheme(theme){
   const t=theme==="dark"||theme==="light"?theme:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
   document.documentElement.setAttribute("data-theme",t);localStorage.setItem("schoolTheme",t);
@@ -582,6 +631,8 @@ function applyTheme(theme){
 }
 applyTheme(localStorage.getItem("schoolTheme")||"auto");
 document.getElementById("themeBtn").onclick=()=>applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");
+document.getElementById("pushBtn").onclick=enablePushNotifications;
+updatePushButton();
 
 async function refreshAuth(){
   const r=await supabaseClient.auth.getUser();currentUser=r.data?.user||null;
@@ -1176,6 +1227,7 @@ if("serviceWorker" in navigator){
     try{
       const registration=await navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"});
       registration.update().catch(()=>{});
+      updatePushButton();
       navigator.serviceWorker.addEventListener("controllerchange",()=>window.location.reload());
     }catch(_){}
   });
