@@ -403,13 +403,60 @@ async function render(){
     if(eff.status==="moved-in"){const replaced=destinationOriginalSubject(eff.change)||x[2];ch="<div class='lesson-change'><s>"+escapeHtml(replaced)+"</s> → "+escapeHtml(eff.subject)+" · mutată din "+escapeHtml(dayNameFromDate(eff.change.from_date))+" "+escapeHtml(eff.change.from_start)+"</div>";}
     return "<div class='lesson "+cls+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
   }).join("");
-  renderPreviews();
+  await renderPreviews();
 }
-function renderPreviews(){
+async function renderPreviews(){
   const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
   document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
   document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
 }
+async function getPollResults(pollId){
+  const r=await supabaseClient.rpc("get_poll_results",{p_poll_id:pollId});
+  return r.error?[]:(r.data||[]);
+}
+function getPollVoteMap(){
+  try{return JSON.parse(localStorage.getItem("pollVotes")||"{}")||{};}catch(_){return {};}
+}
+function setPollVote(pollId,optionId){
+  const map=getPollVoteMap();map[String(pollId)]=String(optionId);localStorage.setItem("pollVotes",JSON.stringify(map));
+}
+function getPollVoterId(){
+  let id=localStorage.getItem("pollVoterId");
+  if(!id){id=window.crypto&&window.crypto.randomUUID?window.crypto.randomUUID():"v-"+Date.now()+"-"+Math.random().toString(36).slice(2);localStorage.setItem("pollVoterId",id);}
+  return id;
+}
+function pollCardHtml(poll,counts,surface){
+  const options=(poll.poll_options||[]).slice().sort((a,b)=>a.position-b.position);
+  const countMap={};(counts||[]).forEach(x=>countMap[String(x.option_id)]=Number(x.vote_count)||0);
+  const total=options.reduce((sum,o)=>sum+(countMap[String(o.id)]||0),0);
+  const voted=getPollVoteMap()[String(poll.id)];
+  const choiceHtml=options.map(o=>"<label class='poll-option'><input type='radio' name='poll-"+poll.id+"-"+surface+"' value='"+o.id+"'><span>"+escapeHtml(o.option_text)+"</span></label>").join("");
+  const resultHtml=options.map(o=>{const n=countMap[String(o.id)]||0,pct=total?Math.round(n/total*100):0;return "<div class='poll-result'><div class='poll-result-head'><span>"+escapeHtml(o.option_text)+"</span><span>"+pct+"% · "+n+"</span></div><div class='poll-bar'><span style='width:"+pct+"%'></span></div></div>"}).join("");
+  return "<article class='poll-card'><div class='poll-question'>"+escapeHtml(poll.question)+"</div>"+(!voted?"<form class='poll-form' data-poll-id='"+poll.id+"'><div class='poll-options'>"+choiceHtml+"</div><div class='poll-actions'><button class='send' type='submit'>Votează</button></div><div class='error poll-form-error'></div></form>":"<div class='poll-voted'>Ai votat. Rezultatele:</div><div class='poll-admin-results'>"+resultHtml+"</div>")+"<div class='poll-meta'>"+formatTime(poll.created_at)+" · "+(total===1?"1 vot":total+" voturi")+"</div></article>";
+}
+async function renderPollCards(list,surface){
+  if(!list.length)return "<div class='empty'>Nu există polluri active.</div>";
+  const cards=await Promise.all(list.map(async p=>pollCardHtml(p,await getPollResults(p.id),surface)));
+  return cards.join("");
+}
+async function renderPollPreview(){
+  const box=document.getElementById("pollPreview");if(!box)return;
+  box.innerHTML=await renderPollCards(polls.filter(p=>!p.closed).slice(0,3),"preview");
+}
+async function votePoll(form){
+  const checked=form.querySelector("input[type='radio']:checked"),error=form.querySelector(".poll-form-error");
+  if(!checked){error.textContent="Alege o variantă.";return}
+  const pollId=Number(form.dataset.pollId),button=form.querySelector("button[type='submit']");
+  button.disabled=true;error.textContent="";
+  const r=await supabaseClient.from("poll_votes").insert({poll_id:pollId,option_id:Number(checked.value),voter_id:getPollVoterId()});
+  button.disabled=false;
+  if(r.error){
+    if(r.error.code==="23505"){setPollVote(pollId,checked.value);await loadData();await renderPollPreview();return}
+    error.textContent="Nu s-a putut înregistra votul. Încearcă din nou.";return;
+  }
+  setPollVote(pollId,checked.value);await loadData();await renderPollPreview();
+}
+document.addEventListener("submit",e=>{if(e.target.matches(".poll-form")){e.preventDefault();votePoll(e.target)}});
 async function openComments(subject){
   selectedSubject=subject;document.getElementById("modalTitle").textContent=subject;document.getElementById("overlay").classList.add("open");document.body.style.overflow="hidden";document.getElementById("error").textContent="";await loadSubjectTasks();await loadComments();
 }
@@ -433,16 +480,18 @@ function closeComments(){document.getElementById("overlay").classList.remove("op
 window.selectDay=d=>{selected=d;renderTabs();render()};window.openComments=openComments;
 document.getElementById("close").onclick=closeComments;document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeComments()});
 
-function openList(type){
+async function openList(type){
   document.getElementById("listOverlay").classList.add("open");document.body.style.overflow="hidden";const title=document.getElementById("listTitle"),body=document.getElementById("listBody");
   if(type==="ann"){
     title.textContent="Anunțuri importante";body.innerHTML=announcements.length?announcements.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
-  }else{
+  }else if(type==="changes"){
     title.textContent="Schimbări de orar";body.innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări de orar.</div>";
+  }else if(type==="polls"){
+    title.textContent="Polluri";body.innerHTML=await renderPollCards(polls.filter(p=>!p.closed),"list");
   }
 }
 function closeList(){document.getElementById("listOverlay").classList.remove("open");document.body.style.overflow=""}
-document.getElementById("announcementsBtn").onclick=()=>openList("ann");document.getElementById("changesBtn").onclick=()=>openList("changes");document.getElementById("openAnnouncements").onclick=()=>openList("ann");document.getElementById("openChanges").onclick=()=>openList("changes");document.getElementById("listClose").onclick=closeList;document.getElementById("listOverlay").addEventListener("click",e=>{if(e.target.id==="listOverlay")closeList()});
+document.getElementById("announcementsBtn").onclick=()=>openList("ann");document.getElementById("changesBtn").onclick=()=>openList("changes");document.getElementById("pollsBtn").onclick=()=>openList("polls");document.getElementById("openAnnouncements").onclick=()=>openList("ann");document.getElementById("openChanges").onclick=()=>openList("changes");document.getElementById("openPolls").onclick=()=>openList("polls");document.getElementById("listClose").onclick=closeList;document.getElementById("listOverlay").addEventListener("click",e=>{if(e.target.id==="listOverlay")closeList()});
 document.getElementById("todayBtn").onclick=()=>{selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
 
 document.getElementById("commentForm").addEventListener("submit",async e=>{
