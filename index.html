@@ -6,80 +6,280 @@
 <meta name="theme-color" content="#0f172a">
 <title>Orarul meu</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#132238;--muted:#718096;--line:#e5eaf0;--blue:#28577f;--green:#16855b;--danger:#b42318}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-header{padding:28px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f);color:#fff;border-radius:0 0 28px 28px}.wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-end}.eyebrow{font-size:13px;opacity:.75}.title{font-size:34px;font-weight:800;margin:4px 0}.date{font-size:14px;opacity:.82}
-.admin-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:9px 12px;font-weight:800;cursor:pointer}
-.auth-help{font-size:12px;color:var(--muted);line-height:1.45}
-.delete-btn{border:0;background:#fff1f0;color:var(--danger);border-radius:9px;padding:6px 9px;font-weight:800;cursor:pointer}
-.comment-actions{display:flex;align-items:center;gap:8px}
-.container{max-width:1000px;margin:auto;padding:18px}.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 14px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
-.tab{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:13px;padding:10px 14px;font-weight:700;white-space:nowrap;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.tab.today:not(.active){box-shadow:inset 0 0 0 2px #6ba7d1}
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 7px 24px rgba(17,38,63,.06)}
+:root{--bg:#f5f7fb;--card:#fff;--text:#132238;--muted:#718096;--line:#e5eaf0;--blue:#28577f;--blue2:#1f6fa8;--green:#16855b;--danger:#b42318;--shadow:0 7px 24px rgba(17,38,63,.06)}
+:root[data-theme="dark"]{--bg:#0b1220;--card:#121b2a;--text:#edf3fb;--muted:#9aabc0;--line:#27364b;--blue:#5aa1d8;--blue2:#68b3eb;--green:#35c58e;--danger:#ff7b73;--shadow:0 10px 28px rgba(0,0,0,.25)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;transition:background .2s,color .2s}
+button,input,textarea,select{font:inherit}
+header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f);color:#fff;border-radius:0 0 28px 28px}
+.wrap{max-width:1050px;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-end}
+.eyebrow{font-size:13px;opacity:.75}.title{font-size:34px;font-weight:800;margin:4px 0}.date{font-size:14px;opacity:.82}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.admin-btn,.icon-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:9px 12px;font-weight:800;cursor:pointer}
+.icon-btn{width:42px;padding:9px;text-align:center}.admin-btn:hover,.icon-btn:hover{background:rgba(255,255,255,.18)}
+.container{max-width:1050px;margin:auto;padding:18px}.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 14px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:13px;padding:10px 14px;font-weight:700;white-space:nowrap;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.tab.today:not(.active){box-shadow:inset 0 0 0 2px #6ba7d1}
+.quick-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.quick{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:12px;padding:9px 12px;font-weight:700;cursor:pointer}.quick.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
 .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.next{font-size:25px;font-weight:800;margin-top:7px}.small{color:var(--muted);font-size:14px;margin-top:5px}.count{font-size:29px;font-weight:800;margin-top:7px}
-.schedule{overflow:hidden}.schedule-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.schedule-title{font-size:21px;font-weight:800}
-.lesson{display:grid;grid-template-columns:105px 1fr auto;gap:14px;align-items:center;padding:14px 10px;border-top:1px solid var(--line);border-radius:12px;cursor:pointer}.lesson:first-of-type{border-top:0}.lesson:hover{background:#f7fafc}
-.time{font-weight:750;color:var(--blue);font-size:14px}.subject{font-size:16px;font-weight:650}.comment-count{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:#edf2f7;color:#64748b;white-space:nowrap}.lesson.current{background:#eef8f4;box-shadow:inset 4px 0 0 var(--green)}.lesson.current .comment-count{background:#d9f2e7;color:var(--green)}.lesson.past{opacity:.5}.notice{margin-top:12px;color:var(--muted);font-size:12px}
-.overlay{position:fixed;inset:0;background:rgba(8,18,30,.55);display:none;align-items:flex-end;justify-content:center;z-index:20;padding:12px}.overlay.open{display:flex}.modal{width:min(720px,100%);max-height:92vh;background:#fff;border-radius:24px 24px 16px 16px;overflow:hidden;display:flex;flex-direction:column}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-title{font-weight:800;font-size:21px}.close{border:0;background:#eef2f6;border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
-.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
-.form{border-top:1px solid var(--line);padding:14px 18px;background:#fbfcfd}.row{display:grid;grid-template-columns:150px 1fr;gap:9px}.input,.textarea{width:100%;border:1px solid #d7dee7;border-radius:12px;padding:11px 12px;font:inherit;outline:none;background:#fff}.textarea{resize:vertical;min-height:84px}.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.hint{font-size:12px;color:var(--muted)}.send{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.send:disabled{opacity:.55;cursor:not-allowed}.error{color:var(--danger);font-size:12px;margin-top:7px;min-height:16px}
-@media(max-width:650px){header{padding:24px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:14px 6px}.comment-count{grid-column:2;width:max-content}.row{grid-template-columns:1fr}.overlay{padding:0}.modal{max-height:95vh;border-radius:22px 22px 0 0}}
+.schedule{overflow:hidden}.schedule-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.schedule-title{font-size:21px;font-weight:800}
+.lesson{display:grid;grid-template-columns:105px 1fr auto;gap:14px;align-items:center;padding:13px 10px;border-top:1px solid var(--line);border-radius:12px;cursor:pointer}.lesson:first-of-type{border-top:0}.lesson:hover{background:rgba(127,150,180,.08)}
+.time{font-weight:750;color:var(--blue);font-size:14px}.subject{font-size:16px;font-weight:650}.subject-main{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.comment-count{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:rgba(127,150,180,.13);color:var(--muted);white-space:nowrap}.lesson.current{background:rgba(22,133,91,.09);box-shadow:inset 4px 0 0 var(--green)}.lesson.past{opacity:.48}
+.lesson-change{margin-top:4px;font-size:12px;color:var(--danger);font-weight:700}.lesson-change s{opacity:.7}.task-line{margin-top:5px;font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;flex-wrap:wrap}.deadline{font-weight:800;color:var(--blue)}.badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800;background:rgba(40,87,127,.12);color:var(--blue)}
+.notice{margin-top:12px;color:var(--muted);font-size:12px}
+.section{margin-top:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title{font-size:20px;font-weight:800}
+.notice-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}.notice-card.pinned{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.notice-title{font-weight:800;font-size:16px}.notice-message{margin-top:6px;line-height:1.45;white-space:pre-wrap}.notice-meta{font-size:12px;color:var(--muted);margin-top:9px}
+.change-card{padding:13px 15px;border:1px solid var(--line);border-radius:15px;margin-bottom:8px;background:var(--card)}.change-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.change-date{font-weight:800}.change-sub{font-weight:700;color:var(--danger)}.change-note{margin-top:5px;color:var(--muted);font-size:13px}
+.overlay{position:fixed;inset:0;background:rgba(8,18,30,.58);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:12px}.overlay.open{display:flex}.modal{width:min(780px,100%);max-height:92vh;background:var(--card);border-radius:24px 24px 16px 16px;overflow:hidden;display:flex;flex-direction:column}.modal.full{width:min(1080px,100%);max-height:94vh}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-title{font-weight:800;font-size:21px}.close{border:0;background:rgba(127,150,180,.13);color:var(--text);border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
+.modal-body{padding:15px 18px;overflow:auto}.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
+.form{border-top:1px solid var(--line);padding:14px 18px;background:rgba(127,150,180,.04)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}.row{display:grid;grid-template-columns:150px 1fr;gap:9px}.input,.textarea,.select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;outline:none;background:var(--card);color:var(--text)}.textarea{resize:vertical;min-height:84px}.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.hint{font-size:12px;color:var(--muted)}.send{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.send:disabled{opacity:.55;cursor:not-allowed}.error{color:var(--danger);font-size:12px;margin-top:7px;min-height:16px}
+.auth-help{font-size:12px;color:var(--muted);line-height:1.45}.delete-btn{border:0;background:rgba(180,35,24,.12);color:var(--danger);border-radius:9px;padding:6px 9px;font-weight:800;cursor:pointer}.comment-actions{display:flex;align-items:center;gap:8px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
+.dashboard-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.dash-tab{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer}.dash-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.dash-panel{display:none}.dash-panel.active{display:block}.dash-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.dash-item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;padding:11px 12px}.dash-item-main{min-width:0}.dash-item-title{font-weight:800}.dash-item-meta{font-size:12px;color:var(--muted);margin-top:3px}.install-banner{display:none;margin-top:14px}.install-banner.show{display:block}.install-btn{border:0;background:var(--green);color:#fff;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}
+@media(max-width:700px){header{padding:22px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:13px 6px}.comment-count{grid-column:2;width:max-content}.grid,.grid-3{grid-template-columns:1fr}.row{grid-template-columns:1fr}.overlay{padding:0}.modal{max-height:95vh;border-radius:22px 22px 0 0}.top{align-items:flex-start}.top-actions{gap:6px}}
 </style>
+
+<meta name="theme-color" content="#28577f" id="themeColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Orarul meu">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
 </head>
 <body>
-<header><div class="wrap"><div class="top"><div><div class="eyebrow">PROGRAM ȘCOLAR</div><div class="title">Orarul meu</div><div class="date" id="date"></div></div><div style="display:flex;align-items:center;gap:10px"><div id="dayLabel" class="date"></div><button class="admin-btn" id="adminBtn">Admin</button></div></div></div></header>
+<header><div class="wrap"><div class="top"><div><div class="eyebrow">PROGRAM ȘCOLAR</div><div class="title">Orarul meu</div><div class="date" id="date"></div></div><div class="top-actions"><div id="dayLabel" class="date"></div><button class="icon-btn" id="themeBtn" title="Schimbă tema">◐</button><button class="admin-btn" id="adminBtn">Admin</button></div></div></div></header>
 <main class="container">
 <nav class="tabs" id="tabs"></nav>
-<section class="hero"><div class="card"><div class="label">Următoarea oră</div><div class="next" id="next">—</div><div class="small" id="nextTime">—</div></div><div class="card"><div class="label">Stare</div><div class="count" id="count">—</div><div class="small" id="state">—</div></div></section>
-<section class="card schedule"><div class="schedule-head"><div class="schedule-title" id="selectedTitle">Luni</div></div><div id="lessons"></div><div class="notice">Apasă pe o materie pentru teme, anunțuri și comentarii.</div></section>
+<div class="quick-nav"><button class="quick primary" id="todayBtn">Acum la școală</button><button class="quick" id="announcementsBtn">Anunțuri importante</button><button class="quick" id="changesBtn">Schimbări de orar</button></div>
+<section class="hero">
+  <div class="card"><div class="label">Acum la școală</div><div class="next" id="next">—</div><div class="small" id="nextTime">—</div><div class="small" id="schoolContext">—</div></div>
+  <div class="card"><div class="label">Stare</div><div class="count" id="count">—</div><div class="small" id="state">—</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
+</section>
+<section class="card schedule"><div class="schedule-head"><div class="schedule-title" id="selectedTitle">Luni</div></div><div id="lessons"></div><div class="notice">Apasă pe o materie pentru teme, proiecte și comentarii.</div></section>
+<section class="section" id="announcementsSection"><div class="section-head"><div class="section-title">Anunțuri importante</div><button class="quick" id="openAnnouncements">Vezi toate</button></div><div id="announcementPreview"></div></section>
+<section class="section" id="changesSection"><div class="section-head"><div class="section-title">Schimbări de orar</div><button class="quick" id="openChanges">Vezi toate</button></div><div id="changePreview"></div></section>
 </main>
-<div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div class="modal-title" id="modalTitle">—</div><button class="close" id="close" aria-label="Închide">×</button></div><div class="comments" id="comments"><div class="no-comments">Se încarcă…</div></div><form class="form" id="commentForm"><div class="row"><input class="input" id="name" maxlength="30" placeholder="Numele tău" autocomplete="nickname" required><textarea class="textarea" id="message" maxlength="500" placeholder="Scrie tema, un anunț sau un comentariu..." required></textarea></div><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="actions"><div class="hint">Max. 500 caractere.</div><button class="send" id="send" type="submit">Adaugă comentariu</button></div><div class="error" id="error"></div></form></section></div>
-<div class="overlay" id="authOverlay"><section class="modal" role="dialog" aria-modal="true" style="max-width:520px"><div class="modal-head"><div class="modal-title">Administrator</div><button class="close" id="authClose" aria-label="Închide">×</button></div><div class="comments" style="padding-bottom:4px"><div class="auth-help">Conectează-te cu adresa de administrator. Vei primi un link de autentificare pe email. Doar contul de administrator poate șterge comentarii.</div><div id="authStatus" class="auth-help" style="margin-top:10px"></div></div><form class="form" id="authForm"><div class="row" style="grid-template-columns:1fr"><input class="input" id="adminEmail" type="email" value="candidoluciano2008l@gmail.com" readonly></div><div class="actions"><div class="hint">Magic link</div><button class="send" id="authSend" type="submit">Trimite linkul</button></div><div class="error" id="authError"></div></form></section></div>
+
+<div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div class="modal-title" id="modalTitle">—</div><button class="close" id="close">×</button></div><div class="modal-body"><div id="subjectTasks"></div><h3 style="margin:18px 0 8px">Comentarii</h3><div class="comments" id="comments" style="padding:0;overflow:visible"><div class="no-comments">Se încarcă…</div></div></div><form class="form" id="commentForm"><div class="row"><input class="input" id="name" maxlength="30" placeholder="Numele tău" autocomplete="nickname" required><textarea class="textarea" id="message" maxlength="500" placeholder="Scrie tema, un anunț sau un comentariu..." required></textarea></div><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="actions"><div class="hint">Max. 500 caractere.</div><button class="send" id="send" type="submit">Adaugă comentariu</button></div><div class="error" id="error"></div></form></section></div>
+
+<div class="overlay" id="listOverlay"><section class="modal full"><div class="modal-head"><div class="modal-title" id="listTitle">—</div><button class="close" id="listClose">×</button></div><div class="modal-body" id="listBody"></div></section></div>
+
+<div class="overlay" id="authOverlay"><section class="modal" role="dialog" aria-modal="true" style="max-width:520px"><div class="modal-head"><div class="modal-title">Administrator</div><button class="close" id="authClose">×</button></div><div class="modal-body"><div class="auth-help">Conectează-te cu adresa administratorului. Vei primi un link pe email. Doar contul administrator poate administra conținutul.</div><div id="authStatus" class="auth-help" style="margin-top:10px"></div></div><form class="form" id="authForm"><div class="grid"><input class="input" id="adminEmail" type="email" value="candidoluciano2008l@gmail.com" readonly></div><div class="actions"><div class="hint">Magic link</div><button class="send" id="authSend" type="submit">Trimite linkul</button></div><div class="error" id="authError"></div></form></section></div>
+
+<div class="overlay" id="dashboardOverlay"><section class="modal full"><div class="modal-head"><div class="modal-title">Admin Dashboard</div><button class="close" id="dashboardClose">×</button></div><div class="modal-body">
+<div class="dashboard-tabs">
+<button class="dash-tab active" data-panel="tasksPanel">Teme / Proiecte</button>
+<button class="dash-tab" data-panel="changesPanel">Schimbări</button>
+<button class="dash-tab" data-panel="announcementsPanel">Anunțuri</button>
+<button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
+</div>
+
+<div class="dash-panel active" id="tasksPanel">
+<form class="form" id="taskAdminForm" style="border:0;padding:0;background:none"><div class="grid"><select class="select" id="taskSubject"></select><select class="select" id="taskType"><option>Temă</option><option>Proiect</option></select></div><div class="grid" style="margin-top:9px"><input class="input" id="taskTitle" maxlength="160" placeholder="Titlu"><input class="input" id="taskDeadline" type="date" required></div><textarea class="textarea" id="taskDescription" maxlength="1000" placeholder="Descriere (opțional)" style="margin-top:9px"></textarea><div class="actions"><span></span><button class="send" type="submit">Adaugă</button></div><div class="error" id="taskError"></div></form><div class="dash-list" id="taskList"></div>
+</div>
+
+<div class="dash-panel" id="changesPanel">
+<form class="form" id="changeAdminForm" style="border:0;padding:0;background:none"><div class="grid-3"><input class="input" id="changeDate" type="date" required><input class="input" id="changeStart" type="time" required><input class="input" id="changeEnd" type="time" required></div><div class="grid" style="margin-top:9px"><input class="input" id="changeOriginal" placeholder="Materia inițială" required><input class="input" id="changeReplacement" placeholder="Înlocuiește cu" required></div><textarea class="textarea" id="changeNote" maxlength="500" placeholder="Notă (opțional)" style="margin-top:9px"></textarea><div class="actions"><span></span><button class="send" type="submit">Adaugă schimbare</button></div><div class="error" id="changeError"></div></form><div class="dash-list" id="changeList"></div>
+</div>
+
+<div class="dash-panel" id="announcementsPanel">
+<form class="form" id="announcementAdminForm" style="border:0;padding:0;background:none"><input class="input" id="announcementTitle" maxlength="160" placeholder="Titlu" required><textarea class="textarea" id="announcementMessage" maxlength="2000" placeholder="Mesaj" style="margin-top:9px" required></textarea><label style="display:flex;gap:8px;align-items:center;margin-top:9px;color:var(--text);font-weight:700"><input type="checkbox" id="announcementPinned"> Fixat sus</label><div class="actions"><span></span><button class="send" type="submit">Publică anunț</button></div><div class="error" id="announcementError"></div></form><div class="dash-list" id="announcementList"></div>
+</div>
+
+<div class="dash-panel" id="commentsPanel"><div class="dash-list" id="adminCommentList"></div></div>
+</div></section></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL="https://ezdlwxbcacsbcnjhqqnq.supabase.co";
 const SUPABASE_KEY="sb_publishable_d_MGU7E-oYQgAtvx4xhqAA_8R4S4TGC";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const ADMIN_EMAIL="candidoluciano2008l@gmail.com";
 const schedule={
 "Luni":[["07:20","08:10","Negociere"],["08:15","09:05","Română"],["09:10","10:00","Proiecte economice"],["10:05","10:55","Proiecte economice"],["11:00","11:50","Comunism"],["11:55","12:45","Negociere"],["12:50","13:40","Geografie"]],
 "Marți":[["07:20","08:10","Geografie"],["08:15","09:05","Politici de marketing"],["09:10","10:00","Matematică"],["10:05","10:55","Analiză economico-financiară"],["11:00","11:50","Dirigenție"],["11:55","12:45","Dirigenție"],["12:50","13:40","Română"]],
 "Miercuri":[["07:20","08:10","Statistică"],["08:15","09:05","Economie aplicată"],["09:10","10:00","Franceză"],["10:05","10:55","Statistică"],["11:00","11:50","Engleză"],["11:55","12:45","Română"]],
 "Joi":[["07:20","08:10","Istorie (Frunză)"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
-"Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]};
+"Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]
+};
 const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
-let now=new Date(),today=names[now.getDay()];
-let selected=days.includes(today)?today:"Luni",selectedSubject=null,isAdmin=false,currentUser=null;
-const ADMIN_EMAIL="candidoluciano2008l@gmail.com";
-function setAdminUi(){document.getElementById("adminBtn").textContent=isAdmin?"Delogare":"Admin"}
-async function refreshAuth(){const{data}=await supabaseClient.auth.getUser();currentUser=data?.user||null;isAdmin=!!currentUser&&(currentUser.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();setAdminUi();if(selectedSubject)await loadComments()}
-async function requestAdminLink(){const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");status.textContent="";err.textContent="";btn.disabled=true;const redirectTo=window.location.origin+window.location.pathname;const{error}=await supabaseClient.auth.signInWithOtp({email:ADMIN_EMAIL,options:{shouldCreateUser:true,emailRedirectTo:redirectTo}});btn.disabled=false;if(error){err.textContent=error.message;return}status.textContent="Linkul de autentificare a fost trimis. Deschide emailul și revino pe site."}
+let now=new Date(),today=names[now.getDay()],selected=days.includes(today)?today:"Luni",selectedSubject=null,isAdmin=false,currentUser=null;
+let tasks=[],changes=[],announcements=[];
+let deferredPrompt=null;
+
+const mins=t=>{const parts=t.split(":").map(Number);return parts[0]*60+parts[1]};
+const localDateKey=d=>{const x=d||new Date();return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
+const fmtDate=d=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"long",year:"numeric"}).format(new Date(d+"T12:00:00"));
+const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
+const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+
+function applyTheme(theme){
+  const t=theme==="dark"||theme==="light"?theme:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  document.documentElement.setAttribute("data-theme",t);localStorage.setItem("schoolTheme",t);
+  document.getElementById("themeColor").setAttribute("content",t==="dark"?"#0b1220":"#28577f");
+  document.getElementById("themeBtn").textContent=t==="dark"?"☀":"◐";
+}
+applyTheme(localStorage.getItem("schoolTheme")||"auto");
+document.getElementById("themeBtn").onclick=()=>applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");
+
+async function refreshAuth(){
+  const r=await supabaseClient.auth.getUser();currentUser=r.data?.user||null;
+  isAdmin=!!currentUser&&(currentUser.email||"").toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  document.getElementById("adminBtn").textContent=isAdmin?"Dashboard":"Admin";
+}
+async function requestAdminLink(){
+  const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");
+  status.textContent="";err.textContent="";btn.disabled=true;
+  const redirectTo=window.location.origin+window.location.pathname;
+  const r=await supabaseClient.auth.signInWithOtp({email:ADMIN_EMAIL,options:{shouldCreateUser:true,emailRedirectTo:redirectTo}});
+  btn.disabled=false;if(r.error){err.textContent=r.error.message;return}
+  status.textContent="Linkul a fost trimis. Deschide emailul și revino pe site.";
+}
+
+async function loadData(){
+  const [a,b,c]=await Promise.all([
+    supabaseClient.from("tasks").select("*").order("deadline",{ascending:true}),
+    supabaseClient.from("schedule_changes").select("*").order("change_date",{ascending:true}).order("start_time",{ascending:true}),
+    supabaseClient.from("announcements").select("*").order("pinned",{ascending:false}).order("created_at",{ascending:false})
+  ]);
+  tasks=a.data||[];changes=b.data||[];announcements=c.data||[];
+}
+async function getCommentCounts(){
+  const r=await supabaseClient.from("comments").select("subject");if(r.error)return {};
+  return (r.data||[]).reduce((acc,row)=>{acc[row.subject]=(acc[row.subject]||0)+1;return acc},{});
+}
+function effectiveSubject(day,lesson){
+  const dateKey=localDateKey(now);if(day!==today)return {subject:lesson[2],change:null};
+  const c=changes.find(x=>x.change_date===dateKey&&x.start_time?.slice(0,5)===lesson[0]&&x.end_time?.slice(0,5)===lesson[1]&&x.original_subject===lesson[2]);
+  return c?{subject:c.replacement_subject,change:c}:{subject:lesson[2],change:null};
+}
+async function renderTabs(){
+  document.getElementById("tabs").innerHTML=days.map(d=>"<button class='tab "+(d===selected?"active ":"")+(d===today?"today":"")+"' onclick='selectDay(\""+d+"\")'>"+d+"</button>").join("");
+}
+function getSchoolState(){
+  if(!days.includes(today))return {kind:"weekend",current:null,next:null};
+  const arr=schedule[today],cur=now.getHours()*60+now.getMinutes();
+  const current=arr.find(x=>cur>=mins(x[0])&&cur<mins(x[1]));
+  const next=arr.find(x=>cur<mins(x[0]));
+  return {kind:current?"current":next?"break-or-before":"after",current,next};
+}
+function renderSchoolState(){
+  const s=getSchoolState(),next=document.getElementById("next"),nextTime=document.getElementById("nextTime"),count=document.getElementById("count"),state=document.getElementById("state"),ctx=document.getElementById("schoolContext");
+  if(s.kind==="current"){
+    const e=effectiveSubject(today,s.current);next.textContent=e.subject;nextTime.textContent=s.current[0]+"–"+s.current[1];count.textContent="Acum";state.textContent="Ora este în desfășurare";ctx.textContent=e.change?"Schimbare: "+s.current[2]+" → "+e.subject:"Program normal";
+  }else if(s.kind==="break-or-before"){
+    next.textContent=s.next?effectiveSubject(today,s.next).subject:"—";nextTime.textContent=s.next?s.next[0]+"–"+s.next[1]:"—";count.textContent=s.next?"Pauză":"—";state.textContent=s.next?"Urmează următoarea oră":"—";ctx.textContent=s.next?"Până la "+s.next[0]:"";
+  }else if(s.kind==="after"){
+    next.textContent="Program încheiat";nextTime.textContent="";count.textContent="Liber";state.textContent="Orele de azi s-au terminat";ctx.textContent="";
+  }else{
+    next.textContent="Weekend";nextTime.textContent="";count.textContent="Liber";state.textContent="Nu sunt ore azi";ctx.textContent="";
+  }
+}
+async function render(){
+  document.getElementById("selectedTitle").textContent=selected;
+  const arr=schedule[selected],cur=now.getHours()*60+now.getMinutes(),counts=await getCommentCounts(),tmap={};
+  tasks.forEach(t=>{(tmap[t.subject]||(tmap[t.subject]=[])).push(t)});
+  renderSchoolState();
+  document.getElementById("lessons").innerHTML=arr.map(x=>{
+    const a=mins(x[0]),b=mins(x[1]),isToday=selected===today,cls=isToday&&cur>=a&&cur<b?"current":(isToday&&cur>=b?"past":""),eff=effectiveSubject(selected,x),c=counts[eff.subject]||0,subTasks=(tmap[eff.subject]||[]).slice(0,2);
+    const taskHtml=subTasks.map(t=>"<div class='task-line'><span class='badge'>"+escapeHtml(t.type)+"</span>"+escapeHtml(t.title)+" · <span class='deadline'>"+fmtDate(t.deadline)+"</span></div>").join("");
+    const ch=eff.change?"<div class='lesson-change'><s>"+escapeHtml(x[2])+"</s> → "+escapeHtml(eff.subject)+"</div>":"";
+    return "<div class='lesson "+cls+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
+  }).join("");
+  renderPreviews();
+}
+function renderPreviews(){
+  const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
+  document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
+  document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>"<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(c.change_date)+" · "+c.start_time.slice(0,5)+"–"+c.end_time.slice(0,5)+"</div><div class='change-sub'>"+escapeHtml(c.original_subject)+" → "+escapeHtml(c.replacement_subject)+"</div></div>"+(c.note?"<div class='change-note'>"+escapeHtml(c.note)+"</div>":"")+"</article>").join(""):"<div class='empty'>Nu există schimbări programate.</div>";
+}
+async function openComments(subject){
+  selectedSubject=subject;document.getElementById("modalTitle").textContent=subject;document.getElementById("overlay").classList.add("open");document.body.style.overflow="hidden";document.getElementById("error").textContent="";await loadSubjectTasks();await loadComments();
+}
+async function loadSubjectTasks(){
+  const list=tasks.filter(t=>t.subject===selectedSubject);
+  document.getElementById("subjectTasks").innerHTML="<h3 style='margin:0 0 8px'>Teme / proiecte</h3>"+(list.length?list.map(t=>"<article class='notice-card'><div class='notice-title'>"+escapeHtml(t.title)+"</div><div class='notice-meta'>"+escapeHtml(t.type)+" · Deadline: <b>"+fmtDate(t.deadline)+"</b></div>"+(t.description?"<div class='notice-message'>"+escapeHtml(t.description)+"</div>":"")+"</article>").join(""):"<div class='empty'>Nu există încă teme sau proiecte pentru această materie.</div>");
+}
+async function loadComments(){
+  const box=document.getElementById("comments");box.innerHTML="<div class='no-comments'>Se încarcă…</div>";
+  const r=await supabaseClient.from("comments").select("id,subject,name,message,created_at").eq("subject",selectedSubject).order("created_at",{ascending:false});
+  if(r.error){box.innerHTML="<div class='no-comments'>Nu am putut încărca comentariile.</div>";return}
+  if(!r.data?.length){box.innerHTML="<div class='no-comments'>Nu există încă comentarii pentru această materie.</div>";return}
+  box.innerHTML="";r.data.forEach(c=>{const item=document.createElement("article"),meta=document.createElement("div"),n=document.createElement("div"),right=document.createElement("div"),t=document.createElement("div"),msg=document.createElement("div");
+    item.className="comment";meta.className="comment-meta";n.className="comment-name";right.className="comment-actions";t.className="comment-time";msg.className="comment-message";n.textContent=c.name;t.textContent=formatTime(c.created_at);right.append(t);
+    if(isAdmin){const del=document.createElement("button");del.className="delete-btn";del.textContent="Șterge";del.onclick=()=>deleteComment(c.id);right.append(del)}
+    meta.append(n,right);msg.textContent=c.message;item.append(meta,msg);box.appendChild(item);
+  });
+}
+async function deleteComment(id){const r=await supabaseClient.from("comments").delete().eq("id",id);if(r.error){document.getElementById("error").textContent="Nu s-a putut șterge comentariul.";return}await loadComments();await render()}
+function closeComments(){document.getElementById("overlay").classList.remove("open");document.body.style.overflow="";selectedSubject=null}
+window.selectDay=d=>{selected=d;renderTabs();render()};window.openComments=openComments;
+document.getElementById("close").onclick=closeComments;document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeComments()});
+
+function openList(type){
+  document.getElementById("listOverlay").classList.add("open");document.body.style.overflow="hidden";const title=document.getElementById("listTitle"),body=document.getElementById("listBody");
+  if(type==="ann"){
+    title.textContent="Anunțuri importante";body.innerHTML=announcements.length?announcements.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
+  }else{
+    title.textContent="Schimbări de orar";body.innerHTML=changes.length?changes.map(c=>"<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(c.change_date)+" · "+c.start_time.slice(0,5)+"–"+c.end_time.slice(0,5)+"</div><div class='change-sub'>"+escapeHtml(c.original_subject)+" → "+escapeHtml(c.replacement_subject)+"</div></div>"+(c.note?"<div class='change-note'>"+escapeHtml(c.note)+"</div>":"")+"</article>").join(""):"<div class='empty'>Nu există schimbări de orar.</div>";
+  }
+}
+function closeList(){document.getElementById("listOverlay").classList.remove("open");document.body.style.overflow=""}
+document.getElementById("announcementsBtn").onclick=()=>openList("ann");document.getElementById("changesBtn").onclick=()=>openList("changes");document.getElementById("openAnnouncements").onclick=()=>openList("ann");document.getElementById("openChanges").onclick=()=>openList("changes");document.getElementById("listClose").onclick=closeList;document.getElementById("listOverlay").addEventListener("click",e=>{if(e.target.id==="listOverlay")closeList()});
+document.getElementById("todayBtn").onclick=()=>{selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
+
+document.getElementById("commentForm").addEventListener("submit",async e=>{
+ e.preventDefault();const error=document.getElementById("error"),button=document.getElementById("send"),name=document.getElementById("name").value.trim(),message=document.getElementById("message").value.trim();
+ if(document.getElementById("website").value)return;if(!selectedSubject||!name||!message){error.textContent="Completează numele și mesajul.";return}
+ const last=Number(localStorage.getItem("commentCooldown")||0);if(Date.now()-last<15000){error.textContent="Așteaptă câteva secunde înainte de a posta din nou.";return}
+ button.disabled=true;const r=await supabaseClient.from("comments").insert({subject:selectedSubject,name,message});button.disabled=false;
+ if(r.error){error.textContent="Nu s-a putut publica. Încearcă din nou.";return}localStorage.setItem("commentCooldown",String(Date.now()));document.getElementById("message").value="";await loadComments();await render();
+});
+
+document.getElementById("adminBtn").onclick=async()=>{if(isAdmin){document.getElementById("dashboardOverlay").classList.add("open");document.body.style.overflow="hidden";await openDashboard();}else{document.getElementById("authOverlay").classList.add("open");document.body.style.overflow="hidden"}};
+document.getElementById("authClose").onclick=()=>{document.getElementById("authOverlay").classList.remove("open");document.body.style.overflow=""};
+document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefault();requestAdminLink()});
+document.getElementById("dashboardClose").onclick=()=>{document.getElementById("dashboardOverlay").classList.remove("open");document.body.style.overflow=""};
+
+async function openDashboard(){fillTaskSubjects();await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminComments()]);}
+function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
+function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
+async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
+async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(c.change_date)+" · "+c.start_time.slice(0,5)+"–"+c.end_time.slice(0,5)+"</div><div class='dash-item-meta'>"+escapeHtml(c.original_subject)+" → "+escapeHtml(c.replacement_subject)+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există schimbări.</div>"}
+async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
+async function renderAdminComments(){const r=await supabaseClient.from("comments").select("id,subject,name,message,created_at").order("created_at",{ascending:false});const box=document.getElementById("adminCommentList");box.innerHTML=r.data?.length?r.data.map(c=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(c.subject)+" — "+escapeHtml(c.name)+"</div><div class='dash-item-meta'>"+formatTime(c.created_at)+"</div><div style='margin-top:5px;white-space:pre-wrap'>"+escapeHtml(c.message)+"</div></div><button class='delete-btn' onclick='removeCommentAdmin("+c.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există comentarii.</div>"}
+window.removeTask=async id=>{await adminDelete("tasks",id);await loadData();await render();await renderAdminTasks()};
+window.removeChange=async id=>{await adminDelete("schedule_changes",id);await loadData();await render();await renderAdminChanges()};
+window.removeAnnouncement=async id=>{await adminDelete("announcements",id);await loadData();await render();await renderAdminAnnouncements()};
+window.removeCommentAdmin=async id=>{await adminDelete("comments",id);await loadData();await render();await renderAdminComments()};
+
+document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
+ e.preventDefault();const err=document.getElementById("taskError");err.textContent="";
+ const r=await supabaseClient.from("tasks").insert({subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null});
+ if(r.error){err.textContent=r.error.message;return}e.target.reset();document.getElementById("taskType").value="Temă";await loadData();await render();await renderAdminTasks();
+});
+document.getElementById("changeAdminForm").addEventListener("submit",async e=>{
+ e.preventDefault();const err=document.getElementById("changeError");err.textContent="";
+ const r=await supabaseClient.from("schedule_changes").insert({change_date:document.getElementById("changeDate").value,start_time:document.getElementById("changeStart").value,end_time:document.getElementById("changeEnd").value,original_subject:document.getElementById("changeOriginal").value.trim(),replacement_subject:document.getElementById("changeReplacement").value.trim(),note:document.getElementById("changeNote").value.trim()||null});
+ if(r.error){err.textContent=r.error.message;return}e.target.reset();await loadData();await render();await renderAdminChanges();
+});
+document.getElementById("announcementAdminForm").addEventListener("submit",async e=>{
+ e.preventDefault();const err=document.getElementById("announcementError");err.textContent="";
+ const r=await supabaseClient.from("announcements").insert({title:document.getElementById("announcementTitle").value.trim(),message:document.getElementById("announcementMessage").value.trim(),pinned:document.getElementById("announcementPinned").checked});
+ if(r.error){err.textContent=r.error.message;return}e.target.reset();await loadData();await render();await renderAdminAnnouncements();
+});
+document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{document.querySelectorAll(".dash-tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".dash-panel").forEach(x=>x.classList.remove("active"));btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active")});
+
+supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
+supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()}).subscribe();
+
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBanner").classList.add("show")});
+document.getElementById("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBanner").classList.remove("show")};
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}))}
 
 document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);
 document.getElementById("dayLabel").textContent=today;
-const mins=t=>{const[h,m]=t.split(":").map(Number);return h*60+m};
-const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
-async function getCommentCounts(){const{data,error}=await supabaseClient.from("comments").select("subject");if(error)return{};return data.reduce((a,r)=>(a[r.subject]=(a[r.subject]||0)+1,a),{})}
-function renderTabs(){document.getElementById("tabs").innerHTML=days.map(d=>`<button class="tab ${d===selected?"active":""} ${d===today?"today":""}" onclick="selectDay('${d}')">${d}</button>`).join("")}
-async function render(){document.getElementById("selectedTitle").textContent=selected;const arr=schedule[selected],current=now.getHours()*60+now.getMinutes(),counts=await getCommentCounts(),upcoming=arr.find(x=>current<mins(x[0])),currentLesson=arr.find(x=>current>=mins(x[0])&&current<mins(x[1]));
-document.getElementById("next").textContent=upcoming?upcoming[2]:(currentLesson?currentLesson[2]:"Program încheiat");
-document.getElementById("nextTime").textContent=upcoming?`${upcoming[0]}–${upcoming[1]}`:(currentLesson?`${currentLesson[0]}–${currentLesson[1]}`:"Nu mai sunt ore azi");
-document.getElementById("count").textContent=currentLesson?"Acum":(upcoming?"Urmează":"Liber");
-document.getElementById("state").textContent=currentLesson?`Se desfășoară ${currentLesson[0]}–${currentLesson[1]}`:(upcoming?`Prima oră: ${upcoming[0]}`:"Programul s-a terminat");
-document.getElementById("lessons").innerHTML=arr.map(x=>{const a=mins(x[0]),b=mins(x[1]),cls=selected===today&&current>=a&&current<b?"current":(selected===today&&current>=b?"past":""),c=counts[x[2]]||0;return `<div class="lesson ${cls}" onclick='openComments(${JSON.stringify(x[2])})'><div class="time">${x[0]}–${x[1]}</div><div class="subject">${x[2]}</div><div class="comment-count">${c} ${c===1?"comentariu":"comentarii"}</div></div>`}).join("")}
-async function loadComments(){const box=document.getElementById("comments");box.innerHTML='<div class="no-comments">Se încarcă…</div>';const{data,error}=await supabaseClient.from("comments").select("id,subject,name,message,created_at").eq("subject",selectedSubject).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="no-comments">Nu am putut încărca comentariile.</div>';return}if(!data.length){box.innerHTML='<div class="no-comments">Nu există încă comentarii pentru această materie.</div>';return}box.innerHTML="";for(const c of data){const item=document.createElement("article"),meta=document.createElement("div"),n=document.createElement("div"),right=document.createElement("div"),t=document.createElement("div"),msg=document.createElement("div");item.className="comment";meta.className="comment-meta";n.className="comment-name";right.className="comment-actions";t.className="comment-time";msg.className="comment-message";n.textContent=c.name;t.textContent=formatTime(c.created_at);right.append(t);if(isAdmin){const del=document.createElement("button");del.className="delete-btn";del.textContent="Șterge";del.onclick=()=>deleteComment(c.id);right.append(del)}meta.append(n,right);msg.textContent=c.message;item.append(meta,msg);box.appendChild(item)}}
-async function deleteComment(id){const{error}=await supabaseClient.from("comments").delete().eq("id",id);if(error){document.getElementById("error").textContent="Nu s-a putut șterge comentariul.";return}await loadComments();await render()}
-function openComments(subject){selectedSubject=subject;document.getElementById("modalTitle").textContent=subject;document.getElementById("overlay").classList.add("open");document.body.style.overflow="hidden";document.getElementById("error").textContent="";loadComments()}
-function closeComments(){document.getElementById("overlay").classList.remove("open");document.body.style.overflow="";selectedSubject=null}
-window.selectDay=d=>{selected=d;renderTabs();render()};window.openComments=openComments;
-document.getElementById("close").onclick=closeComments;document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeComments()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeComments()});
-document.getElementById("commentForm").addEventListener("submit",async e=>{e.preventDefault();const error=document.getElementById("error"),button=document.getElementById("send"),name=document.getElementById("name").value.trim(),message=document.getElementById("message").value.trim();if(document.getElementById("website").value)return;if(!selectedSubject||!name||!message){error.textContent="Completează numele și mesajul.";return}const last=Number(localStorage.getItem("commentCooldown")||0);if(Date.now()-last<15000){error.textContent="Așteaptă câteva secunde înainte de a posta din nou.";return}button.disabled=true;error.textContent="";const{error:insertError}=await supabaseClient.from("comments").insert({subject:selectedSubject,name,message});button.disabled=false;if(insertError){error.textContent="Nu s-a putut publica. Încearcă din nou.";return}localStorage.setItem("commentCooldown",String(Date.now()));document.getElementById("message").value="";await loadComments();await render()});
-document.getElementById("adminBtn").onclick=async()=>{if(isAdmin){await supabaseClient.auth.signOut();await refreshAuth();return}document.getElementById("authOverlay").classList.add("open");document.body.style.overflow="hidden"};
-document.getElementById("authClose").onclick=()=>{document.getElementById("authOverlay").classList.remove("open");document.body.style.overflow=""};
-document.getElementById("authOverlay").addEventListener("click",e=>{if(e.target.id==="authOverlay"){document.getElementById("authOverlay").classList.remove("open");document.body.style.overflow=""}});
-document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefault();requestAdminLink()});
-supabaseClient.auth.onAuthStateChange(()=>{refreshAuth()});
-refreshAuth();
-renderTabs();render();setInterval(()=>{now=new Date();today=names[now.getDay()];renderTabs();render()},30000);
-supabaseClient.channel("comments-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{if(selectedSubject)await loadComments();await render()}).subscribe();
+refreshAuth();loadData().then(()=>{renderTabs();render()});
+setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);document.getElementById("dayLabel").textContent=today;renderTabs();render()},30000);
 </script>
 </body></html>
