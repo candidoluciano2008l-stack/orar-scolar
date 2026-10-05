@@ -79,8 +79,8 @@ body{background:var(--bg)}
       <button class="side-link" id="changesBtn"><span>Schimbări</span><small>Modificări de program</small></button>
     </nav>
     <div class="sidebar-bottom">
-      <button class="side-link side-muted" id="themeBtn"><span>Temă</span><small>Schimbă aspectul</small></button>
-      <button class="side-link side-admin" id="adminBtn"><span>Admin</span><small>Panou de administrare</small></button>
+      <button class="side-link side-muted" id="themeBtn"><span id="themeBtnLabel">Temă</span><small>Schimbă aspectul</small></button>
+      <button class="side-link side-admin" id="adminBtn"><span id="adminBtnLabel">Admin</span><small>Panou de administrare</small></button>
     </div>
   </aside>
 
@@ -315,7 +315,7 @@ function applyTheme(theme){
   const t=theme==="dark"||theme==="light"?theme:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
   document.documentElement.setAttribute("data-theme",t);localStorage.setItem("schoolTheme",t);
   document.getElementById("themeColor").setAttribute("content",t==="dark"?"#0b1220":"#28577f");
-  document.getElementById("themeBtn").textContent=t==="dark"?"☀":"◐";
+  const themeLabel=document.getElementById("themeBtnLabel");if(themeLabel)themeLabel.textContent=t==="dark"?"Temă deschisă":"Temă întunecată";
 }
 applyTheme(localStorage.getItem("schoolTheme")||"auto");
 document.getElementById("themeBtn").onclick=()=>applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");
@@ -327,7 +327,7 @@ async function refreshAuth(){
     const ar=await supabaseClient.from("admins").select("email,role").eq("email",currentUser.email.toLowerCase()).maybeSingle();
     if(ar.data){isAdmin=true;adminRole=ar.data.role;isSuperAdmin=ar.data.role==="superadmin";}
   }
-  document.getElementById("adminBtn").textContent=isAdmin?"Dashboard":"Admin";
+  const adminLabel=document.getElementById("adminBtnLabel");if(adminLabel)adminLabel.textContent=isAdmin?"Dashboard":"Admin";
   const adminsTab=document.getElementById("adminsTab");
   if(adminsTab) adminsTab.style.display=isSuperAdmin?"inline-flex":"none";
 }
