@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Orarul meu</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#132238;--muted:#718096;--line:#e5eaf0;--blue:#28577f;--blue2:#397daf;--green:#16855b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{padding:28px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f);color:#fff;border-radius:0 0 28px 28px}
+.wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-end}.eyebrow{font-size:13px;opacity:.75}.title{font-size:34px;font-weight:800;margin:4px 0}.date{font-size:14px;opacity:.82}
+.container{max-width:1000px;margin:auto;padding:18px}
+.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 14px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tab{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:13px;padding:10px 14px;font-weight:700;white-space:nowrap;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.tab.today:not(.active){box-shadow:inset 0 0 0 2px #6ba7d1}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 7px 24px rgba(17,38,63,.06)}
+.label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.next{font-size:25px;font-weight:800;margin-top:7px}.small{color:var(--muted);font-size:14px;margin-top:5px}.count{font-size:29px;font-weight:800;margin-top:7px}
+.schedule{overflow:hidden}.schedule-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.schedule-title{font-size:21px;font-weight:800}
+.lesson{display:grid;grid-template-columns:105px 1fr auto;gap:14px;align-items:center;padding:16px 10px;border-top:1px solid var(--line);border-radius:12px}.lesson:first-of-type{border-top:0}.time{font-weight:750;color:var(--blue);font-size:14px}.subject{font-size:16px;font-weight:650}.status{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:#edf2f7;color:#64748b}.lesson.current{background:#eef8f4;box-shadow:inset 4px 0 0 var(--green)}.lesson.current .status{background:#d9f2e7;color:var(--green)}.lesson.past{opacity:.5}
+.empty{padding:30px 10px;color:var(--muted);text-align:center}
+@media(max-width:650px){header{padding:24px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:14px 6px}.status{grid-column:2;width:max-content}.subject{font-size:15px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="top"><div><div class="eyebrow">PROGRAM ȘCOLAR</div><div class="title">Orarul meu</div><div class="date" id="date"></div></div><div id="dayLabel" class="date"></div></div></div></header>
+<main class="container">
+<nav class="tabs" id="tabs"></nav>
+<section class="hero">
+<div class="card"><div class="label">Următoarea oră</div><div class="next" id="next">—</div><div class="small" id="nextTime">—</div></div>
+<div class="card"><div class="label">Stare</div><div class="count" id="count">—</div><div class="small" id="state">—</div></div>
+</section>
+<section class="card schedule"><div class="schedule-head"><div class="schedule-title" id="selectedTitle">Luni</div></div><div id="lessons"></div></section>
+</main>
+<script>
+const schedule={
+"Luni":[["07:20","08:10","Negociere"],["08:15","09:05","Română"],["09:10","10:00","Proiecte economice"],["10:05","10:55","Proiecte economice"],["11:00","11:50","Comunism"],["11:55","12:45","Negociere"],["12:50","13:40","Geografie"]],
+"Marți":[["07:20","08:10","Geografie"],["08:15","09:05","Politici de marketing"],["09:10","10:00","Matematică"],["10:05","10:55","Analiză economico-financiară"],["11:00","11:50","Dirigenție"],["11:55","12:45","Dirigenție"],["12:50","13:40","Română"]],
+"Miercuri":[["07:20","08:10","Statistică"],["08:15","09:05","Economie aplicată"],["09:10","10:00","Franceză"],["10:05","10:55","Statistică"],["11:00","11:50","Engleză"],["11:55","12:45","Română"]],
+"Joi":[["07:20","08:10","Istorie (Frunză)"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
+"Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]
+};
+const days=Object.keys(schedule), names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
+const now=new Date(), today=names[now.getDay()];
+let selected=days.includes(today)?today:"Luni";
+document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);
+document.getElementById("dayLabel").textContent=today;
+function mins(t){const [h,m]=t.split(":").map(Number);return h*60+m}
+function renderTabs(){document.getElementById("tabs").innerHTML=days.map(d=>`<button class="tab ${d===selected?"active":""} ${d===today?"today":""}" onclick="selectDay('${d}')">${d}</button>`).join("")}
+function selectDay(d){selected=d;renderTabs();render()}
+function render(){
+ document.getElementById("selectedTitle").textContent=selected;
+ const arr=schedule[selected], current=now.getHours()*60+now.getMinutes();
+ let upcoming=arr.find(x=>current<mins(x[0])), currentLesson=arr.find(x=>current>=mins(x[0])&&current<mins(x[1]));
+ document.getElementById("next").textContent=upcoming?upcoming[2]:(currentLesson?currentLesson[2]:"Program încheiat");
+ document.getElementById("nextTime").textContent=upcoming?`${upcoming[0]}–${upcoming[1]}`:(currentLesson?`${currentLesson[0]}–${currentLesson[1]}`:"Nu mai sunt ore azi");
+ document.getElementById("count").textContent=currentLesson?"Acum":(upcoming?"Urmează":"Liber");
+ document.getElementById("state").textContent=currentLesson?`Se desfășoară ${currentLesson[0]}–${currentLesson[1]}`:(upcoming?`Prima oră: ${upcoming[0]}`:"Programul s-a terminat");
+ document.getElementById("lessons").innerHTML=arr.map(x=>{
+   const a=mins(x[0]),b=mins(x[1]), cls=selected===today&&current>=a&&current<b?"current":(selected===today&&current>=b?"past":"");
+   const st=cls==="current"?"ACUM":cls==="past"?"TERMINAT":"";
+   return `<div class="lesson ${cls}"><div class="time">${x[0]}–${x[1]}</div><div class="subject">${x[2]}</div>${st?`<div class="status">${st}</div>`:""}</div>`;
+ }).join("");
+}
+renderTabs();render();
+setInterval(()=>{render()},30000);
+</script>
+</body>
+</html>
