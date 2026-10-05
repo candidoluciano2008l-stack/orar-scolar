@@ -6,64 +6,62 @@
 <meta name="theme-color" content="#0f172a">
 <title>Orarul meu</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#132238;--muted:#718096;--line:#e5eaf0;--blue:#28577f;--blue2:#397daf;--green:#16855b}
+:root{--bg:#f5f7fb;--card:#fff;--text:#132238;--muted:#718096;--line:#e5eaf0;--blue:#28577f;--green:#16855b;--danger:#b42318}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-header{padding:28px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f);color:#fff;border-radius:0 0 28px 28px}
-.wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-end}.eyebrow{font-size:13px;opacity:.75}.title{font-size:34px;font-weight:800;margin:4px 0}.date{font-size:14px;opacity:.82}
-.container{max-width:1000px;margin:auto;padding:18px}
-.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 14px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+header{padding:28px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f);color:#fff;border-radius:0 0 28px 28px}.wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-end}.eyebrow{font-size:13px;opacity:.75}.title{font-size:34px;font-weight:800;margin:4px 0}.date{font-size:14px;opacity:.82}
+.container{max-width:1000px;margin:auto;padding:18px}.tabs{display:flex;gap:8px;overflow:auto;padding:2px 0 14px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
 .tab{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:13px;padding:10px 14px;font-weight:700;white-space:nowrap;cursor:pointer}.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.tab.today:not(.active){box-shadow:inset 0 0 0 2px #6ba7d1}
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 7px 24px rgba(17,38,63,.06)}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 7px 24px rgba(17,38,63,.06)}
 .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}.next{font-size:25px;font-weight:800;margin-top:7px}.small{color:var(--muted);font-size:14px;margin-top:5px}.count{font-size:29px;font-weight:800;margin-top:7px}
 .schedule{overflow:hidden}.schedule-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.schedule-title{font-size:21px;font-weight:800}
-.lesson{display:grid;grid-template-columns:105px 1fr auto;gap:14px;align-items:center;padding:16px 10px;border-top:1px solid var(--line);border-radius:12px}.lesson:first-of-type{border-top:0}.time{font-weight:750;color:var(--blue);font-size:14px}.subject{font-size:16px;font-weight:650}.status{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:#edf2f7;color:#64748b}.lesson.current{background:#eef8f4;box-shadow:inset 4px 0 0 var(--green)}.lesson.current .status{background:#d9f2e7;color:var(--green)}.lesson.past{opacity:.5}
-.empty{padding:30px 10px;color:var(--muted);text-align:center}
-@media(max-width:650px){header{padding:24px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:14px 6px}.status{grid-column:2;width:max-content}.subject{font-size:15px}}
+.lesson{display:grid;grid-template-columns:105px 1fr auto;gap:14px;align-items:center;padding:14px 10px;border-top:1px solid var(--line);border-radius:12px;cursor:pointer}.lesson:first-of-type{border-top:0}.lesson:hover{background:#f7fafc}
+.time{font-weight:750;color:var(--blue);font-size:14px}.subject{font-size:16px;font-weight:650}.comment-count{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:#edf2f7;color:#64748b;white-space:nowrap}.lesson.current{background:#eef8f4;box-shadow:inset 4px 0 0 var(--green)}.lesson.current .comment-count{background:#d9f2e7;color:var(--green)}.lesson.past{opacity:.5}.notice{margin-top:12px;color:var(--muted);font-size:12px}
+.overlay{position:fixed;inset:0;background:rgba(8,18,30,.55);display:none;align-items:flex-end;justify-content:center;z-index:20;padding:12px}.overlay.open{display:flex}.modal{width:min(720px,100%);max-height:92vh;background:#fff;border-radius:24px 24px 16px 16px;overflow:hidden;display:flex;flex-direction:column}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-title{font-weight:800;font-size:21px}.close{border:0;background:#eef2f6;border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
+.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
+.form{border-top:1px solid var(--line);padding:14px 18px;background:#fbfcfd}.row{display:grid;grid-template-columns:150px 1fr;gap:9px}.input,.textarea{width:100%;border:1px solid #d7dee7;border-radius:12px;padding:11px 12px;font:inherit;outline:none;background:#fff}.textarea{resize:vertical;min-height:84px}.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.hint{font-size:12px;color:var(--muted)}.send{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.send:disabled{opacity:.55;cursor:not-allowed}.error{color:var(--danger);font-size:12px;margin-top:7px;min-height:16px}
+@media(max-width:650px){header{padding:24px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:14px 6px}.comment-count{grid-column:2;width:max-content}.row{grid-template-columns:1fr}.overlay{padding:0}.modal{max-height:95vh;border-radius:22px 22px 0 0}}
 </style>
 </head>
 <body>
 <header><div class="wrap"><div class="top"><div><div class="eyebrow">PROGRAM ȘCOLAR</div><div class="title">Orarul meu</div><div class="date" id="date"></div></div><div id="dayLabel" class="date"></div></div></div></header>
 <main class="container">
 <nav class="tabs" id="tabs"></nav>
-<section class="hero">
-<div class="card"><div class="label">Următoarea oră</div><div class="next" id="next">—</div><div class="small" id="nextTime">—</div></div>
-<div class="card"><div class="label">Stare</div><div class="count" id="count">—</div><div class="small" id="state">—</div></div>
-</section>
-<section class="card schedule"><div class="schedule-head"><div class="schedule-title" id="selectedTitle">Luni</div></div><div id="lessons"></div></section>
+<section class="hero"><div class="card"><div class="label">Următoarea oră</div><div class="next" id="next">—</div><div class="small" id="nextTime">—</div></div><div class="card"><div class="label">Stare</div><div class="count" id="count">—</div><div class="small" id="state">—</div></div></section>
+<section class="card schedule"><div class="schedule-head"><div class="schedule-title" id="selectedTitle">Luni</div></div><div id="lessons"></div><div class="notice">Apasă pe o materie pentru teme, anunțuri și comentarii.</div></section>
 </main>
+<div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div class="modal-title" id="modalTitle">—</div><button class="close" id="close" aria-label="Închide">×</button></div><div class="comments" id="comments"><div class="no-comments">Se încarcă…</div></div><form class="form" id="commentForm"><div class="row"><input class="input" id="name" maxlength="30" placeholder="Numele tău" autocomplete="nickname" required><textarea class="textarea" id="message" maxlength="500" placeholder="Scrie tema, un anunț sau un comentariu..." required></textarea></div><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="actions"><div class="hint">Max. 500 caractere.</div><button class="send" id="send" type="submit">Adaugă comentariu</button></div><div class="error" id="error"></div></form></section></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL="https://ezdlwxbcacsbcnjhqqnq.supabase.co";
+const SUPABASE_KEY="sb_publishable_d_MGU7E-oYQgAtvx4xhqAA_8R4S4TGC";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const schedule={
 "Luni":[["07:20","08:10","Negociere"],["08:15","09:05","Română"],["09:10","10:00","Proiecte economice"],["10:05","10:55","Proiecte economice"],["11:00","11:50","Comunism"],["11:55","12:45","Negociere"],["12:50","13:40","Geografie"]],
 "Marți":[["07:20","08:10","Geografie"],["08:15","09:05","Politici de marketing"],["09:10","10:00","Matematică"],["10:05","10:55","Analiză economico-financiară"],["11:00","11:50","Dirigenție"],["11:55","12:45","Dirigenție"],["12:50","13:40","Română"]],
 "Miercuri":[["07:20","08:10","Statistică"],["08:15","09:05","Economie aplicată"],["09:10","10:00","Franceză"],["10:05","10:55","Statistică"],["11:00","11:50","Engleză"],["11:55","12:45","Română"]],
 "Joi":[["07:20","08:10","Istorie (Frunză)"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
-"Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]
-};
-const days=Object.keys(schedule), names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
-const now=new Date(), today=names[now.getDay()];
-let selected=days.includes(today)?today:"Luni";
+"Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]};
+const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"],now=new Date(),today=names[now.getDay()];
+let selected=days.includes(today)?today:"Luni",selectedSubject=null;
 document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);
 document.getElementById("dayLabel").textContent=today;
-function mins(t){const [h,m]=t.split(":").map(Number);return h*60+m}
-function renderTabs(){document.getElementById("tabs").innerHTML=days.map(d=>`<button class="tab ${d===selected?"active":""} ${d===today?"today":""}" onclick="selectDay('${d}')">${d}</button>`).join("")}
-function selectDay(d){selected=d;renderTabs();render()}
-function render(){
- document.getElementById("selectedTitle").textContent=selected;
- const arr=schedule[selected], current=now.getHours()*60+now.getMinutes();
- let upcoming=arr.find(x=>current<mins(x[0])), currentLesson=arr.find(x=>current>=mins(x[0])&&current<mins(x[1]));
- document.getElementById("next").textContent=upcoming?upcoming[2]:(currentLesson?currentLesson[2]:"Program încheiat");
- document.getElementById("nextTime").textContent=upcoming?`${upcoming[0]}–${upcoming[1]}`:(currentLesson?`${currentLesson[0]}–${currentLesson[1]}`:"Nu mai sunt ore azi");
- document.getElementById("count").textContent=currentLesson?"Acum":(upcoming?"Urmează":"Liber");
- document.getElementById("state").textContent=currentLesson?`Se desfășoară ${currentLesson[0]}–${currentLesson[1]}`:(upcoming?`Prima oră: ${upcoming[0]}`:"Programul s-a terminat");
- document.getElementById("lessons").innerHTML=arr.map(x=>{
-   const a=mins(x[0]),b=mins(x[1]), cls=selected===today&&current>=a&&current<b?"current":(selected===today&&current>=b?"past":"");
-   const st=cls==="current"?"ACUM":cls==="past"?"TERMINAT":"";
-   return `<div class="lesson ${cls}"><div class="time">${x[0]}–${x[1]}</div><div class="subject">${x[2]}</div>${st?`<div class="status">${st}</div>`:""}</div>`;
- }).join("");
-}
-renderTabs();render();
-setInterval(()=>{render()},30000);
+const mins=t=>{const[h,m]=t.split(":").map(Number);return h*60+m};
+const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
+async function getCommentCounts(){const{data,error}=await supabaseClient.from("comments").select("subject");if(error)return{};return data.reduce((a,r)=>(a[r.subject]=(a[r.subject]||0)+1,a),{})}
+function renderTabs(){document.getElementById("tabs").innerHTML=days.map(d=>\`<button class="tab \${d===selected?"active":""} \${d===today?"today":""}" onclick="selectDay('\${d}')">\${d}</button>\`).join("")}
+async function render(){document.getElementById("selectedTitle").textContent=selected;const arr=schedule[selected],current=now.getHours()*60+now.getMinutes(),counts=await getCommentCounts(),upcoming=arr.find(x=>current<mins(x[0])),currentLesson=arr.find(x=>current>=mins(x[0])&&current<mins(x[1]));
+document.getElementById("next").textContent=upcoming?upcoming[2]:(currentLesson?currentLesson[2]:"Program încheiat");
+document.getElementById("nextTime").textContent=upcoming?\`\${upcoming[0]}–\${upcoming[1]}\`:(currentLesson?\`\${currentLesson[0]}–\${currentLesson[1]}\`:"Nu mai sunt ore azi");
+document.getElementById("count").textContent=currentLesson?"Acum":(upcoming?"Urmează":"Liber");
+document.getElementById("state").textContent=currentLesson?\`Se desfășoară \${currentLesson[0]}–\${currentLesson[1]}\`:(upcoming?\`Prima oră: \${upcoming[0]}\`:"Programul s-a terminat");
+document.getElementById("lessons").innerHTML=arr.map(x=>{const a=mins(x[0]),b=mins(x[1]),cls=selected===today&&current>=a&&current<b?"current":(selected===today&&current>=b?"past":""),c=counts[x[2]]||0;return \`<div class="lesson \${cls}" onclick='openComments(\${JSON.stringify(x[2])})'><div class="time">\${x[0]}–\${x[1]}</div><div class="subject">\${x[2]}</div><div class="comment-count">\${c} \${c===1?"comentariu":"comentarii"}</div></div>\`}).join("")}
+async function loadComments(){const box=document.getElementById("comments");box.innerHTML='<div class="no-comments">Se încarcă…</div>';const{data,error}=await supabaseClient.from("comments").select("id,subject,name,message,created_at").eq("subject",selectedSubject).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="no-comments">Nu am putut încărca comentariile.</div>';return}if(!data.length){box.innerHTML='<div class="no-comments">Nu există încă comentarii pentru această materie.</div>';return}box.innerHTML="";for(const c of data){const item=document.createElement("article"),meta=document.createElement("div"),n=document.createElement("div"),t=document.createElement("div"),msg=document.createElement("div");item.className="comment";meta.className="comment-meta";n.className="comment-name";t.className="comment-time";msg.className="comment-message";n.textContent=c.name;t.textContent=formatTime(c.created_at);meta.append(n,t);msg.textContent=c.message;item.append(meta,msg);box.appendChild(item)}}
+function openComments(subject){selectedSubject=subject;document.getElementById("modalTitle").textContent=subject;document.getElementById("overlay").classList.add("open");document.body.style.overflow="hidden";document.getElementById("error").textContent="";loadComments()}
+function closeComments(){document.getElementById("overlay").classList.remove("open");document.body.style.overflow="";selectedSubject=null}
+window.selectDay=d=>{selected=d;renderTabs();render()};window.openComments=openComments;
+document.getElementById("close").onclick=closeComments;document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeComments()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeComments()});
+document.getElementById("commentForm").addEventListener("submit",async e=>{e.preventDefault();const error=document.getElementById("error"),button=document.getElementById("send"),name=document.getElementById("name").value.trim(),message=document.getElementById("message").value.trim();if(document.getElementById("website").value)return;if(!selectedSubject||!name||!message){error.textContent="Completează numele și mesajul.";return}const last=Number(localStorage.getItem("commentCooldown")||0);if(Date.now()-last<15000){error.textContent="Așteaptă câteva secunde înainte de a posta din nou.";return}button.disabled=true;error.textContent="";const{error:insertError}=await supabaseClient.from("comments").insert({subject:selectedSubject,name,message});button.disabled=false;if(insertError){error.textContent="Nu s-a putut publica. Încearcă din nou.";return}localStorage.setItem("commentCooldown",String(Date.now()));document.getElementById("message").value="";await loadComments();await render()});
+renderTabs();render();setInterval(render,30000);
+supabaseClient.channel("comments-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{if(selectedSubject)await loadComments();await render()}).subscribe();
 </script>
-</body>
-</html>
+</body></html>
