@@ -254,7 +254,8 @@ function normalizeChange(c){
       to_date:String(c.to_date),
       to_start:c.to_start_time?.slice(0,5) || "",
       to_end:c.to_end_time?.slice(0,5) || "",
-      to_subject:c.to_subject
+      to_subject:c.to_subject,
+      to_original_subject:c.to_original_subject || ""
     };
   }
   return {
@@ -266,8 +267,18 @@ function normalizeChange(c){
     to_date:String(c.change_date),
     to_start:c.start_time?.slice(0,5) || "",
     to_end:c.end_time?.slice(0,5) || "",
-    to_subject:c.replacement_subject
+    to_subject:c.replacement_subject,
+    to_original_subject:""
   };
+}
+function baseSubjectForDateInterval(dateValue,start,end){
+  const weekday=dayNameFromDate(dateValue),arr=schedule[weekday]||[];
+  const lesson=arr.find(x=>x[0]===start&&x[1]===end);
+  return lesson?lesson[2]:"";
+}
+function destinationOriginalSubject(change){
+  const n=normalizeChange(change);
+  return n.to_original_subject || baseSubjectForDateInterval(n.to_date,n.to_start,n.to_end);
 }
 function getChangeForLesson(day,lesson){
   const dateKey=weekDateForDay(day),start=lesson[0],end=lesson[1],subject=lesson[2];
@@ -343,7 +354,7 @@ async function render(){
     let ch="";
     if(eff.status==="replace") ch="<div class='lesson-change'><s>"+escapeHtml(x[2])+"</s> → "+escapeHtml(eff.subject)+"</div>";
     if(eff.status==="moved-away") ch="<div class='lesson-change'>Mutată → "+escapeHtml(dayNameFromDate(eff.change.to_date))+" "+escapeHtml(eff.change.to_start)+"–"+escapeHtml(eff.change.to_end)+"</div>";
-    if(eff.status==="moved-in") ch="<div class='lesson-change'><s>"+escapeHtml(x[2])+"</s> → "+escapeHtml(eff.subject)+" · mutată din "+escapeHtml(dayNameFromDate(eff.change.from_date))+" "+escapeHtml(eff.change.from_start)+"</div>";
+    if(eff.status==="moved-in"){const replaced=destinationOriginalSubject(eff.change)||x[2];ch="<div class='lesson-change'><s>"+escapeHtml(replaced)+"</s> → "+escapeHtml(eff.subject)+" · mutată din "+escapeHtml(dayNameFromDate(eff.change.from_date))+" "+escapeHtml(eff.change.from_start)+"</div>";}
     return "<div class='lesson "+cls+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
   }).join("");
   renderPreviews();
@@ -351,7 +362,7 @@ async function render(){
 function renderPreviews(){
   const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
   document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
-  document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
+  document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
 }
 async function openComments(subject){
   selectedSubject=subject;document.getElementById("modalTitle").textContent=subject;document.getElementById("overlay").classList.add("open");document.body.style.overflow="hidden";document.getElementById("error").textContent="";await loadSubjectTasks();await loadComments();
@@ -381,7 +392,7 @@ function openList(type){
   if(type==="ann"){
     title.textContent="Anunțuri importante";body.innerHTML=announcements.length?announcements.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
   }else{
-    title.textContent="Schimbări de orar";body.innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări de orar.</div>";
+    title.textContent="Schimbări de orar";body.innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări de orar.</div>";
   }
 }
 function closeList(){document.getElementById("listOverlay").classList.remove("open");document.body.style.overflow=""}
@@ -409,7 +420,7 @@ async function openDashboard(){
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
-async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
+async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 async function renderAdminComments(){const r=await supabaseClient.from("comments").select("id,subject,name,message,created_at").order("created_at",{ascending:false});const box=document.getElementById("adminCommentList");box.innerHTML=r.data?.length?r.data.map(c=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(c.subject)+" — "+escapeHtml(c.name)+"</div><div class='dash-item-meta'>"+formatTime(c.created_at)+"</div><div style='margin-top:5px;white-space:pre-wrap'>"+escapeHtml(c.message)+"</div></div><button class='delete-btn' onclick='removeCommentAdmin("+c.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există comentarii.</div>"}
 async function renderAdminAdmins(){
@@ -538,13 +549,14 @@ function findSubjectForSelectedInterval(){
   const lesson=arr.find(x=>x[0]===start&&x[1]===end);
   if(lesson){
     document.getElementById("fromSubject").value=lesson[2];
-    if(document.getElementById("changeType").value==="move"&&!document.getElementById("toSubject").value.trim())document.getElementById("toSubject").value=lesson[2];
+    if(document.getElementById("changeType").value==="move")document.getElementById("toSubject").value=lesson[2];
   }
 }
 document.getElementById("changeType").addEventListener("change",()=>{
   const move=document.getElementById("changeType").value==="move";
   document.getElementById("moveTargetFields").style.display=move?"block":"none";
-  document.getElementById("toSubject").placeholder=move?"Materia care se mută":"Materia de înlocuire";
+  document.getElementById("toSubject").placeholder=move?"Materia mutată":"Materia de înlocuire";
+  document.getElementById("toSubject").readOnly=move;
   document.getElementById("toDate").required=move;
   document.getElementById("toInterval").required=move;
   if(move)document.getElementById("toDate").value=localDateKey(now);
@@ -569,9 +581,10 @@ document.getElementById("changeAdminForm").addEventListener("submit",async e=>{
  const toSubject=document.getElementById("toSubject").value.trim();
  if(!fromDate||!fromInterval.start||!fromInterval.end||!fromSubject||!toDate||!toInterval.start||!toInterval.end||!toSubject){err.textContent="Completează toate câmpurile necesare.";return}
  if(type==="move"&&fromDate===toDate&&fromInterval.start===toInterval.start&&fromInterval.end===toInterval.end){err.textContent="Pentru o mutare, intervalul nou trebuie să fie diferit.";return}
+ const destinationOriginal = type==="move" ? baseSubjectForDateInterval(toDate,toInterval.start,toInterval.end) : "";
  const r=await supabaseClient.from("schedule_changes").insert({
    change_type:type,from_date:fromDate,from_start_time:fromInterval.start,from_end_time:fromInterval.end,from_subject:fromSubject,
-   to_date:toDate,to_start_time:toInterval.start,to_end_time:toInterval.end,to_subject:toSubject,
+   to_date:toDate,to_start_time:toInterval.start,to_end_time:toInterval.end,to_subject:toSubject,to_original_subject:destinationOriginal||null,
    change_date:fromDate,start_time:fromInterval.start,end_time:fromInterval.end,original_subject:fromSubject,replacement_subject:toSubject,
    note:document.getElementById("changeNote").value.trim()||null
  });
