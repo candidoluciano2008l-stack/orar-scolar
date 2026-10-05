@@ -113,7 +113,7 @@ body{background:var(--bg)}
 .side-link span{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.05);color:#91a8bd;font-size:12px;font-weight:900}
 .side-link b{font-size:13px;font-weight:800;letter-spacing:.01em}
 .side-link small{display:none}
-.side-link.active{background:linear-gradient(90deg,#1b5c92,#185078);box-shadow:none}
+.side-link.active{background:linear-gradient(90deg,#1b5c92,#185078);box-shadow:none}.side-link.nav-selected{background:linear-gradient(90deg,#1b5c92,#185078);box-shadow:none}.side-link.nav-selected span{background:rgba(255,255,255,.12);color:#fff}.side-link.nav-selected b{color:#fff}
 .side-link.active span{background:rgba(255,255,255,.12);color:#fff}
 .side-link.active b{color:#fff}
 .side-admin{margin-top:2px}
@@ -236,12 +236,12 @@ body{background:var(--bg)}
   <aside class="sidebar">
     <div class="sidebar-brand"><div class="brand-mark">O</div><div><div class="brand-title">Orarul meu</div><div class="brand-sub">PROGRAM ȘCOLAR</div></div></div>
     <nav class="side-nav">
-      <button class="side-link active" id="todayBtn"><span>⌂</span><b>Acasă</b></button>
-      <button class="side-link" onclick="document.getElementById('scheduleSection').scrollIntoView({behavior:'smooth'})"><span>▣</span><b>Orar</b></button>
-      <button class="side-link" onclick="document.getElementById('tasksSection').scrollIntoView({behavior:'smooth'})"><span>✓</span><b>Teme</b></button>
-      <button class="side-link" id="announcementsBtn"><span>!</span><b>Anunțuri</b></button>
-      <button class="side-link" id="pollsBtn"><span>◫</span><b>Polluri</b></button>
-      <button class="side-link" id="changesBtn"><span>↻</span><b>Schimbări</b></button>
+      <button class="side-link active" id="todayBtn" data-nav="home"><span>⌂</span><b>Acasă</b></button>
+      <button class="side-link" id="scheduleNav" data-nav="schedule"><span>▣</span><b>Orar</b></button>
+      <button class="side-link" id="tasksNav" data-nav="tasks"><span>✓</span><b>Teme</b></button>
+      <button class="side-link" id="announcementsBtn" data-nav="announcements"><span>!</span><b>Anunțuri</b></button>
+      <button class="side-link" id="pollsBtn" data-nav="polls"><span>◫</span><b>Polluri</b></button>
+      <button class="side-link" id="changesBtn" data-nav="changes"><span>↻</span><b>Schimbări</b></button>
     </nav>
     <div class="sidebar-bottom">
       <button class="side-link side-muted" id="themeBtn"><span>☾</span><b id="themeBtnLabel">Temă</b></button>
@@ -756,8 +756,35 @@ async function openList(type){
   }
 }
 function closeList(){document.getElementById("listOverlay").classList.remove("open");document.body.style.overflow=""}
-document.getElementById("announcementsBtn").onclick=()=>openList("ann");document.getElementById("changesBtn").onclick=()=>openList("changes");document.getElementById("pollsBtn").onclick=()=>openList("polls");document.getElementById("openAnnouncements").onclick=()=>openList("ann");document.getElementById("openChanges").onclick=()=>openList("changes");document.getElementById("openPolls").onclick=()=>openList("polls");document.getElementById("listClose").onclick=closeList;document.getElementById("listOverlay").addEventListener("click",e=>{if(e.target.id==="listOverlay")closeList()});
-document.getElementById("todayBtn").onclick=()=>{selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
+function setSideNavActive(key){
+  document.querySelectorAll(".side-link[data-nav]").forEach(btn=>btn.classList.toggle("nav-selected",btn.dataset.nav===key));
+}
+function scrollToSection(sectionId,key){
+  setSideNavActive(key);
+  const el=document.getElementById(sectionId);
+  if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+document.getElementById("todayBtn").onclick=()=>{setSideNavActive("home");selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("scheduleNav").onclick=()=>scrollToSection("scheduleSection","schedule");
+document.getElementById("tasksNav").onclick=()=>scrollToSection("tasksSection","tasks");
+document.getElementById("announcementsBtn").onclick=()=>{setSideNavActive("announcements");openList("ann")};
+document.getElementById("changesBtn").onclick=()=>{setSideNavActive("changes");openList("changes")};
+document.getElementById("pollsBtn").onclick=()=>{setSideNavActive("polls");openList("polls")};
+document.getElementById("openAnnouncements").onclick=()=>{setSideNavActive("announcements");openList("ann")};
+document.getElementById("openChanges").onclick=()=>{setSideNavActive("changes");openList("changes")};
+document.getElementById("openPolls").onclick=()=>{setSideNavActive("polls");openList("polls")};
+const sectionNavTargets=[["scheduleSection","schedule"],["tasksSection","tasks"],["announcementsSection","announcements"],["pollsSection","polls"],["changesSection","changes"]];
+if("IntersectionObserver" in window){
+  const navObserver=new IntersectionObserver(entries=>{
+    const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+    if(visible){
+      const hit=sectionNavTargets.find(x=>x[0]===visible.target.id);
+      if(hit)setSideNavActive(hit[1]);
+    }
+  },{threshold:[0.15,0.35,0.55],rootMargin:"-12% 0px -55% 0px"});
+  sectionNavTargets.forEach(([id])=>{const el=document.getElementById(id);if(el)navObserver.observe(el)});
+}document.getElementById("listClose").onclick=closeList;document.getElementById("listOverlay").addEventListener("click",e=>{if(e.target.id==="listOverlay")closeList()});
+
 
 document.getElementById("commentForm").addEventListener("submit",async e=>{
  e.preventDefault();const error=document.getElementById("error"),button=document.getElementById("send"),name=document.getElementById("name").value.trim(),message=document.getElementById("message").value.trim();
