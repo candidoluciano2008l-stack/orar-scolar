@@ -82,7 +82,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 
 <div class="dash-panel" id="changesPanel">
 <form class="form" id="changeAdminForm" style="border:0;padding:0;background:none">
-  <div class="auth-help" style="margin-bottom:9px">Poți înlocui o oră sau o poți muta complet pe altă zi și alt interval.</div>
+  <div class="auth-help" style="margin-bottom:9px">Alege ziua, intervalul și materia. Pentru o mutare, alegi și intervalul de destinație.</div>
   <div class="grid">
     <select class="select" id="changeType">
       <option value="replace">Înlocuiește ora</option>
@@ -91,22 +91,18 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
     <input class="input" id="fromDate" type="date" required>
   </div>
   <div class="grid" style="margin-top:9px">
-    <input class="input" id="fromStart" type="time" required>
-    <input class="input" id="fromEnd" type="time" required>
+    <select class="select" id="fromInterval" required></select>
+    <select class="select" id="fromSubject" required></select>
   </div>
   <div class="grid" style="margin-top:9px">
-    <select class="select" id="fromSubject" required></select>
-    <input class="input" id="toSubject" list="subjectsList" placeholder="Materia din noul interval" required>
+    <input class="input" id="toSubject" list="subjectsList" placeholder="Materia nouă / mutată" required>
+    <div class="auth-help" style="padding:10px 12px;border:1px dashed var(--line);border-radius:12px">Exemplu: Luni 08:15–09:05 → Joi 10:05–10:55</div>
   </div>
   <datalist id="subjectsList"></datalist>
   <div id="moveTargetFields" style="display:none">
     <div class="grid" style="margin-top:9px">
       <input class="input" id="toDate" type="date">
-      <input class="input" id="toStart" type="time">
-    </div>
-    <div class="grid" style="margin-top:9px">
-      <input class="input" id="toEnd" type="time">
-      <div class="auth-help" style="padding:10px 12px;border:1px dashed var(--line);border-radius:12px">Exemplu: Luni 08:15–09:05 → Joi 10:05–10:55</div>
+      <select class="select" id="toInterval"></select>
     </div>
   </div>
   <textarea class="textarea" id="changeNote" maxlength="500" placeholder="Notă (opțional)" style="margin-top:9px"></textarea>
@@ -503,35 +499,90 @@ document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
  const r=await supabaseClient.from("tasks").insert({subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null});
  if(r.error){err.textContent=r.error.message;return}e.target.reset();document.getElementById("taskType").value="Temă";await loadData();await render();await renderAdminTasks();
 });
+function intervalOptionsForDate(dateValue){
+  if(!dateValue)return [];
+  const weekday=names[new Date(dateValue+"T12:00:00").getDay()];
+  return schedule[weekday]||[];
+}
+function populateIntervalSelect(id,dateValue,preferred=""){
+  const select=document.getElementById(id),arr=intervalOptionsForDate(dateValue);
+  select.innerHTML=arr.length
+    ? arr.map(x=>"<option value='"+x[0]+"|"+x[1]+"'"+(preferred===x[0]+"|"+x[1]?" selected":"")+">"+x[0]+"–"+x[1]+"</option>").join("")
+    : "<option value=''>Nu există ore pentru această zi</option>";
+}
+function getIntervalValue(id){
+  const v=document.getElementById(id).value||"";
+  const [start,end]=v.split("|");
+  return {start:start||"",end:end||""};
+}
+function populateFromSubjects(){
+  const date=document.getElementById("fromDate").value,arr=intervalOptionsForDate(date);
+  const interval=getIntervalValue("fromInterval");
+  const selected=arr.find(x=>x[0]===interval.start&&x[1]===interval.end);
+  const subjects=selected?[selected[2]]:arr.map(x=>x[2]);
+  const select=document.getElementById("fromSubject");
+  select.innerHTML=(subjects.length?subjects:Array.from(new Set(Object.values(schedule).flat().map(x=>x[2])))).map(s=>"<option value='"+escapeHtml(s)+"'>"+escapeHtml(s)+"</option>").join("");
+}
+function populateChangeSubjects(){
+  const subjects=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2])));
+  document.getElementById("subjectsList").innerHTML=subjects.map(s=>"<option value='"+escapeHtml(s)+"'></option>").join("");
+}
+function refreshChangeIntervals(){
+  populateIntervalSelect("fromInterval",document.getElementById("fromDate").value);
+  populateIntervalSelect("toInterval",document.getElementById("toDate").value);
+  populateFromSubjects();
+}
+function findSubjectForSelectedInterval(){
+  const arr=intervalOptionsForDate(document.getElementById("fromDate").value);
+  const {start,end}=getIntervalValue("fromInterval");
+  const lesson=arr.find(x=>x[0]===start&&x[1]===end);
+  if(lesson){
+    document.getElementById("fromSubject").value=lesson[2];
+    if(document.getElementById("changeType").value==="move"&&!document.getElementById("toSubject").value.trim())document.getElementById("toSubject").value=lesson[2];
+  }
+}
 document.getElementById("changeType").addEventListener("change",()=>{
   const move=document.getElementById("changeType").value==="move";
   document.getElementById("moveTargetFields").style.display=move?"block":"none";
-  document.getElementById("toSubject").placeholder=move?"Materia care se mută (de obicei aceeași)":"Materia de înlocuire";
-  document.getElementById("toDate").required=move;document.getElementById("toStart").required=move;document.getElementById("toEnd").required=move;
+  document.getElementById("toSubject").placeholder=move?"Materia care se mută":"Materia de înlocuire";
+  document.getElementById("toDate").required=move;
+  document.getElementById("toInterval").required=move;
+  if(move)document.getElementById("toDate").value=localDateKey(now);
+  refreshChangeIntervals();
+  findSubjectForSelectedInterval();
 });
 document.getElementById("fromDate").value=localDateKey(now);
 document.getElementById("toDate").value=localDateKey(now);
-function populateChangeSubjects(){
-  const subjects=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2])));
-  document.getElementById("fromSubject").innerHTML=subjects.map(s=>"<option value='"+escapeHtml(s)+"'>"+escapeHtml(s)+"</option>").join("");
-  document.getElementById("subjectsList").innerHTML=subjects.map(s=>"<option value='"+escapeHtml(s)+"'></option>").join("");
-}
-populateChangeSubjects();
+document.getElementById("fromDate").addEventListener("change",()=>{refreshChangeIntervals();findSubjectForSelectedInterval()});
+document.getElementById("toDate").addEventListener("change",()=>populateIntervalSelect("toInterval",document.getElementById("toDate").value));
+document.getElementById("fromInterval").addEventListener("change",()=>{populateFromSubjects();findSubjectForSelectedInterval()});
+populateChangeSubjects();refreshChangeIntervals();findSubjectForSelectedInterval();
+
 document.getElementById("changeAdminForm").addEventListener("submit",async e=>{
  e.preventDefault();const err=document.getElementById("changeError");err.textContent="";
  const type=document.getElementById("changeType").value;
- const fromDate=document.getElementById("fromDate").value,fromStart=document.getElementById("fromStart").value,fromEnd=document.getElementById("fromEnd").value,fromSubject=document.getElementById("fromSubject").value;
- const toDate=type==="move"?document.getElementById("toDate").value:fromDate,toStart=type==="move"?document.getElementById("toStart").value:fromStart,toEnd=type==="move"?document.getElementById("toEnd").value:fromEnd,toSubject=document.getElementById("toSubject").value.trim();
- if(!fromDate||!fromStart||!fromEnd||!fromSubject||!toDate||!toStart||!toEnd||!toSubject){err.textContent="Completează toate câmpurile necesare.";return}
- if(type==="move"&&fromDate===toDate&&fromStart===toStart&&fromEnd===toEnd){err.textContent="Pentru o mutare, intervalul nou trebuie să fie diferit.";return}
+ const fromDate=document.getElementById("fromDate").value;
+ const fromInterval=getIntervalValue("fromInterval");
+ const fromSubject=document.getElementById("fromSubject").value;
+ const toDate=type==="move"?document.getElementById("toDate").value:fromDate;
+ const toInterval=type==="move"?getIntervalValue("toInterval"):fromInterval;
+ const toSubject=document.getElementById("toSubject").value.trim();
+ if(!fromDate||!fromInterval.start||!fromInterval.end||!fromSubject||!toDate||!toInterval.start||!toInterval.end||!toSubject){err.textContent="Completează toate câmpurile necesare.";return}
+ if(type==="move"&&fromDate===toDate&&fromInterval.start===toInterval.start&&fromInterval.end===toInterval.end){err.textContent="Pentru o mutare, intervalul nou trebuie să fie diferit.";return}
  const r=await supabaseClient.from("schedule_changes").insert({
-   change_type:type,from_date:fromDate,from_start_time:fromStart,from_end_time:fromEnd,from_subject:fromSubject,
-   to_date:toDate,to_start_time:toStart,to_end_time:toEnd,to_subject:toSubject,
-   change_date:fromDate,start_time:fromStart,end_time:fromEnd,original_subject:fromSubject,replacement_subject:toSubject,
+   change_type:type,from_date:fromDate,from_start_time:fromInterval.start,from_end_time:fromInterval.end,from_subject:fromSubject,
+   to_date:toDate,to_start_time:toInterval.start,to_end_time:toInterval.end,to_subject:toSubject,
+   change_date:fromDate,start_time:fromInterval.start,end_time:fromInterval.end,original_subject:fromSubject,replacement_subject:toSubject,
    note:document.getElementById("changeNote").value.trim()||null
  });
  if(r.error){err.textContent=r.error.message;return}
- e.target.reset();document.getElementById("changeType").value="replace";document.getElementById("moveTargetFields").style.display="none";document.getElementById("fromDate").value=localDateKey(now);document.getElementById("toDate").value=localDateKey(now);populateChangeSubjects();await loadData();await render();await renderAdminChanges();
+ e.target.reset();
+ document.getElementById("changeType").value="replace";
+ document.getElementById("moveTargetFields").style.display="none";
+ document.getElementById("fromDate").value=localDateKey(now);
+ document.getElementById("toDate").value=localDateKey(now);
+ refreshChangeIntervals();populateChangeSubjects();findSubjectForSelectedInterval();
+ await loadData();await render();await renderAdminChanges();
 });
 document.getElementById("announcementAdminForm").addEventListener("submit",async e=>{
  e.preventDefault();const err=document.getElementById("announcementError");err.textContent="";
