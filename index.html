@@ -64,7 +64,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 
 <div class="overlay" id="listOverlay"><section class="modal full"><div class="modal-head"><div class="modal-title" id="listTitle">—</div><button class="close" id="listClose">×</button></div><div class="modal-body" id="listBody"></div></section></div>
 
-<div class="overlay" id="authOverlay"><section class="modal" role="dialog" aria-modal="true" style="max-width:520px"><div class="modal-head"><div class="modal-title">Administrator</div><button class="close" id="authClose">×</button></div><div class="modal-body"><div class="auth-help">Conectează-te cu adresa administratorului. Vei primi un link pe email. Doar contul administrator poate administra conținutul.</div><div id="authStatus" class="auth-help" style="margin-top:10px"></div></div><form class="form" id="authForm"><div class="grid"><input class="input" id="adminEmail" type="email" value="candidoluciano2008l@gmail.com" placeholder="adresa ta de email" autocomplete="email" required></div><div class="actions"><div class="hint">Magic link</div><button class="send" id="authSend" type="submit">Trimite linkul</button></div><div class="error" id="authError"></div></form></section></div>
+<div class="overlay" id="authOverlay"><section class="modal" role="dialog" aria-modal="true" style="max-width:520px"><div class="modal-head"><div class="modal-title">Administrator</div><button class="close" id="authClose">×</button></div><div class="modal-body"><div class="auth-help">Autentificare cu email și parolă. Nu este nevoie de Magic Link la fiecare conectare.</div><div id="authStatus" class="auth-help" style="margin-top:10px"></div></div><form class="form" id="authForm"><div class="grid"><input class="input" id="adminEmail" type="email" value="candidoluciano2008l@gmail.com" placeholder="adresa de email" autocomplete="email" required><input class="input" id="adminPassword" type="password" placeholder="Parolă" autocomplete="current-password" minlength="8" required></div><div class="actions"><div class="hint">Minim 8 caractere</div><button class="send" id="authSend" type="submit">Autentificare</button></div><div class="error" id="authError"></div></form></section></div>
 
 <div class="overlay" id="dashboardOverlay"><section class="modal full"><div class="modal-head"><div class="modal-title">Admin Dashboard</div><div style="display:flex;gap:8px"><button class="quick" id="logoutBtn">Delogare</button><button class="close" id="dashboardClose">×</button></div></div><div class="modal-body">
 <div class="dashboard-tabs">
@@ -73,6 +73,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 <button class="dash-tab" data-panel="announcementsPanel">Anunțuri</button>
 <button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
 <button class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
+<button class="dash-tab" data-panel="securityPanel">Securitate</button>
 </div>
 
 <div class="dash-panel active" id="tasksPanel">
@@ -89,17 +90,33 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 
 <div class="dash-panel" id="commentsPanel"><div class="dash-list" id="adminCommentList"></div></div>
 
+<div class="dash-panel" id="securityPanel">
+  <div class="auth-help" style="margin-bottom:10px">Schimbă parola contului cu care ești autentificat. Această operațiune nu trimite niciun email.</div>
+  <form class="form" id="passwordForm" style="border:0;padding:0;background:none">
+    <div class="grid">
+      <input class="input" id="myPassword" type="password" placeholder="Parolă nouă" autocomplete="new-password" minlength="8" required>
+      <input class="input" id="myPassword2" type="password" placeholder="Confirmă parola" autocomplete="new-password" minlength="8" required>
+    </div>
+    <div class="actions"><span class="hint">Minim 8 caractere</span><button class="send" type="submit">Schimbă parola</button></div>
+    <div class="error" id="passwordError"></div>
+  </form>
+</div>
+
 <div class="dash-panel" id="adminsPanel">
   <div class="auth-help" style="margin-bottom:10px">Doar Super Admin poate adăuga, promova sau elimina administratori.</div>
   <form class="form" id="adminManageForm" style="border:0;padding:0;background:none">
     <div class="grid">
-      <input class="input" id="newAdminEmail" type="email" placeholder="email@exemplu.ro" required>
+      <input class="input" id="newAdminEmail" type="email" placeholder="email@exemplu.ro" autocomplete="email" required>
       <select class="select" id="newAdminRole">
         <option value="admin">Administrator</option>
         <option value="superadmin">Super Admin</option>
       </select>
     </div>
-    <div class="actions"><span class="hint">Persoana se va autentifica prin Magic Link.</span><button class="send" type="submit">Adaugă administrator</button></div>
+    <div class="grid" style="margin-top:9px">
+      <input class="input" id="newAdminPassword" type="password" placeholder="Parola inițială" autocomplete="new-password" minlength="8" required>
+      <input class="input" id="newAdminPassword2" type="password" placeholder="Confirmă parola" autocomplete="new-password" minlength="8" required>
+    </div>
+    <div class="actions"><span class="hint">Minim 8 caractere. Fără email.</span><button class="send" type="submit">Creează administrator</button></div>
     <div class="error" id="adminManageError"></div>
   </form>
   <div class="dash-list" id="adminList"></div>
@@ -150,17 +167,19 @@ async function refreshAuth(){
   const adminsTab=document.getElementById("adminsTab");
   if(adminsTab) adminsTab.style.display=isSuperAdmin?"inline-flex":"none";
 }
-async function requestAdminLink(){
+async function authenticateAdmin(){
   const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");
-  const emailInput=document.getElementById("adminEmail");
-  const email=(emailInput.value||"").trim().toLowerCase();
+  const emailInput=document.getElementById("adminEmail"),passwordInput=document.getElementById("adminPassword");
+  const email=(emailInput.value||"").trim().toLowerCase(),password=passwordInput.value||"";
   status.textContent="";err.textContent="";
   if(!email||!emailInput.checkValidity()){err.textContent="Introdu o adresă de email validă.";return}
+  if(password.length<8){err.textContent="Parola trebuie să aibă cel puțin 8 caractere.";return}
   btn.disabled=true;
-  const redirectTo=window.location.origin+window.location.pathname;
-  const r=await supabaseClient.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:redirectTo}});
-  btn.disabled=false;if(r.error){err.textContent=r.error.message;return}
-  status.textContent="Linkul a fost trimis. Deschide emailul și revino pe site.";
+  const r=await supabaseClient.auth.signInWithPassword({email,password});
+  btn.disabled=false;
+  if(r.error){err.textContent="Email sau parolă incorectă.";return}
+  document.getElementById("authOverlay").classList.remove("open");document.body.style.overflow="";
+  await refreshAuth();
 }
 
 async function loadData(){
@@ -265,7 +284,7 @@ document.getElementById("commentForm").addEventListener("submit",async e=>{
 
 document.getElementById("adminBtn").onclick=async()=>{if(isAdmin){document.getElementById("dashboardOverlay").classList.add("open");document.body.style.overflow="hidden";await openDashboard();}else{document.getElementById("authOverlay").classList.add("open");document.body.style.overflow="hidden"}};
 document.getElementById("authClose").onclick=()=>{document.getElementById("authOverlay").classList.remove("open");document.body.style.overflow=""};
-document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefault();requestAdminLink()});
+document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefault();authenticateAdmin()});
 document.getElementById("dashboardClose").onclick=()=>{document.getElementById("dashboardOverlay").classList.remove("open");document.body.style.overflow=""};document.getElementById("logoutBtn").onclick=async()=>{await supabaseClient.auth.signOut();document.getElementById("dashboardOverlay").classList.remove("open");document.body.style.overflow="";await refreshAuth()};
 
 async function openDashboard(){
@@ -294,23 +313,56 @@ window.removeChange=async id=>{await adminDelete("schedule_changes",id);await lo
 window.removeAnnouncement=async id=>{await adminDelete("announcements",id);await loadData();await render();await renderAdminAnnouncements()};
 window.removeCommentAdmin=async id=>{await adminDelete("comments",id);await loadData();await render();await renderAdminComments()};
 
+async function callAdminAuth(action,payload={}){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session?.access_token) throw new Error("Sesiunea a expirat. Autentifică-te din nou.");
+  const r=await fetch(SUPABASE_URL+"/functions/v1/admin-auth",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+session.access_token,
+      "apikey":SUPABASE_KEY
+    },
+    body:JSON.stringify({action,...payload})
+  });
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok||data.error)throw new Error(data.error||"Operațiunea nu a reușit.");
+  return data;
+}
+
 document.getElementById("adminManageForm").addEventListener("submit",async e=>{
   e.preventDefault();
   if(!isSuperAdmin)return;
   const err=document.getElementById("adminManageError");err.textContent="";
   const email=document.getElementById("newAdminEmail").value.trim().toLowerCase();
+  const password=document.getElementById("newAdminPassword").value;
+  const password2=document.getElementById("newAdminPassword2").value;
   const role=document.getElementById("newAdminRole").value;
   if(!email||!document.getElementById("newAdminEmail").checkValidity()){err.textContent="Introdu o adresă de email validă.";return}
-  const r=await supabaseClient.from("admins").upsert({email,role},{onConflict:"email"});
-  if(r.error){err.textContent=r.error.message;return}
-  e.target.reset();document.getElementById("newAdminRole").value="admin";await renderAdminAdmins();
+  if(password.length<8){err.textContent="Parola trebuie să aibă cel puțin 8 caractere.";return}
+  if(password!==password2){err.textContent="Parolele nu coincid.";return}
+  try{
+    await callAdminAuth("create_user",{email,password,role});
+    e.target.reset();document.getElementById("newAdminRole").value="admin";await renderAdminAdmins();
+  }catch(error){err.textContent=error.message}
 });
+
 window.removeAdmin=async email=>{
   if(!isSuperAdmin||email.toLowerCase()===(currentUser?.email||"").toLowerCase())return;
-  const r=await supabaseClient.from("admins").delete().eq("email",email);
-  if(r.error){document.getElementById("adminManageError").textContent=r.error.message;return}
-  await renderAdminAdmins();
+  const err=document.getElementById("adminManageError");err.textContent="";
+  try{await callAdminAuth("delete_user",{email});await renderAdminAdmins()}
+  catch(error){err.textContent=error.message}
 };
+
+document.getElementById("passwordForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const err=document.getElementById("passwordError");err.textContent="";
+  const p=document.getElementById("myPassword").value,p2=document.getElementById("myPassword2").value;
+  if(p.length<8){err.textContent="Parola trebuie să aibă cel puțin 8 caractere.";return}
+  if(p!==p2){err.textContent="Parolele nu coincid.";return}
+  try{await callAdminAuth("set_password",{password:p});e.target.reset();err.textContent="Parola a fost schimbată.";err.style.color="var(--green)"}
+  catch(error){err.textContent=error.message;err.style.color="var(--danger)"}
+});
 document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
  e.preventDefault();const err=document.getElementById("taskError");err.textContent="";
  const r=await supabaseClient.from("tasks").insert({subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null});
