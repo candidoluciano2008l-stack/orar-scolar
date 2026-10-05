@@ -41,7 +41,7 @@ const schedule={
 "Miercuri":[["07:20","08:10","Statistică"],["08:15","09:05","Economie aplicată"],["09:10","10:00","Franceză"],["10:05","10:55","Statistică"],["11:00","11:50","Engleză"],["11:55","12:45","Română"]],
 "Joi":[["07:20","08:10","Istorie (Frunză)"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
 "Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]};
-const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"],now=new Date(),today=names[now.getDay()];
+const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];\nlet now=new Date(),today=names[now.getDay()];
 let selected=days.includes(today)?today:"Luni",selectedSubject=null;
 document.getElementById("date").textContent=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long"}).format(now);
 document.getElementById("dayLabel").textContent=today;
@@ -61,7 +61,7 @@ function closeComments(){document.getElementById("overlay").classList.remove("op
 window.selectDay=d=>{selected=d;renderTabs();render()};window.openComments=openComments;
 document.getElementById("close").onclick=closeComments;document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeComments()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeComments()});
 document.getElementById("commentForm").addEventListener("submit",async e=>{e.preventDefault();const error=document.getElementById("error"),button=document.getElementById("send"),name=document.getElementById("name").value.trim(),message=document.getElementById("message").value.trim();if(document.getElementById("website").value)return;if(!selectedSubject||!name||!message){error.textContent="Completează numele și mesajul.";return}const last=Number(localStorage.getItem("commentCooldown")||0);if(Date.now()-last<15000){error.textContent="Așteaptă câteva secunde înainte de a posta din nou.";return}button.disabled=true;error.textContent="";const{error:insertError}=await supabaseClient.from("comments").insert({subject:selectedSubject,name,message});button.disabled=false;if(insertError){error.textContent="Nu s-a putut publica. Încearcă din nou.";return}localStorage.setItem("commentCooldown",String(Date.now()));document.getElementById("message").value="";await loadComments();await render()});
-renderTabs();render();setInterval(render,30000);
+renderTabs();render();setInterval(()=>{now=new Date();today=names[now.getDay()];renderTabs();render()},30000);
 supabaseClient.channel("comments-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{if(selectedSubject)await loadComments();await render()}).subscribe();
 </script>
 </body></html>
