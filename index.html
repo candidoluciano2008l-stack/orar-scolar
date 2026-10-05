@@ -264,6 +264,47 @@ body{background:var(--bg)}
   .stat-value{font-size:19px}
 }
 </style>
+<style>
+/* Medium / mobile Model A: keep the left navigation rail. */
+@media(max-width:760px){
+  html,body{overflow-x:hidden}
+  .app-shell{display:grid !important;grid-template-columns:68px minmax(0,1fr) !important;width:100%;min-width:0}
+  .sidebar{position:sticky !important;top:0 !important;width:68px !important;height:100vh !important;min-height:100vh !important;padding:12px 6px !important;border-right:1px solid rgba(255,255,255,.08) !important;border-bottom:0 !important;z-index:30}
+  .sidebar-brand{justify-content:center !important;padding:2px 0 18px !important}
+  .brand-mark{width:38px !important;height:38px !important}
+  .brand-title,.brand-sub{display:none !important}
+  .side-nav{display:flex !important;flex-direction:column !important;gap:6px !important;overflow:visible !important;padding:0 !important}
+  .side-link{flex:0 0 auto !important;width:100% !important;min-width:0 !important;height:46px !important;min-height:46px !important;padding:7px 5px !important;justify-content:center !important;align-items:center !important;gap:0 !important;border-radius:11px !important}
+  .side-link span{display:grid !important;width:28px !important;height:28px !important;font-size:12px !important}
+  .side-link b{display:none !important}
+  .sidebar-bottom{display:flex !important;flex-direction:column !important;gap:6px !important;margin-top:auto !important}
+  .sidebar-bottom .side-link{width:100% !important}
+  .main-shell{width:100% !important;min-width:0 !important}
+  .topbar{position:sticky !important;top:0 !important;width:100% !important;height:54px !important;padding:0 12px !important}
+  .topbar-left{min-width:0 !important;flex:1 !important}
+  .topbar-date{margin-left:auto !important}
+  .mobile-brand{display:none !important}
+  .topbar .status-pill{display:block !important;font-size:10px;padding:5px 8px}
+  .dashboard-main{width:100% !important;max-width:none !important;margin:0 !important;padding:14px 12px 30px !important;overflow:hidden}
+  .welcome-card{width:100% !important;min-height:132px !important;padding:20px !important;margin-bottom:12px !important}
+  .welcome-copy h1{font-size:29px !important}
+  .welcome-date{display:none !important}
+  .welcome-art{display:none !important}
+  .stat-grid{grid-template-columns:1fr !important;gap:9px !important}
+  .stat-card{min-height:88px !important}
+  .dashboard-grid-main,.dashboard-grid-lower{grid-template-columns:1fr !important}
+  .dashboard-card{width:100% !important;min-width:0 !important}
+  .schedule-card .lesson{grid-template-columns:78px minmax(0,1fr) !important;gap:8px !important}
+}
+@media(max-width:520px){
+  .app-shell{grid-template-columns:62px minmax(0,1fr) !important}
+  .sidebar{width:62px !important;padding-left:5px !important;padding-right:5px !important}
+  .brand-mark{width:36px !important;height:36px !important}
+  .topbar{height:50px !important;padding:0 9px !important}
+  .topbar .status-pill{display:none !important}
+  .dashboard-main{padding:10px 9px 24px !important}
+}
+</style>
 </head>
 <body>
 <div class="app-shell">
