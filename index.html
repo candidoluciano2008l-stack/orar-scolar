@@ -30,6 +30,11 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .notice{margin-top:12px;color:var(--muted);font-size:12px}
 .section{margin-top:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title{font-size:20px;font-weight:800}
 .notice-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}
+.chat-shell{display:flex;flex-direction:column;gap:14px;min-height:0}.chat-messages{display:flex;flex-direction:column;gap:9px;height:min(60vh,650px);overflow:auto;padding:2px}.chat-message{padding:12px 14px;border:1px solid var(--line);border-radius:15px;background:var(--card);box-shadow:var(--shadow)}
+.chat-page{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow);min-height:calc(100vh - 120px)}.chat-page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;padding:6px 3px 17px;border-bottom:1px solid var(--line);margin-bottom:14px}.chat-page-head h1{font-size:30px;line-height:1;margin:5px 0 7px}.chat-page-head p{margin:0;color:var(--muted);font-size:13px}.chat-page-online{display:flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid var(--line);border-radius:999px;font-size:11px;font-weight:800;color:var(--muted);white-space:nowrap}
+.chat-page .chat-messages{height:calc(100vh - 330px);min-height:320px;max-height:none}.chat-page .chat-composer{position:sticky;bottom:0;background:var(--card);border:1px solid var(--line);box-shadow:0 -8px 18px rgba(0,0,0,.03)}
+.chat-page .chat-composer .grid{grid-template-columns:1fr}
+@media(max-width:760px){.chat-page{min-height:calc(100vh - 95px);padding:13px;border-radius:15px}.chat-page-head{align-items:flex-start;flex-direction:column}.chat-page-head h1{font-size:26px}.chat-page .chat-messages{height:calc(100vh - 330px);min-height:280px}}
 .chat-shell{display:flex;flex-direction:column;gap:12px;min-height:0}.chat-messages{display:flex;flex-direction:column;gap:8px;max-height:58vh;overflow:auto;padding:2px}.chat-message{padding:11px 13px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.chat-message-meta{display:flex;justify-content:space-between;gap:10px;align-items:center}.chat-message-name{font-weight:900}.chat-message-time{font-size:11px;color:var(--muted);white-space:nowrap}.chat-message-text{margin-top:5px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}.chat-composer{border:1px solid var(--line);border-radius:15px;padding:12px;background:rgba(127,150,180,.04)}.chat-composer .input,.chat-composer .textarea{margin-bottom:8px}.chat-composer .textarea{min-height:80px}.chat-delete{margin-left:auto}.notice-card.pinned{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.notice-title{font-weight:800;font-size:16px}.notice-message{margin-top:6px;line-height:1.45;white-space:pre-wrap}.notice-meta{font-size:12px;color:var(--muted);margin-top:9px}
 .change-card{padding:13px 15px;border:1px solid var(--line);border-radius:15px;margin-bottom:8px;background:var(--card)}.change-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.change-date{font-weight:800}.change-sub{font-weight:700;color:var(--danger)}.change-note{margin-top:5px;color:var(--muted);font-size:13px}
 .name-gate{position:fixed;inset:0;z-index:100;background:rgba(6,16,28,.72);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:18px}
@@ -488,6 +493,18 @@ body{background:var(--bg)}
       <section class="dashboard-card" id="changesSection">
         <div class="section-head"><div><div class="section-title">Schimbări recente</div><div class="section-subtitle">Modificări aplicate programului.</div></div><button class="quick" id="openChanges">Vezi toate</button></div>
         <div id="changePreview"></div>
+      </section>
+
+      <section class="chat-page" id="chatPage" style="display:none">
+        <div class="chat-page-head">
+          <div>
+            <div class="eyebrow">DISCUȚII PUBLICE</div>
+            <h1>Chat public</h1>
+            <p>Vorbește cu ceilalți elevi de pe site.</p>
+          </div>
+          <div class="chat-page-online"><span class="online-dot"></span><span id="chatOnlineCount">Online</span></div>
+        </div>
+        <div id="chatPageBody"></div>
       </section>
     </main>
   </div>
@@ -1176,7 +1193,7 @@ document.getElementById("taskImageViewerClose").onclick=closeTaskImage;
 document.getElementById("taskImageViewer").addEventListener("click",e=>{if(e.target.id==="taskImageViewer")closeTaskImage()});
 
 async function loadChat(){
-  const body=document.getElementById("listBody");
+  const body=document.getElementById("chatPageBody")||document.getElementById("listBody");
   const r=await supabaseClient.from("chat_messages").select("id,name,message,created_at").order("created_at",{ascending:true}).limit(200);
   if(r.error){body.innerHTML="<div class='empty'>Nu am putut încărca chatul.</div>";return}
   const messages=r.data||[];
@@ -1208,7 +1225,7 @@ async function submitChat(e){
 async function deleteChatMessage(id){
   const r=await supabaseClient.from("chat_messages").delete().eq("id",id);
   if(r.error)return;
-  if(document.getElementById("listOverlay").classList.contains("open")&&document.getElementById("listTitle").textContent==="Chat public")await loadChat();
+  if(document.getElementById("chatPage")?.style.display!=="none")await loadChat();
 }
 async function openList(type){
   document.getElementById("listOverlay").classList.add("open");document.body.style.overflow="hidden";const title=document.getElementById("listTitle"),body=document.getElementById("listBody");
@@ -1219,7 +1236,7 @@ async function openList(type){
   }else if(type==="polls"){
     title.textContent="Polluri";body.innerHTML=await renderPollCards(polls.filter(p=>!p.closed),"list");
   }else if(type==="chat"){
-    title.textContent="Chat public";await loadChat();
+    closeList();showChatPage();return;
   }
 }
 function closeList(){document.getElementById("listOverlay").classList.remove("open");document.body.style.overflow=""}
@@ -1234,13 +1251,25 @@ function scrollToSection(sectionId,key){
   const el=document.getElementById(sectionId);
   if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
 }
-document.getElementById("todayBtn").onclick=()=>{setSideNavActive("home");selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
-document.getElementById("scheduleNav").onclick=()=>scrollToSection("scheduleSection","schedule");
-document.getElementById("tasksNav").onclick=()=>scrollToSection("tasksSection","tasks");
-document.getElementById("announcementsBtn").onclick=()=>{setSideNavActive("announcements");openList("ann")};
-document.getElementById("changesBtn").onclick=()=>{setSideNavActive("changes");openList("changes")};
-document.getElementById("pollsBtn").onclick=()=>{setSideNavActive("polls");openList("polls")};
-document.getElementById("chatBtn").onclick=()=>{setSideNavActive("chat");openList("chat")};
+document.getElementById("todayBtn").onclick=()=>{showHomePage();setSideNavActive("home");selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("scheduleNav").onclick=()=>{showHomePage();scrollToSection("scheduleSection","schedule")};
+document.getElementById("tasksNav").onclick=()=>{showHomePage();scrollToSection("tasksSection","tasks")};
+document.getElementById("announcementsBtn").onclick=()=>{showHomePage();setSideNavActive("announcements");openList("ann")};
+document.getElementById("changesBtn").onclick=()=>{showHomePage();setSideNavActive("changes");openList("changes")};
+document.getElementById("pollsBtn").onclick=()=>{showHomePage();setSideNavActive("polls");openList("polls")};
+function showChatPage(){
+  document.querySelectorAll(".dashboard-main > *").forEach(el=>{el.style.display=el.id==="chatPage"?"block":"none"});
+  document.querySelector(".dashboard-main")?.scrollTo?.({top:0,behavior:"smooth"});
+  window.scrollTo({top:0,behavior:"smooth"});
+  loadChat();
+  const state=onlineChannel?.presenceState?.()||{};
+  const count=Object.values(state).flat().filter(x=>String(x?.name||"").trim()).length;
+  const online=document.getElementById("chatOnlineCount");if(online)online.textContent=count+" online";
+}
+function showHomePage(){
+  document.querySelectorAll(".dashboard-main > *").forEach(el=>{if(el.id==="chatPage")el.style.display="none";else el.style.display=""});
+}
+document.getElementById("chatBtn").onclick=()=>{setSideNavActive("chat");showChatPage()};
 document.getElementById("openAnnouncements").onclick=()=>{setSideNavActive("announcements");openList("ann")};
 document.getElementById("openChanges").onclick=()=>{setSideNavActive("changes");openList("changes")};
 document.getElementById("openPolls").onclick=()=>{setSideNavActive("polls");openList("polls")};
@@ -1597,7 +1626,7 @@ document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
 });
 
 supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
-supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("listOverlay").classList.contains("open")&&document.getElementById("listTitle").textContent==="Chat public")await loadChat()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()})
+supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none")await loadChat()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()})
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls()})
 .on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin){await renderAdminPolls();renderAdminOverviewStats()}}).subscribe();
 
@@ -1628,6 +1657,7 @@ async function renderOnlineUsers(){
   users.sort((a,b)=>a.name.localeCompare(b.name,"ro",{sensitivity:"base"}));
   countEl.textContent=String(users.length);
   const statOnline=document.getElementById("adminStatOnline");if(statOnline)statOnline.textContent=String(users.length);
+  const chatOnline=document.getElementById("chatOnlineCount");if(chatOnline)chatOnline.textContent=String(users.length)+" online";
   listEl.innerHTML=users.length?users.map(u=>"<div class='online-user'><span class='online-dot'></span><div class='online-user-name'>"+escapeHtml(u.name)+"</div><div class='online-user-meta'>Online</div></div>").join(""):"<div class='empty'>Nu este nimeni online.</div>";
 }
 async function startOnlinePresence(){
