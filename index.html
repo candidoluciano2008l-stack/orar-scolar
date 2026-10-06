@@ -32,6 +32,13 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .notice-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}
 .chat-shell{display:flex;flex-direction:column;gap:12px;min-height:0}.chat-messages{display:flex;flex-direction:column;gap:8px;max-height:58vh;overflow:auto;padding:2px}.chat-message{padding:11px 13px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.chat-message-meta{display:flex;justify-content:space-between;gap:10px;align-items:center}.chat-message-name{font-weight:900}.chat-message-time{font-size:11px;color:var(--muted);white-space:nowrap}.chat-message-text{margin-top:5px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}.chat-composer{border:1px solid var(--line);border-radius:15px;padding:12px;background:rgba(127,150,180,.04)}.chat-composer .input,.chat-composer .textarea{margin-bottom:8px}.chat-composer .textarea{min-height:80px}.chat-delete{margin-left:auto}.notice-card.pinned{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.notice-title{font-weight:800;font-size:16px}.notice-message{margin-top:6px;line-height:1.45;white-space:pre-wrap}.notice-meta{font-size:12px;color:var(--muted);margin-top:9px}
 .change-card{padding:13px 15px;border:1px solid var(--line);border-radius:15px;margin-bottom:8px;background:var(--card)}.change-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.change-date{font-weight:800}.change-sub{font-weight:700;color:var(--danger)}.change-note{margin-top:5px;color:var(--muted);font-size:13px}
+.name-gate{position:fixed;inset:0;z-index:100;background:rgba(6,16,28,.72);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:18px}
+.name-gate.hidden{display:none}.name-gate-card{width:min(440px,100%);background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.name-gate-brand{font-size:12px;font-weight:900;letter-spacing:.1em;color:var(--blue);text-transform:uppercase}
+.name-gate-title{font-size:28px;font-weight:900;margin:7px 0 8px}.name-gate-copy{color:var(--muted);line-height:1.45;font-size:14px;margin-bottom:18px}
+.name-gate-error{min-height:18px;color:var(--danger);font-size:12px;margin-top:8px}
+.site-locked{overflow:hidden}
+@media(max-width:520px){.name-gate{padding:12px}.name-gate-card{padding:20px;border-radius:20px}.name-gate-title{font-size:24px}}
 .overlay{position:fixed;inset:0;background:rgba(8,18,30,.58);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:12px}.overlay.open{display:flex}.modal{width:min(780px,100%);max-height:92vh;background:var(--card);border-radius:24px 24px 16px 16px;overflow:hidden;display:flex;flex-direction:column}.modal.full{width:min(1080px,100%);max-height:94vh}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-title{font-weight:800;font-size:21px}.close{border:0;background:rgba(127,150,180,.13);color:var(--text);border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
 .modal-body{padding:15px 18px;overflow:auto}.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
 .form{border-top:1px solid var(--line);padding:14px 18px;background:rgba(127,150,180,.04)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}.row{display:grid;grid-template-columns:150px 1fr;gap:9px}.input,.textarea,.select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;outline:none;background:var(--card);color:var(--text)}.textarea{resize:vertical;min-height:84px}.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.hint{font-size:12px;color:var(--muted)}.send{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.send:disabled{opacity:.55;cursor:not-allowed}.error{color:var(--danger);font-size:12px;margin-top:7px;min-height:16px}
@@ -446,6 +453,19 @@ body{background:var(--bg)}
   </div>
 </div>
 
+<div class="name-gate" id="nameGate" aria-modal="true" role="dialog">
+  <div class="name-gate-card">
+    <div class="name-gate-brand">ORARUL MEU</div>
+    <div class="name-gate-title">Bun venit!</div>
+    <div class="name-gate-copy">Înainte să intri pe site, scrie numele cu care vrei să apari în chat și în lista de utilizatori online.</div>
+    <form id="nameGateForm">
+      <input class="input" id="visitorName" maxlength="30" autocomplete="name" placeholder="Numele tău" required>
+      <button class="send" style="width:100%;margin-top:10px" type="submit">Intră pe site</button>
+      <div class="name-gate-error" id="nameGateError"></div>
+    </form>
+  </div>
+</div>
+
 <div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div class="modal-title" id="modalTitle">—</div><button class="close" id="close">×</button></div><div class="modal-body"><div id="subjectTasks"></div><h3 style="margin:18px 0 8px">Comentarii</h3><div class="comments" id="comments" style="padding:0;overflow:visible"><div class="no-comments">Se încarcă…</div></div></div><form class="form" id="commentForm"><div class="row"><input class="input" id="name" maxlength="30" placeholder="Numele tău" autocomplete="nickname" required><textarea class="textarea" id="message" maxlength="500" placeholder="Scrie tema, un anunț sau un comentariu..." required></textarea></div><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="actions"><div class="hint">Max. 500 caractere.</div><button class="send" id="send" type="submit">Adaugă comentariu</button></div><div class="error" id="error"></div></form></section></div>
 
 <div class="overlay" id="listOverlay"><section class="modal full"><div class="modal-head"><div class="modal-title" id="listTitle">—</div><button class="close" id="listClose">×</button></div><div class="modal-body" id="listBody"></div></section></div>
@@ -615,6 +635,7 @@ const fmtDate=d=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"long",yea
 const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 const isTaskActive=t=>Boolean(t?.deadline)&&String(t.deadline)>=localDateKey(now);
+const getVisitorName=()=>String(localStorage.getItem("visitorName")||"").trim();
 
 function isStandalonePwa(){return window.navigator.standalone===true||window.matchMedia?.("(display-mode: standalone)").matches===true}
 function base64ToUint8Array(value){const pad="=".repeat((4-value.length%4)%4),b64=(value+pad).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(b64);return Uint8Array.from(raw,c=>c.charCodeAt(0))}
@@ -1016,15 +1037,15 @@ async function loadChat(){
     const del=isAdmin?"<button class='delete-btn chat-delete' onclick='deleteChatMessage("+m.id+")'>Șterge</button>":"";
     return "<article class='chat-message'><div class='chat-message-meta'><div class='chat-message-name'>"+escapeHtml(m.name)+"</div><div style='display:flex;gap:8px;align-items:center'><div class='chat-message-time'>"+formatTime(m.created_at)+"</div>"+del+"</div></div><div class='chat-message-text'>"+escapeHtml(m.message)+"</div></article>";
   }).join(""):"<div class='empty'>Nu a scris nimeni încă. Fii primul!</div>";
-  body.innerHTML="<div class='chat-shell'><div class='chat-messages' id='chatMessages'>"+cards+"</div><form class='chat-composer' id='chatForm'><div class='grid'><input class='input' id='chatName' maxlength='30' placeholder='Numele tău' autocomplete='nickname' required><span></span></div><textarea class='textarea' id='chatMessage' maxlength='500' placeholder='Scrie un mesaj pentru toată lumea...' required></textarea><input id='chatWebsite' tabindex='-1' autocomplete='off' aria-hidden='true' style='position:absolute;left:-9999px'><div class='actions'><div class='hint'>Max. 500 caractere. Așteaptă 5 secunde între mesaje.</div><button class='send' id='chatSend' type='submit'>Trimite</button></div><div class='error' id='chatError'></div></form></div>";
-  const saved=localStorage.getItem("chatName");if(saved)document.getElementById("chatName").value=saved;
+  body.innerHTML="<div class='chat-shell'><div class='chat-messages' id='chatMessages'>"+cards+"</div><form class='chat-composer' id='chatForm'><div class='grid'><input class='input' id='chatName' maxlength='30' placeholder='Numele tău' autocomplete='nickname' value='' required><span></span></div><textarea class='textarea' id='chatMessage' maxlength='500' placeholder='Scrie un mesaj pentru toată lumea...' required></textarea><input id='chatWebsite' tabindex='-1' autocomplete='off' aria-hidden='true' style='position:absolute;left:-9999px'><div class='actions'><div class='hint'>Max. 500 caractere. Așteaptă 5 secunde între mesaje.</div><button class='send' id='chatSend' type='submit'>Trimite</button></div><div class='error' id='chatError'></div></form></div>";
+  const saved=localStorage.getItem("chatName")||getVisitorName();if(saved)document.getElementById("chatName").value=saved;
   const box=document.getElementById("chatMessages");if(box)box.scrollTop=box.scrollHeight;
   document.getElementById("chatForm").addEventListener("submit",submitChat);
 }
 async function submitChat(e){
   e.preventDefault();
   const form=e.currentTarget,error=document.getElementById("chatError"),button=document.getElementById("chatSend");
-  const name=document.getElementById("chatName").value.trim(),message=document.getElementById("chatMessage").value.trim();
+  const name=(document.getElementById("chatName").value.trim()||getVisitorName()),message=document.getElementById("chatMessage").value.trim();
   if(document.getElementById("chatWebsite").value)return;
   if(!name||!message){error.textContent="Completează numele și mesajul.";return}
   const last=Number(localStorage.getItem("chatCooldown")||0);
@@ -1380,6 +1401,29 @@ if("serviceWorker" in navigator){
 
 const welcomeDateFormat=new Intl.DateTimeFormat("ro-RO",{day:"numeric",month:"long",year:"numeric"});
 const welcomeDayFormat=new Intl.DateTimeFormat("ro-RO",{weekday:"long"});
+function unlockSite(name){
+  const clean=String(name||"").trim().replace(/\s+/g," ");
+  localStorage.setItem("visitorName",clean);
+  localStorage.setItem("chatName",clean);
+  document.body.classList.remove("site-locked");
+  document.getElementById("nameGate").classList.add("hidden");
+  const chatName=document.getElementById("chatName");if(chatName)chatName.value=clean;
+}
+function initNameGate(){
+  const gate=document.getElementById("nameGate"),input=document.getElementById("visitorName"),form=document.getElementById("nameGateForm"),err=document.getElementById("nameGateError");
+  const saved=getVisitorName();
+  if(saved){unlockSite(saved);return}
+  document.body.classList.add("site-locked");
+  gate.classList.remove("hidden");
+  setTimeout(()=>input.focus(),50);
+  form.addEventListener("submit",e=>{
+    e.preventDefault();err.textContent="";
+    const clean=input.value.trim().replace(/\s+/g," ");
+    if(clean.length<2){err.textContent="Introdu cel puțin 2 caractere.";return}
+    unlockSite(clean);
+  });
+}
+initNameGate();
 document.getElementById("date").textContent=welcomeDateFormat.format(now);
 document.getElementById("dayLabel").textContent=today;
 document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
