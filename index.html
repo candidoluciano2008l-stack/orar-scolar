@@ -146,6 +146,10 @@ body{background:var(--bg)}
 .task-selected-image img{display:block;width:100%;height:100%;object-fit:cover}
 .task-selected-remove{position:absolute;top:4px;right:4px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(8,18,30,.78);color:#fff;font-size:16px;line-height:24px;padding:0;cursor:pointer}
 .task-selected-empty{grid-column:1/-1;color:var(--muted);font-size:11px;padding-top:2px}
+.task-existing-image{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:rgba(127,150,180,.05)}
+.task-existing-image img{display:block;width:100%;height:100%;object-fit:cover}
+.task-existing-remove{position:absolute;top:4px;right:4px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(180,35,24,.88);color:#fff;font-size:15px;line-height:24px;padding:0;cursor:pointer}
+
 @media(max-width:520px){.task-selected-images{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:520px){.task-image-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #changesSection{margin-top:0}.quick{font-size:12px}
@@ -709,10 +713,11 @@ body{background:var(--bg)}
   </div>
   <div class="task-upload">
     <label class="task-upload-label"><span>📷</span><span>Adaugă poze</span><input id="taskImages" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
-    <div class="task-upload-help">Poți adăuga până la 5 imagini, maximum 5 MB fiecare. Formate: JPG, PNG sau WEBP.</div>
+    <div class="task-upload-help">Poți avea până la 5 imagini, maximum 5 MB fiecare. Formate: JPG, PNG sau WEBP.</div>
+    <div class="task-selected-images" id="taskExistingImages" style="display:none"></div>
     <div class="task-selected-images" id="taskSelectedImages"></div>
   </div>
-  <div class="actions"><span></span><button class="send" id="taskSubmitBtn" type="submit">Adaugă</button></div>
+  <div class="actions"><div style="display:flex;gap:8px;align-items:center"><button class="quick" id="taskCancelEdit" type="button" style="display:none">Anulează</button><span></span></div><button class="send" id="taskSubmitBtn" type="submit">Adaugă</button></div>
   <div class="error" id="taskError"></div>
 </form>
 <div class="dash-list" id="taskList"></div>
@@ -1156,6 +1161,9 @@ function renderAttention(){
   }
 }
 let taskFileSelection=[];
+let editingTaskId=null;
+let editingTaskImagePaths=[];
+
 function getSelectedTaskFiles(){
   return taskFileSelection.slice();
 }
@@ -1176,7 +1184,7 @@ function renderSelectedTaskFiles(){
   if(!box)return;
   box.innerHTML="";
   if(!files.length){
-    box.innerHTML="<div class='task-selected-empty'>Nicio poză selectată.</div>";
+    box.innerHTML="<div class='task-selected-empty'>Nicio poză nouă selectată.</div>";
     return;
   }
   files.forEach((file,index)=>{
@@ -1189,6 +1197,45 @@ function renderSelectedTaskFiles(){
     };
     box.appendChild(item);
   });
+}
+function renderExistingTaskImages(){
+  const box=document.getElementById("taskExistingImages");
+  if(!box)return;
+  box.innerHTML="";
+  box.style.display=editingTaskId&&editingTaskImagePaths.length?"grid":"none";
+  if(!editingTaskImagePaths.length)return;
+  editingTaskImagePaths.forEach((path,index)=>{
+    const url=supabaseClient.storage.from("task-images").getPublicUrl(path).data.publicUrl;
+    const item=document.createElement("div");item.className="task-existing-image";
+    item.innerHTML="<img src='"+escapeHtml(url)+"' alt='Poză existentă "+(index+1)+"'><button type='button' class='task-existing-remove' aria-label='Șterge poza' title='Șterge poza'>×</button>";
+    item.querySelector("img").style.cursor="zoom-in";
+    item.querySelector("img").onclick=()=>openTaskImage(path);
+    item.querySelector("button").onclick=()=>{
+      editingTaskImagePaths.splice(index,1);
+      renderExistingTaskImages();
+      updateTaskImageLimitMessage();
+    };
+    box.appendChild(item);
+  });
+}
+function updateTaskImageLimitMessage(){
+  const err=document.getElementById("taskError");
+  const total=editingTaskImagePaths.length+getSelectedTaskFiles().length;
+  if(total>5&&err)err.textContent="Poți avea maximum 5 imagini.";
+  else if(err&&err.textContent==="Poți avea maximum 5 imagini.")err.textContent="";
+}
+function resetTaskEditor(){
+  editingTaskId=null;
+  editingTaskImagePaths=[];
+  document.getElementById("taskTitle").value="";
+  document.getElementById("taskDeadline").value="";
+  document.getElementById("taskDescription").value="";
+  document.getElementById("taskType").value="Temă";
+  setSelectedTaskFiles([]);
+  renderExistingTaskImages();
+  document.getElementById("taskSubmitBtn").textContent="Adaugă";
+  document.getElementById("taskCancelEdit").style.display="none";
+  document.querySelector("#tasksPanel .section-edit-title")?.remove();
 }
 function taskImageUrls(task){
   return Array.isArray(task?.image_paths)
@@ -1573,8 +1620,25 @@ function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>{
   const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
   const thumb=firstPath?"<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+")' aria-label='Deschide poza'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"'></button>":"";
-  return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>";
+  return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div><div style='display:flex;gap:7px;flex-wrap:wrap'><button class='quick' onclick='editTask("+t.id+")'>Editează</button><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div></div>";
 }).join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
+window.editTask=async id=>{
+  const task=tasks.find(t=>Number(t.id)===Number(id));
+  if(!task)return;
+  editingTaskId=Number(task.id);
+  editingTaskImagePaths=Array.isArray(task.image_paths)?task.image_paths.slice():[];
+  document.getElementById("taskSubject").value=task.subject||"";
+  document.getElementById("taskType").value=task.type||"Temă";
+  document.getElementById("taskTitle").value=task.title||"";
+  document.getElementById("taskDeadline").value=task.deadline||"";
+  document.getElementById("taskDescription").value=task.description||"";
+  setSelectedTaskFiles([]);
+  renderExistingTaskImages();
+  document.getElementById("taskSubmitBtn").textContent="Salvează modificările";
+  document.getElementById("taskCancelEdit").style.display="inline-block";
+  document.getElementById("taskError").textContent="";
+  document.getElementById("taskTitle").scrollIntoView({behavior:"smooth",block:"center"});
+};
 async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+" · Postat de "+authorLabel(c)+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+(a.attention?"<span style='color:#b91c1c'>[ATENȚIE] </span>":"")+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+" · Postat de "+authorLabel(a)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 function addPollOptionInput(value=""){
@@ -1719,19 +1783,22 @@ document.getElementById("passwordForm").addEventListener("submit",async e=>{
   try{await callAdminAuth("set_password",{password:p});e.target.reset();err.textContent="Parola a fost schimbată.";err.style.color="var(--green)"}
   catch(error){err.textContent=error.message;err.style.color="var(--danger)"}
 });
+document.getElementById("taskCancelEdit").onclick=()=>resetTaskEditor();
 document.getElementById("taskImages").addEventListener("change",()=>{
   const input=document.getElementById("taskImages");
   const newlySelected=Array.from(input?.files||[]);
   const existing=getSelectedTaskFiles();
   const combined=existing.concat(newlySelected.filter(file=>!existing.some(x=>x.name===file.name&&x.size===file.size&&x.lastModified===file.lastModified)));
   const err=document.getElementById("taskError");
-  if(combined.length>5){
-    setSelectedTaskFiles(combined.slice(0,5));
-    if(err)err.textContent="Poți încărca maximum 5 imagini.";
+  const available=Math.max(0,5-editingTaskImagePaths.length);
+  if(combined.length>available){
+    setSelectedTaskFiles(combined.slice(0,available));
+    if(err)err.textContent="Poți avea maximum 5 imagini.";
     return;
   }
   if(err)err.textContent="";
   setSelectedTaskFiles(combined);
+  updateTaskImageLimitMessage();
 });
 setSelectedTaskFiles([]);
 document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
@@ -1739,17 +1806,22 @@ document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
  const err=document.getElementById("taskError"),button=document.getElementById("taskSubmitBtn"),fileInput=document.getElementById("taskImages");
  err.textContent="";
  const files=getSelectedTaskFiles();
- if(files.length>5){err.textContent="Poți încărca maximum 5 imagini.";return}
+ if(editingTaskImagePaths.length+files.length>5){err.textContent="Poți avea maximum 5 imagini.";return}
  for(const file of files){
    if(!["image/jpeg","image/png","image/webp"].includes(file.type)){err.textContent="Sunt acceptate doar JPG, PNG sau WEBP.";return}
    if(file.size>5*1024*1024){err.textContent="Fiecare imagine trebuie să aibă maximum 5 MB.";return}
  }
  button.disabled=true;
  try{
-   const taskData={subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null,image_paths:[],author_name:getVisitorName()||"Administrator"};
-   const created=await supabaseClient.from("tasks").insert(taskData).select("id").single();
-   if(created.error)throw created.error;
-   const taskId=created.data.id,uploaded=[];
+   const baseData={subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null};
+   const uploaded=[];
+   const taskId=editingTaskId;
+   const originalImagePaths=editingTaskId ? (tasks.find(t=>Number(t.id)===Number(editingTaskId))?.image_paths||[]).slice() : [];
+   if(!taskId) {
+     const created=await supabaseClient.from("tasks").insert({...baseData,image_paths:[],author_name:getVisitorName()||"Administrator"}).select("id").single();
+     if(created.error)throw created.error;
+     editingTaskId=Number(created.data.id);
+   }
    try{
      for(let i=0;i<files.length;i++){
        const file=files[i],ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path="task/"+taskId+"/"+Date.now()+"-"+i+"-"+(window.crypto?.randomUUID?.()||Math.random().toString(36).slice(2))+"."+ext;
@@ -1759,18 +1831,29 @@ document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
      }
    }catch(uploadError){
      if(uploaded.length)await supabaseClient.storage.from("task-images").remove(uploaded);
-     await supabaseClient.from("tasks").delete().eq("id",taskId);
+     if(!editingTaskId||!tasks.some(t=>Number(t.id)===Number(editingTaskId)))await supabaseClient.from("tasks").delete().eq("id",taskId);
      throw uploadError;
    }
-   if(uploaded.length){
-     const updated=await supabaseClient.from("tasks").update({image_paths:uploaded}).eq("id",taskId);
+   const finalImagePaths=editingTaskImagePaths.concat(uploaded);
+   const updatePayload={...baseData,image_paths:finalImagePaths};
+   if(editingTaskId && tasks.some(t=>Number(t.id)===Number(editingTaskId))){
+     const updated=await supabaseClient.from("tasks").update(updatePayload).eq("id",taskId);
      if(updated.error){
-       await supabaseClient.storage.from("task-images").remove(uploaded);
+       if(uploaded.length)await supabaseClient.storage.from("task-images").remove(uploaded);
+       throw updated.error;
+     }
+     const removed=originalImagePaths.filter(path=>!finalImagePaths.includes(path));
+     if(removed.length)await supabaseClient.storage.from("task-images").remove(removed);
+   }else{
+     const updated=await supabaseClient.from("tasks").update(updatePayload).eq("id",taskId);
+     if(updated.error){
+       if(uploaded.length)await supabaseClient.storage.from("task-images").remove(uploaded);
        await supabaseClient.from("tasks").delete().eq("id",taskId);
        throw updated.error;
      }
    }
    e.target.reset();document.getElementById("taskType").value="Temă";setSelectedTaskFiles([]);
+   resetTaskEditor();
    await loadData();await render();await renderAdminTasks();
  }catch(error){
    err.textContent=error?.message||"Nu s-a putut adăuga tema/proiectul.";
