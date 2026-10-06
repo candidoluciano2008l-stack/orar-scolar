@@ -1815,12 +1815,13 @@ document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
  try{
    const baseData={subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null};
    const uploaded=[];
-   const taskId=editingTaskId;
+   let taskId=editingTaskId;
    const originalImagePaths=editingTaskId ? (tasks.find(t=>Number(t.id)===Number(editingTaskId))?.image_paths||[]).slice() : [];
    if(!taskId) {
      const created=await supabaseClient.from("tasks").insert({...baseData,image_paths:[],author_name:getVisitorName()||"Administrator"}).select("id").single();
      if(created.error)throw created.error;
      editingTaskId=Number(created.data.id);
+     taskId=editingTaskId;
    }
    try{
      for(let i=0;i<files.length;i++){
