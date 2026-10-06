@@ -75,7 +75,27 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .admin-modern .quick{border-radius:10px}
 .admin-modern .send{border-radius:11px}
 .admin-modern .task-upload{background:rgba(127,150,180,.035);border-radius:13px}.admin-modern #tasksPanel .field-wrap{gap:6px}.admin-modern #tasksPanel .input,.admin-modern #tasksPanel .textarea,.admin-modern #tasksPanel .select{min-width:0}.admin-modern #tasksPanel .actions{padding-top:2px}
-@media(max-width:900px){.admin-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-modern #tasksPanel.active{grid-template-columns:1fr}.admin-modern-head{flex-direction:column}.admin-head-actions{justify-content:flex-start}}
+@media(max-width:900px){
+  .admin-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .admin-modern #tasksPanel.active{grid-template-columns:1fr}
+  .admin-modern-head{flex-direction:column}
+  .admin-head-actions{justify-content:flex-start}
+}
+@media(max-width:900px){
+  .dashboard-main{display:flex;flex-direction:column}
+  .dashboard-main>.stat-grid,.dashboard-main>.dashboard-grid-main,.dashboard-main>.dashboard-grid-lower{display:contents}
+  #nextCard{order:1}
+  #stateCard{order:2}
+  #scheduleSection{order:3}
+  #todayFocus{order:4}
+  #dueCard{order:5}
+  #announcementsSection{order:6}
+  #tasksSection{order:7}
+  #pollsSection{order:8}
+  #changesSection{order:9}
+  .dashboard-main>.attention-alert{order:0}
+  #scheduleSection,#announcementsSection,#tasksSection,#pollsSection,#changesSection,.today-focus{width:100%;box-sizing:border-box}
+}
 @media(max-width:600px){.admin-modern-head{padding:17px 15px 15px}.admin-modern-title{font-size:25px}.admin-modern-body{padding:13px}.admin-overview-card{padding:12px}.admin-overview-value{font-size:19px}}
 .dashboard-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.dash-tab{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer}.dash-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.dash-panel{display:none}.dash-panel.active{display:block}.dash-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.dash-item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;padding:11px 12px}.dash-item-main{min-width:0}.dash-item-title{font-weight:800}.dash-item-meta{font-size:12px;color:var(--muted);margin-top:3px}.change-builder{display:flex;flex-direction:column;gap:12px}.change-section{border:1px solid var(--line);border-radius:15px;padding:13px;background:rgba(127,150,180,.04)}.change-section-title{font-weight:800;margin-bottom:9px}.change-section-sub{font-size:12px;color:var(--muted);margin-top:4px}.change-arrow{font-size:20px;color:var(--muted);text-align:center;font-weight:800}.readonly-input{background:rgba(127,150,180,.07);font-weight:700}.field-wrap{display:flex;flex-direction:column;gap:5px}.field-label{font-size:12px;color:var(--muted);font-weight:800}.poll-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}.poll-question{font-size:17px;font-weight:800;line-height:1.35}.poll-options{display:flex;flex-direction:column;gap:8px;margin-top:12px}.poll-option{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:12px;padding:10px 11px;cursor:pointer}.poll-option:hover{background:rgba(127,150,180,.08)}.poll-option input{margin-top:3px}.poll-actions{display:flex;justify-content:flex-end;margin-top:11px}.poll-meta{font-size:12px;color:var(--muted);margin-top:8px}.poll-result{margin-top:9px}.poll-result-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}.poll-bar{height:8px;border-radius:999px;background:rgba(127,150,180,.16);overflow:hidden;margin-top:5px}.poll-bar span{display:block;height:100%;background:var(--blue);border-radius:inherit}.poll-voted{font-size:12px;color:var(--green);font-weight:800;margin-top:10px}.poll-admin-option{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-top:8px}.poll-admin-option:first-child{margin-top:0}.poll-remove-option{border:0;background:rgba(180,35,24,.12);color:var(--danger);border-radius:9px;padding:9px 10px;font-weight:800;cursor:pointer}.poll-admin-results{margin-top:8px}.install-banner{display:none;margin-top:14px}.install-banner.show{display:block}.install-btn{border:0;background:var(--green);color:#fff;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}
 @media(max-width:700px){header{padding:22px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:13px 6px}.comment-count{grid-column:2;width:max-content}.grid,.grid-3{grid-template-columns:1fr}.row{grid-template-columns:1fr}.overlay{padding:0}.modal{max-height:95vh;border-radius:22px 22px 0 0}.top{align-items:flex-start}.top-actions{gap:6px}}
@@ -462,8 +482,8 @@ body{background:var(--bg)}
 
       <section class="stat-grid">
         <div class="stat-card stat-primary" id="nextCard"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div></div>
-        <div class="stat-card"><div class="stat-label">Stare</div><div class="stat-note state-context" id="schoolContext">Programul se actualizează automat.</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state" style="display:none">—</div></div>
-        <div class="stat-card"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
+        <div class="stat-card" id="stateCard"><div class="stat-label">Stare</div><div class="stat-note state-context" id="schoolContext">Programul se actualizează automat.</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state" style="display:none">—</div></div>
+        <div class="stat-card" id="dueCard"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
       </section>
 
       <section class="today-focus" id="todayFocus">
