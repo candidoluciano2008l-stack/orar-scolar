@@ -568,10 +568,10 @@ const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const SUPERADMIN_EMAIL="candidoluciano2008l@gmail.com";
 const VAPID_PUBLIC_KEY="BKfg9TcuZBFk3EfcnwF-738zahqxAX7McsK7u1KZJy9gjt4rbLZLl1X5VOjVkExewwPGPiZkljAfaxMqjMlaCtA";
 const schedule={
-"Luni":[["07:20","08:10","Negociere"],["08:15","09:05","Română"],["09:10","10:00","Proiecte economice"],["10:05","10:55","Proiecte economice"],["11:00","11:50","Comunism"],["11:55","12:45","Negociere"],["12:50","13:40","Geografie"]],
+"Luni":[["07:20","08:10","Negociere"],["08:15","09:05","Română"],["09:10","10:00","Proiecte economice"],["10:05","10:55","Proiecte economice"],["11:00","11:50","Istoria comunismului"],["11:55","12:45","Negociere"],["12:50","13:40","Geografie"]],
 "Marți":[["07:20","08:10","Geografie"],["08:15","09:05","Politici de marketing"],["09:10","10:00","Matematică"],["10:05","10:55","Analiză economico-financiară"],["11:00","11:50","Dirigenție"],["11:55","12:45","Dirigenție"],["12:50","13:40","Română"]],
 "Miercuri":[["07:20","08:10","Statistică"],["08:15","09:05","Economie aplicată"],["09:10","10:00","Franceză"],["10:05","10:55","Statistică"],["11:00","11:50","Engleză"],["11:55","12:45","Română"]],
-"Joi":[["07:20","08:10","Istorie (Frunză)"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
+"Joi":[["07:20","08:10","Istorie"],["08:15","09:05","Franceză"],["09:10","10:00","Matematică"],["10:05","10:55","Sport"],["11:00","11:50","TIC"],["11:55","12:45","Economie aplicată"],["12:50","13:40","Engleză"]],
 "Vineri":[["07:20","08:10","Analiză economico-financiară"],["08:15","09:05","Matematică"],["09:10","10:00","Religie"],["10:05","10:55","Statistică"]]
 };
 const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
@@ -835,7 +835,7 @@ function renderSchoolState(){
 }
 const teacherBySubject={
   "Istorie":"LAURENTIU MIHAI T FRUNZA",
-  "Istorie (Frunză)":"LAURENTIU MIHAI T FRUNZA",
+  "Istorie":"LAURENTIU MIHAI T FRUNZA",
   "Română":"MARIA MADALINA - DOBRE",
   "Geografie":"TUDORIȚA - DANILOV",
   "Matematică":"ELENA-GABRIELA I MANAFU",
@@ -844,8 +844,9 @@ const teacherBySubject={
   "Sport":"MIHAELA VALENTINA - DUMITRAȘCU",
   "TIC":"ANTONICA A BĂLȚOI",
   "Religie":"CRISTINA - EMILIA - POP",
-  "Comunism":"AURELIAN EMIL S NICOLAE",
-  "Istoria comunismului din România":"AURELIAN EMIL S NICOLAE",
+  "Analiză economico-financiară":"MATEI MIRELA",
+  "Istoria comunismului":"AURELIAN EMIL S NICOLAE",
+  "Istoria comunismului":"AURELIAN EMIL S NICOLAE",
   "Educație fizică și sport":"MIHAELA VALENTINA - DUMITRAȘCU",
   "Politici de marketing":"NICULINA - NEAGU",
   "Dirigenție":"NICULINA - NEAGU",
