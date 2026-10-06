@@ -1016,7 +1016,7 @@ async function loadChat(){
     const del=isAdmin?"<button class='delete-btn chat-delete' onclick='deleteChatMessage("+m.id+")'>Șterge</button>":"";
     return "<article class='chat-message'><div class='chat-message-meta'><div class='chat-message-name'>"+escapeHtml(m.name)+"</div><div style='display:flex;gap:8px;align-items:center'><div class='chat-message-time'>"+formatTime(m.created_at)+"</div>"+del+"</div></div><div class='chat-message-text'>"+escapeHtml(m.message)+"</div></article>";
   }).join(""):"<div class='empty'>Nu a scris nimeni încă. Fii primul!</div>";
-  body.innerHTML="<div class='chat-shell'><div class='chat-messages' id='chatMessages'>"+cards+"</div><form class='chat-composer' id='chatForm'><div class='grid'><input class='input' id='chatName' maxlength='30' placeholder='Numele tău' autocomplete='nickname' required><span></span></div><textarea class='textarea' id='chatMessage' maxlength='500' placeholder='Scrie un mesaj pentru toată lumea...' required></textarea><input id='chatWebsite' tabindex='-1' autocomplete='off' aria-hidden='true' style='position:absolute;left:-9999px'><div class='actions'><div class='hint'>Max. 500 caractere. Așteaptă 10 secunde între mesaje.</div><button class='send' id='chatSend' type='submit'>Trimite</button></div><div class='error' id='chatError'></div></form></div>";
+  body.innerHTML="<div class='chat-shell'><div class='chat-messages' id='chatMessages'>"+cards+"</div><form class='chat-composer' id='chatForm'><div class='grid'><input class='input' id='chatName' maxlength='30' placeholder='Numele tău' autocomplete='nickname' required><span></span></div><textarea class='textarea' id='chatMessage' maxlength='500' placeholder='Scrie un mesaj pentru toată lumea...' required></textarea><input id='chatWebsite' tabindex='-1' autocomplete='off' aria-hidden='true' style='position:absolute;left:-9999px'><div class='actions'><div class='hint'>Max. 500 caractere. Așteaptă 5 secunde între mesaje.</div><button class='send' id='chatSend' type='submit'>Trimite</button></div><div class='error' id='chatError'></div></form></div>";
   const saved=localStorage.getItem("chatName");if(saved)document.getElementById("chatName").value=saved;
   const box=document.getElementById("chatMessages");if(box)box.scrollTop=box.scrollHeight;
   document.getElementById("chatForm").addEventListener("submit",submitChat);
@@ -1028,7 +1028,7 @@ async function submitChat(e){
   if(document.getElementById("chatWebsite").value)return;
   if(!name||!message){error.textContent="Completează numele și mesajul.";return}
   const last=Number(localStorage.getItem("chatCooldown")||0);
-  if(Date.now()-last<10000){error.textContent="Așteaptă câteva secunde înainte de a scrie din nou.";return}
+  if(Date.now()-last<5000){error.textContent="Așteaptă câteva secunde înainte de a scrie din nou.";return}
   button.disabled=true;error.textContent="";
   const r=await supabaseClient.from("chat_messages").insert({name,message});
   button.disabled=false;
