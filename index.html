@@ -56,7 +56,7 @@ body{background:var(--bg)}
 .brand-title{font-weight:900;font-size:17px}.brand-sub{font-size:9px;letter-spacing:.12em;opacity:.55;margin-top:2px}
 .side-nav{display:flex;flex-direction:column;gap:5px}.side-link{width:100%;border:1px solid transparent;background:transparent;color:inherit;text-align:left;border-radius:11px;padding:9px 11px;cursor:pointer;display:flex;align-items:center;gap:10px}.side-link>div{min-width:0;display:flex;flex-direction:column;gap:2px}.side-link span{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.05);color:#91a8bd;font-size:12px;font-weight:900;flex:none}.side-link span::before{display:none}.side-link b{font-size:13px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.side-link small{font-size:9px;color:#93a8bb;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.side-link:hover{background:rgba(255,255,255,.05)}.side-link.active{background:#18527f;box-shadow:inset 3px 0 0 #78bdf3}.side-link.active small{color:#d7ecff}.sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:6px}.side-muted{opacity:.9}.side-admin{background:rgba(255,255,255,.04)}
 .main-shell{min-width:0}.topbar{height:64px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}.topbar-left,.topbar-actions,.topbar-date{display:flex;align-items:center;gap:14px}.topbar-actions{margin-left:0;justify-content:flex-start}.topbar-date{flex-direction:column;align-items:flex-start;gap:0}.topbar-date div:first-child{font-size:14px;font-weight:800}.topbar-date div:last-child{font-size:12px;color:var(--muted)}.mobile-brand{display:none;font-weight:900}.status-pill{padding:6px 10px;border-radius:999px;background:rgba(22,133,91,.12);color:var(--green);font-size:11px;font-weight:800}
-.user-badge{display:flex;flex-direction:column;align-items:flex-end;gap:1px;margin-left:0;max-width:220px;text-align:right}
+.user-badge{display:flex;flex-direction:column;align-items:flex-end;gap:1px;margin-left:2px;max-width:220px}
 .user-badge-name{font-size:13px;font-weight:900;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
 .user-badge-role{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 @media(max-width:760px){.user-badge{max-width:130px}.user-badge-name{max-width:130px;font-size:12px}.user-badge-role{font-size:9px}}
@@ -396,8 +396,8 @@ body{background:var(--bg)}
       </div>
       <div class="topbar-actions">
         <div class="topbar-date"><div id="dayLabel"></div><div id="date"></div></div>
-        <div class="status-pill">Online</div>
         <div class="user-badge"><div class="user-badge-name" id="visitorDisplayName"></div><div class="user-badge-role" id="visitorDisplayRole">Elev</div></div>
+        <div class="status-pill">Online</div>
       </div>
     </header>
 
