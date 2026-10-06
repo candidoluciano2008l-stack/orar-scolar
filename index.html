@@ -48,6 +48,16 @@ body{background:var(--bg)}
 .side-nav{display:flex;flex-direction:column;gap:5px}.side-link{width:100%;border:1px solid transparent;background:transparent;color:inherit;text-align:left;border-radius:11px;padding:9px 11px;cursor:pointer;display:flex;align-items:center;gap:10px}.side-link>div{min-width:0;display:flex;flex-direction:column;gap:2px}.side-link span{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.05);color:#91a8bd;font-size:12px;font-weight:900;flex:none}.side-link span::before{display:none}.side-link b{font-size:13px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.side-link small{font-size:9px;color:#93a8bb;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.side-link:hover{background:rgba(255,255,255,.05)}.side-link.active{background:#18527f;box-shadow:inset 3px 0 0 #78bdf3}.side-link.active small{color:#d7ecff}.sidebar-bottom{margin-top:auto;display:flex;flex-direction:column;gap:6px}.side-muted{opacity:.9}.side-admin{background:rgba(255,255,255,.04)}
 .main-shell{min-width:0}.topbar{height:64px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);position:sticky;top:0;z-index:20}.topbar-left,.topbar-actions,.topbar-date{display:flex;align-items:center;gap:14px}.topbar-actions{margin-left:0;justify-content:flex-start}.topbar-date{flex-direction:column;align-items:flex-start;gap:0}.topbar-date div:first-child{font-size:14px;font-weight:800}.topbar-date div:last-child{font-size:12px;color:var(--muted)}.mobile-brand{display:none;font-weight:900}.status-pill{padding:6px 10px;border-radius:999px;background:rgba(22,133,91,.12);color:var(--green);font-size:11px;font-weight:800}
 .dashboard-main{max-width:1320px;margin:0 auto;padding:24px 26px 44px}.welcome-card{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;border-radius:19px;padding:24px 26px;background:radial-gradient(circle at 86% 28%,rgba(95,174,239,.28),transparent 27%),linear-gradient(135deg,#0c2034,#143b5c 58%,#1f5b82);color:#fff;box-shadow:0 16px 38px rgba(13,41,66,.2);margin-bottom:16px}.welcome-card .eyebrow{color:#b8d2e8}.welcome-card h1{font-size:32px;line-height:1;margin:5px 0 8px}.welcome-card p{margin:0;color:#d4e4f2}.welcome-date{text-align:right;font-weight:800}.welcome-day{font-size:18px}.welcome-date div:last-child{font-size:12px;opacity:.72;margin-top:3px}
+.attention-alert{margin-top:14px;padding:11px 13px;border:2px solid #ef4444;border-radius:13px;background:rgba(239,68,68,.12);color:#fff}
+.attention-alert strong{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#fecaca}
+.attention-alert div{margin-top:3px;font-size:14px;font-weight:800;line-height:1.3}
+.attention-alert small{display:block;margin-top:4px;color:#fee2e2;line-height:1.35}
+.attention-warning{border:2px solid #ef4444 !important;box-shadow:0 0 0 2px rgba(239,68,68,.08),var(--shadow) !important}
+.attention-warning .stat-label{color:#dc2626}
+.attention-warning .stat-value{color:#b91c1c}
+.attention-warning .attention-mini{display:block}
+.attention-mini{display:none;margin-top:8px;padding:8px 9px;border:1px solid rgba(239,68,68,.45);border-radius:10px;background:rgba(239,68,68,.08);color:#b91c1c;font-size:11px;font-weight:800;line-height:1.3}
+@media(max-width:760px){.attention-alert{margin-top:10px}.attention-alert div{font-size:13px}.attention-mini{font-size:10px}}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}.stat-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;min-height:108px;box-shadow:var(--shadow)}.stat-card.stat-primary{box-shadow:inset 4px 0 0 var(--blue),var(--shadow)}.stat-label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.stat-value{font-size:21px;font-weight:900;margin-top:8px}.stat-sub{font-size:13px;color:var(--muted);margin-top:4px}.stat-note{font-size:11px;color:var(--muted);margin-top:7px}
 .dashboard-grid{display:grid;gap:14px;margin-bottom:14px}.dashboard-grid-main{grid-template-columns:minmax(0,1.38fr) minmax(315px,.62fr)}.dashboard-grid-lower{grid-template-columns:1fr 1fr}.dashboard-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:var(--shadow)}.schedule-card{min-width:0}.section-subtitle{font-size:11px;color:var(--muted);margin-top:3px}.dashboard-card .section-head{margin-bottom:12px}.dashboard-card .section-title{font-size:17px}.schedule-card .tabs{margin-bottom:4px;padding-bottom:10px}
 .schedule-card .lesson{border-top:1px solid var(--line);padding:12px 8px;min-width:0}.schedule-card .lesson:first-of-type{border-top:0}.schedule-card .lesson:hover{background:rgba(127,150,180,.06)}.schedule-card .lesson > div{min-width:0}.schedule-card .subject{overflow-wrap:anywhere}
@@ -373,6 +383,7 @@ body{background:var(--bg)}
           <div class="eyebrow">PROGRAMUL TĂU</div>
           <h1>Bun venit!</h1>
           <p>Iată ce se întâmplă astăzi la școală.</p>
+          <div class="attention-alert" id="attentionWelcome" style="display:none"></div>
           <button class="notify-btn" id="pushBtn" type="button">Activează notificările</button>
           <span class="notify-help" id="pushHelp">Primești alerte pentru comentarii și anunțuri noi.</span>
         </div>
@@ -381,7 +392,7 @@ body{background:var(--bg)}
       </section>
 
       <section class="stat-grid">
-        <div class="stat-card stat-primary"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div></div>
+        <div class="stat-card stat-primary" id="nextCard"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div><div class="attention-mini" id="attentionNext"></div></div>
         <div class="stat-card"><div class="stat-label">Stare</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state">—</div><div class="stat-note" id="schoolContext">Programul se actualizează automat.</div></div>
         <div class="stat-card"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
       </section>
@@ -506,7 +517,10 @@ body{background:var(--bg)}
 </div>
 
 <div class="dash-panel" id="announcementsPanel">
-<form class="form" id="announcementAdminForm" style="border:0;padding:0;background:none"><input class="input" id="announcementTitle" maxlength="160" placeholder="Titlu" required><textarea class="textarea" id="announcementMessage" maxlength="2000" placeholder="Mesaj" style="margin-top:9px" required></textarea><label style="display:flex;gap:8px;align-items:center;margin-top:9px;color:var(--text);font-weight:700"><input type="checkbox" id="announcementPinned"> Fixat sus</label><div class="actions"><span></span><button class="send" type="submit">Publică anunț</button></div><div class="error" id="announcementError"></div></form><div class="dash-list" id="announcementList"></div>
+<form class="form" id="announcementAdminForm" style="border:0;padding:0;background:none"><input class="input" id="announcementTitle" maxlength="160" placeholder="Titlu" required><textarea class="textarea" id="announcementMessage" maxlength="2000" placeholder="Mesaj" style="margin-top:9px" required></textarea><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;color:var(--text);font-weight:700">
+<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="announcementPinned"> Fixat sus</label>
+<label style="display:flex;gap:8px;align-items:center;color:#b91c1c"><input type="checkbox" id="announcementAttention"> Atenție!</label>
+</div><div class="actions"><span></span><button class="send" type="submit">Publică anunț</button></div><div class="error" id="announcementError"></div></form><div class="dash-list" id="announcementList"></div>
 </div>
 
 <div class="dash-panel" id="pollsPanel">
@@ -858,6 +872,29 @@ const teacherBySubject={
 };
 const teacherForSubject=subject=>teacherBySubject[subject]||"—";
 
+function getAttentionAnnouncement(){
+  return announcements.find(a=>a.attention===true) || null;
+}
+function renderAttention(){
+  const a=getAttentionAnnouncement();
+  const welcome=document.getElementById("attentionWelcome");
+  const nextCard=document.getElementById("nextCard");
+  const next=document.getElementById("attentionNext");
+  if(!welcome||!nextCard||!next)return;
+  if(a){
+    const title=escapeHtml(a.title||"Atenție!");
+    const message=escapeHtml(a.message||"");
+    welcome.innerHTML="<strong>ATENȚIE!</strong><div>"+title+"</div>"+(message?"<small>"+message+"</small>":"");
+    welcome.style.display="block";
+    nextCard.classList.add("attention-warning");
+    next.innerHTML="<strong>ATENȚIE!</strong> "+title+(message?"<br><span style='font-weight:700'>"+message+"</span>":"");
+  }else{
+    welcome.innerHTML="";
+    welcome.style.display="none";
+    nextCard.classList.remove("attention-warning");
+    next.innerHTML="";
+  }
+}
 async function render(){
   document.getElementById("selectedTitle").textContent=selected;
   const dueTaskCount=document.getElementById("dueTaskCount");
@@ -868,6 +905,7 @@ async function render(){
   const arr=lessonsForDay(selected),cur=now.getHours()*60+now.getMinutes(),counts=await getCommentCounts(),tmap={};
   tasks.forEach(t=>{(tmap[t.subject]||(tmap[t.subject]=[])).push(t)});
   renderSchoolState();
+  renderAttention();
   document.getElementById("lessons").innerHTML=arr.map(x=>{
     const a=mins(x[0]),b=mins(x[1]),isToday=selected===today,eff=getChangeForLesson(selected,x);
     const cls=(isToday&&cur>=a&&cur<b?"current ":"")+(isToday&&cur>=b?"past ":"")+(eff.status==="moved-away"?"lesson-moved ":"")+(eff.status==="moved-in"?"lesson-move-in ":"");
@@ -883,7 +921,7 @@ async function render(){
 }
 async function renderPreviews(){
   const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
-  document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
+  document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned ":"")+(a.attention?"attention-warning":"")+"'><div class='notice-title'>"+(a.attention?"<span style='color:#b91c1c'>ATENȚIE! </span>":"")+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
   document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
   const taskBox=document.getElementById("taskPreview");
   if(taskBox){
@@ -1030,7 +1068,7 @@ function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Arr
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
-async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
+async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+(a.attention?"<span style='color:#b91c1c'>[ATENȚIE] </span>":"")+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 function addPollOptionInput(value=""){
   const box=document.getElementById("pollOptionFields");
   if(box.children.length>=6)return;
@@ -1267,7 +1305,7 @@ document.getElementById("changeAdminForm").addEventListener("submit",async e=>{
 });
 document.getElementById("announcementAdminForm").addEventListener("submit",async e=>{
  e.preventDefault();const err=document.getElementById("announcementError");err.textContent="";
- const r=await supabaseClient.from("announcements").insert({title:document.getElementById("announcementTitle").value.trim(),message:document.getElementById("announcementMessage").value.trim(),pinned:document.getElementById("announcementPinned").checked});
+ const r=await supabaseClient.from("announcements").insert({title:document.getElementById("announcementTitle").value.trim(),message:document.getElementById("announcementMessage").value.trim(),pinned:document.getElementById("announcementPinned").checked,attention:document.getElementById("announcementAttention").checked});
  if(r.error){err.textContent=r.error.message;return}e.target.reset();await loadData();await render();await renderAdminAnnouncements();
 });
 document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
