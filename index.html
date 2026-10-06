@@ -1155,16 +1155,20 @@ function renderAttention(){
     box.style.display="none";
   }
 }
+let taskFileSelection=[];
 function getSelectedTaskFiles(){
-  const input=document.getElementById("taskImages");
-  return Array.from(input?.files||[]);
+  return taskFileSelection.slice();
 }
 function setSelectedTaskFiles(files){
   const input=document.getElementById("taskImages");
-  if(!input)return;
-  const dt=new DataTransfer();
-  files.forEach(file=>dt.items.add(file));
-  input.files=dt.files;
+  taskFileSelection=Array.from(files||[]);
+  if(input){
+    try{
+      const dt=new DataTransfer();
+      taskFileSelection.forEach(file=>dt.items.add(file));
+      input.files=dt.files;
+    }catch(_){}
+  }
   renderSelectedTaskFiles();
 }
 function renderSelectedTaskFiles(){
@@ -1716,21 +1720,25 @@ document.getElementById("passwordForm").addEventListener("submit",async e=>{
   catch(error){err.textContent=error.message;err.style.color="var(--danger)"}
 });
 document.getElementById("taskImages").addEventListener("change",()=>{
-  const files=getSelectedTaskFiles();
-  if(files.length>5){
-    setSelectedTaskFiles(files.slice(0,5));
-    const err=document.getElementById("taskError");if(err)err.textContent="Poți încărca maximum 5 imagini.";
+  const input=document.getElementById("taskImages");
+  const newlySelected=Array.from(input?.files||[]);
+  const existing=getSelectedTaskFiles();
+  const combined=existing.concat(newlySelected.filter(file=>!existing.some(x=>x.name===file.name&&x.size===file.size&&x.lastModified===file.lastModified)));
+  const err=document.getElementById("taskError");
+  if(combined.length>5){
+    setSelectedTaskFiles(combined.slice(0,5));
+    if(err)err.textContent="Poți încărca maximum 5 imagini.";
     return;
   }
-  const err=document.getElementById("taskError");if(err)err.textContent="";
-  renderSelectedTaskFiles();
+  if(err)err.textContent="";
+  setSelectedTaskFiles(combined);
 });
-renderSelectedTaskFiles();
+setSelectedTaskFiles([]);
 document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const err=document.getElementById("taskError"),button=document.getElementById("taskSubmitBtn"),fileInput=document.getElementById("taskImages");
  err.textContent="";
- const files=Array.from(fileInput.files||[]);
+ const files=getSelectedTaskFiles();
  if(files.length>5){err.textContent="Poți încărca maximum 5 imagini.";return}
  for(const file of files){
    if(!["image/jpeg","image/png","image/webp"].includes(file.type)){err.textContent="Sunt acceptate doar JPG, PNG sau WEBP.";return}
@@ -1762,7 +1770,7 @@ document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
        throw updated.error;
      }
    }
-   e.target.reset();document.getElementById("taskType").value="Temă";renderSelectedTaskFiles();
+   e.target.reset();document.getElementById("taskType").value="Temă";setSelectedTaskFiles([]);
    await loadData();await render();await renderAdminTasks();
  }catch(error){
    err.textContent=error?.message||"Nu s-a putut adăuga tema/proiectul.";
