@@ -830,7 +830,7 @@ function renderSchoolState(){
       next.textContent="Program încheiat";
       nextTime.textContent="";
     }
-    count.textContent="Acum";
+    count.textContent="În oră";
     state.textContent=s.next?"Urmează următoarea oră":"Ultima oră de azi";
     ctx.textContent=s.next
       ? "Acum: "+currentInfo.subject+" · Se termină la "+s.current[1]
@@ -847,7 +847,7 @@ function renderSchoolState(){
       const nextSeconds=mins(s.next[0])*60;
       const previousEndSeconds=previous?mins(previous[1])*60:null;
       const inBreak=previousEndSeconds!==null && curSeconds>=previousEndSeconds && curSeconds<nextSeconds;
-      count.textContent=inBreak?"Pauză":"Înainte de prima oră";
+      count.textContent=inBreak?"Pauză":"Înainte de ore";
       state.textContent=inBreak?"Urmează următoarea oră":"Prima oră începe în curând";
       const remaining=Math.max(0,nextSeconds-curSeconds);
       const mm=String(Math.floor(remaining/60)).padStart(2,"0");
