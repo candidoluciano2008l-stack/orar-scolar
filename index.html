@@ -26,7 +26,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .schedule{overflow:hidden}.schedule-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.schedule-title{font-size:21px;font-weight:800}
 .lesson{display:grid;grid-template-columns:105px 1fr auto;gap:14px;align-items:center;padding:13px 10px;border-top:1px solid var(--line);border-radius:12px;cursor:pointer}.lesson:first-of-type{border-top:0}.lesson:hover{background:rgba(127,150,180,.08)}
 .time{font-weight:750;color:var(--blue);font-size:14px}.subject{font-size:16px;font-weight:650}.subject-main{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.comment-count{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:rgba(127,150,180,.13);color:var(--muted);white-space:nowrap}.lesson.current{background:rgba(22,133,91,.09);box-shadow:inset 4px 0 0 var(--green)}.lesson.past{opacity:.48}
-.lesson-change{margin-top:4px;font-size:12px;color:var(--danger);font-weight:700}.lesson-change s{opacity:.7}.lesson-moved{opacity:.58}.lesson-moved .subject{text-decoration:line-through}.lesson-move-in{box-shadow:inset 4px 0 0 var(--blue2)}.task-line{margin-top:5px;font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;flex-wrap:wrap}.deadline{font-weight:800;color:var(--blue)}.badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800;background:rgba(40,87,127,.12);color:var(--blue)}
+.lesson-change{margin-top:4px;font-size:12px;color:var(--danger);font-weight:700}.lesson-change s{opacity:.7}.lesson-moved{opacity:.58}.lesson-moved .subject{text-decoration:line-through}.lesson-move-in{box-shadow:inset 4px 0 0 var(--blue2)}.task-line{margin-top:5px;font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;flex-wrap:wrap}.teacher-sub{margin-top:5px;font-size:11px;color:var(--muted);font-weight:700;line-height:1.25;overflow-wrap:anywhere}.schedule-card .teacher-sub{font-size:10.5px}@media(max-width:760px){.schedule-card .teacher-sub{font-size:10px}}.deadline{font-weight:800;color:var(--blue)}.badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800;background:rgba(40,87,127,.12);color:var(--blue)}
 .notice{margin-top:12px;color:var(--muted);font-size:12px}
 .section{margin-top:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title{font-size:20px;font-weight:800}
 .notice-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}.notice-card.pinned{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.notice-title{font-weight:800;font-size:16px}.notice-message{margin-top:6px;line-height:1.45;white-space:pre-wrap}.notice-meta{font-size:12px;color:var(--muted);margin-top:9px}
@@ -833,6 +833,23 @@ function renderSchoolState(){
     next.textContent="Weekend";nextTime.textContent="";count.textContent="Liber";state.textContent="Nu sunt ore azi";ctx.textContent="";
   }
 }
+const teacherBySubject={
+  "Istorie":"LAURENTIU MIHAI T FRUNZA",
+  "Istorie (Frunză)":"LAURENTIU MIHAI T FRUNZA",
+  "Română":"MARIA MADALINA - DOBRE",
+  "Geografie":"TUDORIȚA - DANILOV",
+  "Matematică":"ELENA-GABRIELA I MANAFU",
+  "Franceză":"FLORENȚA - DUMITRA - ȘTEFAN",
+  "Engleză":"GABRIELA IRINA N STANCU",
+  "Sport":"MIHAELA VALENTINA - DUMITRAȘCU",
+  "TIC":"ANTONICA A BĂLȚOI",
+  "Religie":"CRISTINA - EMILIA - POP",
+  "Comunism":"AURELIAN EMIL S NICOLAE",
+  "Istoria comunismului din România":"AURELIAN EMIL S NICOLAE",
+  "Educație fizică și sport":"MIHAELA VALENTINA - DUMITRAȘCU"
+};
+const teacherForSubject=subject=>teacherBySubject[subject]||"—";
+
 async function render(){
   document.getElementById("selectedTitle").textContent=selected;
   const dueTaskCount=document.getElementById("dueTaskCount");
