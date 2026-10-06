@@ -869,7 +869,7 @@ async function render(){
     if(eff.status==="replace") ch="<div class='lesson-change'><s>"+escapeHtml(x[2])+"</s> → "+escapeHtml(eff.subject)+"</div>";
     if(eff.status==="moved-away") ch="<div class='lesson-change'>Mutată → "+escapeHtml(dayNameFromDate(eff.change.to_date))+" "+escapeHtml(eff.change.to_start)+"–"+escapeHtml(eff.change.to_end)+"</div>";
     if(eff.status==="moved-in"){const replaced=destinationOriginalSubject(eff.change)||x[2];ch="<div class='lesson-change'><s>"+escapeHtml(replaced)+"</s> → "+escapeHtml(eff.subject)+" · mutată din "+escapeHtml(dayNameFromDate(eff.change.from_date))+" "+escapeHtml(eff.change.from_start)+"</div>";}
-    return "<div class='lesson "+cls+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
+    return "<div class='lesson "+cls+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='teacher-sub'>Profesor: "+escapeHtml(teacherForSubject(eff.subject))+"</div></div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
   }).join("");
   await renderPreviews();
 }
