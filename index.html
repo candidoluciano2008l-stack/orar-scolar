@@ -29,7 +29,8 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .lesson-change{margin-top:4px;font-size:12px;color:var(--danger);font-weight:700}.lesson-change s{opacity:.7}.lesson-moved{opacity:.58}.lesson-moved .subject{text-decoration:line-through}.lesson-move-in{box-shadow:inset 4px 0 0 var(--blue2)}.task-line{margin-top:5px;font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;flex-wrap:wrap}.teacher-sub{margin-top:5px;font-size:11px;color:var(--muted);font-weight:700;line-height:1.25;overflow-wrap:anywhere}.schedule-card .teacher-sub{font-size:10.5px}@media(max-width:760px){.schedule-card .teacher-sub{font-size:10px}}.deadline{font-weight:800;color:var(--blue)}.badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800;background:rgba(40,87,127,.12);color:var(--blue)}
 .notice{margin-top:12px;color:var(--muted);font-size:12px}
 .section{margin-top:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.section-title{font-size:20px;font-weight:800}
-.notice-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}.notice-card.pinned{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.notice-title{font-weight:800;font-size:16px}.notice-message{margin-top:6px;line-height:1.45;white-space:pre-wrap}.notice-meta{font-size:12px;color:var(--muted);margin-top:9px}
+.notice-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}
+.chat-shell{display:flex;flex-direction:column;gap:12px;min-height:0}.chat-messages{display:flex;flex-direction:column;gap:8px;max-height:58vh;overflow:auto;padding:2px}.chat-message{padding:11px 13px;border:1px solid var(--line);border-radius:14px;background:var(--card)}.chat-message-meta{display:flex;justify-content:space-between;gap:10px;align-items:center}.chat-message-name{font-weight:900}.chat-message-time{font-size:11px;color:var(--muted);white-space:nowrap}.chat-message-text{margin-top:5px;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}.chat-composer{border:1px solid var(--line);border-radius:15px;padding:12px;background:rgba(127,150,180,.04)}.chat-composer .input,.chat-composer .textarea{margin-bottom:8px}.chat-composer .textarea{min-height:80px}.chat-delete{margin-left:auto}.notice-card.pinned{border-color:var(--blue);box-shadow:inset 3px 0 0 var(--blue)}.notice-title{font-weight:800;font-size:16px}.notice-message{margin-top:6px;line-height:1.45;white-space:pre-wrap}.notice-meta{font-size:12px;color:var(--muted);margin-top:9px}
 .change-card{padding:13px 15px;border:1px solid var(--line);border-radius:15px;margin-bottom:8px;background:var(--card)}.change-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.change-date{font-weight:800}.change-sub{font-weight:700;color:var(--danger)}.change-note{margin-top:5px;color:var(--muted);font-size:13px}
 .overlay{position:fixed;inset:0;background:rgba(8,18,30,.58);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:12px}.overlay.open{display:flex}.modal{width:min(780px,100%);max-height:92vh;background:var(--card);border-radius:24px 24px 16px 16px;overflow:hidden;display:flex;flex-direction:column}.modal.full{width:min(1080px,100%);max-height:94vh}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-title{font-weight:800;font-size:21px}.close{border:0;background:rgba(127,150,180,.13);color:var(--text);border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
 .modal-body{padding:15px 18px;overflow:auto}.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
@@ -367,6 +368,7 @@ body{background:var(--bg)}
       <button class="side-link" id="tasksNav" data-nav="tasks"><span>✓</span><div><b>Teme</b><small>Teme și proiecte</small></div></button>
       <button class="side-link" id="announcementsBtn" data-nav="announcements"><span>!</span><div><b>Anunțuri</b><small>Informații importante</small></div></button>
       <button class="side-link" id="pollsBtn" data-nav="polls"><span>◫</span><div><b>Polluri</b><small>Votează</small></div></button>
+      <button class="side-link" id="chatBtn" data-nav="chat"><span>◉</span><div><b>Chat</b><small>Discuții publice</small></div></button>
       <button class="side-link" id="changesBtn" data-nav="changes"><span>↻</span><div><b>Schimbări</b><small>Modificări de program</small></div></button>
     </nav>
     <div class="sidebar-bottom">
@@ -1005,6 +1007,41 @@ function closeComments(){document.getElementById("overlay").classList.remove("op
 window.selectDay=d=>{selected=d;renderTabs();render()};window.openComments=openComments;
 document.getElementById("close").onclick=closeComments;document.getElementById("overlay").addEventListener("click",e=>{if(e.target.id==="overlay")closeComments()});
 
+async function loadChat(){
+  const body=document.getElementById("listBody");
+  const r=await supabaseClient.from("chat_messages").select("id,name,message,created_at").order("created_at",{ascending:true}).limit(200);
+  if(r.error){body.innerHTML="<div class='empty'>Nu am putut încărca chatul.</div>";return}
+  const messages=r.data||[];
+  const cards=messages.length?messages.map(m=>{
+    const del=isAdmin?"<button class='delete-btn chat-delete' onclick='deleteChatMessage("+m.id+")'>Șterge</button>":"";
+    return "<article class='chat-message'><div class='chat-message-meta'><div class='chat-message-name'>"+escapeHtml(m.name)+"</div><div style='display:flex;gap:8px;align-items:center'><div class='chat-message-time'>"+formatTime(m.created_at)+"</div>"+del+"</div></div><div class='chat-message-text'>"+escapeHtml(m.message)+"</div></article>";
+  }).join(""):"<div class='empty'>Nu a scris nimeni încă. Fii primul!</div>";
+  body.innerHTML="<div class='chat-shell'><div class='chat-messages' id='chatMessages'>"+cards+"</div><form class='chat-composer' id='chatForm'><div class='grid'><input class='input' id='chatName' maxlength='30' placeholder='Numele tău' autocomplete='nickname' required><span></span></div><textarea class='textarea' id='chatMessage' maxlength='500' placeholder='Scrie un mesaj pentru toată lumea...' required></textarea><input id='chatWebsite' tabindex='-1' autocomplete='off' aria-hidden='true' style='position:absolute;left:-9999px'><div class='actions'><div class='hint'>Max. 500 caractere. Așteaptă 10 secunde între mesaje.</div><button class='send' id='chatSend' type='submit'>Trimite</button></div><div class='error' id='chatError'></div></form></div>";
+  const saved=localStorage.getItem("chatName");if(saved)document.getElementById("chatName").value=saved;
+  const box=document.getElementById("chatMessages");if(box)box.scrollTop=box.scrollHeight;
+  document.getElementById("chatForm").addEventListener("submit",submitChat);
+}
+async function submitChat(e){
+  e.preventDefault();
+  const form=e.currentTarget,error=document.getElementById("chatError"),button=document.getElementById("chatSend");
+  const name=document.getElementById("chatName").value.trim(),message=document.getElementById("chatMessage").value.trim();
+  if(document.getElementById("chatWebsite").value)return;
+  if(!name||!message){error.textContent="Completează numele și mesajul.";return}
+  const last=Number(localStorage.getItem("chatCooldown")||0);
+  if(Date.now()-last<10000){error.textContent="Așteaptă câteva secunde înainte de a scrie din nou.";return}
+  button.disabled=true;error.textContent="";
+  const r=await supabaseClient.from("chat_messages").insert({name,message});
+  button.disabled=false;
+  if(r.error){error.textContent="Nu s-a putut trimite mesajul. Încearcă din nou.";return}
+  localStorage.setItem("chatName",name);localStorage.setItem("chatCooldown",String(Date.now()));
+  document.getElementById("chatMessage").value="";
+  await loadChat();
+}
+async function deleteChatMessage(id){
+  const r=await supabaseClient.from("chat_messages").delete().eq("id",id);
+  if(r.error)return;
+  if(document.getElementById("listOverlay").classList.contains("open")&&document.getElementById("listTitle").textContent==="Chat public")await loadChat();
+}
 async function openList(type){
   document.getElementById("listOverlay").classList.add("open");document.body.style.overflow="hidden";const title=document.getElementById("listTitle"),body=document.getElementById("listBody");
   if(type==="ann"){
@@ -1013,6 +1050,8 @@ async function openList(type){
     title.textContent="Schimbări de orar";body.innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări de orar.</div>";
   }else if(type==="polls"){
     title.textContent="Polluri";body.innerHTML=await renderPollCards(polls.filter(p=>!p.closed),"list");
+  }else if(type==="chat"){
+    title.textContent="Chat public";await loadChat();
   }
 }
 function closeList(){document.getElementById("listOverlay").classList.remove("open");document.body.style.overflow=""}
@@ -1033,6 +1072,7 @@ document.getElementById("tasksNav").onclick=()=>scrollToSection("tasksSection","
 document.getElementById("announcementsBtn").onclick=()=>{setSideNavActive("announcements");openList("ann")};
 document.getElementById("changesBtn").onclick=()=>{setSideNavActive("changes");openList("changes")};
 document.getElementById("pollsBtn").onclick=()=>{setSideNavActive("polls");openList("polls")};
+document.getElementById("chatBtn").onclick=()=>{setSideNavActive("chat");openList("chat")};
 document.getElementById("openAnnouncements").onclick=()=>{setSideNavActive("announcements");openList("ann")};
 document.getElementById("openChanges").onclick=()=>{setSideNavActive("changes");openList("changes")};
 document.getElementById("openPolls").onclick=()=>{setSideNavActive("polls");openList("polls")};
@@ -1321,7 +1361,7 @@ document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
 });
 
 supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
-supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()})
+supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments()}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("listOverlay").classList.contains("open")&&document.getElementById("listTitle").textContent==="Chat public")await loadChat()}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render()}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render()})
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls()})
 .on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls()}).subscribe();
 
