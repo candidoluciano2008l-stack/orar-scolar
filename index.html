@@ -783,18 +783,31 @@ function getSchoolState(){
   if(!days.includes(today))return {kind:"weekend",current:null,next:null};
   const arr=lessonsForDay(today),cur=now.getHours()*60+now.getMinutes();
   const current=arr.find(x=>cur>=mins(x[0])&&cur<mins(x[1]));
+  if(current){
+    const currentIndex=arr.findIndex(x=>x[0]===current[0]&&x[1]===current[1]);
+    const nextAfter=currentIndex>=0?arr[currentIndex+1]:null;
+    return {kind:"current",current,next:nextAfter};
+  }
   const next=arr.find(x=>cur<mins(x[0]));
-  return {kind:current?"current":next?"break-or-before":"after",current,next};
+  return {kind:next?"break-or-before":"after",current:null,next};
 }
 function renderSchoolState(){
   const s=getSchoolState(),next=document.getElementById("next"),nextTime=document.getElementById("nextTime"),count=document.getElementById("count"),state=document.getElementById("state"),ctx=document.getElementById("schoolContext");
   if(s.kind==="current"){
-    const e=getChangeForLesson(today,s.current);
-    next.textContent=e.subject;
-    nextTime.textContent=s.current[0]+"–"+s.current[1];
+    const currentInfo=getChangeForLesson(today,s.current);
+    if(s.next){
+      const nextInfo=getChangeForLesson(today,s.next);
+      next.textContent=nextInfo.subject;
+      nextTime.textContent=s.next[0]+"–"+s.next[1];
+    }else{
+      next.textContent="Program încheiat";
+      nextTime.textContent="";
+    }
     count.textContent="Acum";
-    state.textContent="Ora este în desfășurare";
-    ctx.textContent=e.status==="moved-away"?"Ora a fost mutată la "+dayNameFromDate(e.change.to_date)+" "+e.change.to_start+"–"+e.change.to_end:(e.change?"Schimbare de orar":"Program normal");
+    state.textContent=s.next?"Urmează următoarea oră":"Ultima oră de azi";
+    ctx.textContent=s.next
+      ? "Acum: "+currentInfo.subject+" · Se termină la "+s.current[1]
+      : "Acum: "+currentInfo.subject+" · Se termină la "+s.current[1];
   }else if(s.kind==="break-or-before"){
     if(s.next){
       const e=getChangeForLesson(today,s.next);
