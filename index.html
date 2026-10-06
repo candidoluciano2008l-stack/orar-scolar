@@ -43,6 +43,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .modal-body{padding:15px 18px;overflow:auto}.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
 .form{border-top:1px solid var(--line);padding:14px 18px;background:rgba(127,150,180,.04)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}.row{display:grid;grid-template-columns:150px 1fr;gap:9px}.input,.textarea,.select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;outline:none;background:var(--card);color:var(--text)}.textarea{resize:vertical;min-height:84px}.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.hint{font-size:12px;color:var(--muted)}.send{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.send:disabled{opacity:.55;cursor:not-allowed}.error{color:var(--danger);font-size:12px;margin-top:7px;min-height:16px}
 .auth-help{font-size:12px;color:var(--muted);line-height:1.45}.delete-btn{border:0;background:rgba(180,35,24,.12);color:var(--danger);border-radius:9px;padding:6px 9px;font-weight:800;cursor:pointer}.comment-actions{display:flex;align-items:center;gap:8px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
+.online-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 15px;border:1px solid var(--line);border-radius:15px;background:rgba(127,150,180,.04)}.online-count{min-width:44px;height:44px;padding:0 12px;border-radius:13px;background:rgba(22,133,91,.12);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900}.online-user{display:flex;align-items:center;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:var(--card)}.online-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(22,133,91,.12);flex:none}.online-user-name{font-weight:800}.online-user-meta{font-size:11px;color:var(--muted);margin-left:auto}
 .dashboard-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.dash-tab{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:9px 12px;font-weight:800;cursor:pointer}.dash-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}.dash-panel{display:none}.dash-panel.active{display:block}.dash-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.dash-item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;padding:11px 12px}.dash-item-main{min-width:0}.dash-item-title{font-weight:800}.dash-item-meta{font-size:12px;color:var(--muted);margin-top:3px}.change-builder{display:flex;flex-direction:column;gap:12px}.change-section{border:1px solid var(--line);border-radius:15px;padding:13px;background:rgba(127,150,180,.04)}.change-section-title{font-weight:800;margin-bottom:9px}.change-section-sub{font-size:12px;color:var(--muted);margin-top:4px}.change-arrow{font-size:20px;color:var(--muted);text-align:center;font-weight:800}.readonly-input{background:rgba(127,150,180,.07);font-weight:700}.field-wrap{display:flex;flex-direction:column;gap:5px}.field-label{font-size:12px;color:var(--muted);font-weight:800}.poll-card{padding:15px 16px;border:1px solid var(--line);border-radius:16px;margin-bottom:9px;background:var(--card)}.poll-question{font-size:17px;font-weight:800;line-height:1.35}.poll-options{display:flex;flex-direction:column;gap:8px;margin-top:12px}.poll-option{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--line);border-radius:12px;padding:10px 11px;cursor:pointer}.poll-option:hover{background:rgba(127,150,180,.08)}.poll-option input{margin-top:3px}.poll-actions{display:flex;justify-content:flex-end;margin-top:11px}.poll-meta{font-size:12px;color:var(--muted);margin-top:8px}.poll-result{margin-top:9px}.poll-result-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700}.poll-bar{height:8px;border-radius:999px;background:rgba(127,150,180,.16);overflow:hidden;margin-top:5px}.poll-bar span{display:block;height:100%;background:var(--blue);border-radius:inherit}.poll-voted{font-size:12px;color:var(--green);font-weight:800;margin-top:10px}.poll-admin-option{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-top:8px}.poll-admin-option:first-child{margin-top:0}.poll-remove-option{border:0;background:rgba(180,35,24,.12);color:var(--danger);border-radius:9px;padding:9px 10px;font-weight:800;cursor:pointer}.poll-admin-results{margin-top:8px}.install-banner{display:none;margin-top:14px}.install-banner.show{display:block}.install-btn{border:0;background:var(--green);color:#fff;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}
 @media(max-width:700px){header{padding:22px 16px 16px}.title{font-size:29px}.container{padding:14px}.hero{grid-template-columns:1fr}.card{border-radius:17px;padding:15px}.lesson{grid-template-columns:82px 1fr;gap:9px;padding:13px 6px}.comment-count{grid-column:2;width:max-content}.grid,.grid-3{grid-template-columns:1fr}.row{grid-template-columns:1fr}.overlay{padding:0}.modal{max-height:95vh;border-radius:22px 22px 0 0}.top{align-items:flex-start}.top-actions{gap:6px}}
 
@@ -479,6 +480,7 @@ body{background:var(--bg)}
 <button class="dash-tab" data-panel="announcementsPanel">Anunțuri</button>
 <button class="dash-tab" data-panel="pollsPanel">Polluri</button>
 <button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
+<button class="dash-tab" data-panel="onlinePanel">Online</button>
 <button class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
 <button class="dash-tab" data-panel="securityPanel">Securitate</button>
 </div>
@@ -568,6 +570,11 @@ body{background:var(--bg)}
 
 <div class="dash-panel" id="commentsPanel"><div class="dash-list" id="adminCommentList"></div></div>
 
+<div class="dash-panel" id="onlinePanel">
+  <div class="online-summary"><div><div class="section-title">Utilizatori online</div><div class="section-subtitle">Lista se actualizează în timp real.</div></div><div class="online-count" id="onlineCount">0</div></div>
+  <div class="dash-list" id="onlineUserList"></div>
+</div>
+
 <div class="dash-panel" id="securityPanel">
   <div class="auth-help" style="margin-bottom:10px">Schimbă parola contului cu care ești autentificat. Această operațiune nu trimite niciun email.</div>
   <form class="form" id="passwordForm" style="border:0;padding:0;background:none">
@@ -628,6 +635,9 @@ const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","
 let now=new Date(),today=names[now.getDay()],selected=days.includes(today)?today:"Luni",selectedSubject=null,isAdmin=false,isSuperAdmin=false,currentUser=null,adminRole=null;
 let tasks=[],changes=[],announcements=[],polls=[];
 let deferredPrompt=null;
+let onlineChannel=null;
+let onlineSessionId=sessionStorage.getItem("onlineSessionId");
+if(!onlineSessionId){onlineSessionId=window.crypto?.randomUUID?.()||"session-"+Date.now()+"-"+Math.random().toString(36).slice(2);sessionStorage.setItem("onlineSessionId",onlineSessionId);}
 
 const mins=t=>{const parts=t.split(":").map(Number);return parts[0]*60+parts[1]};
 const localDateKey=d=>{const x=d||new Date();return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0")};
@@ -1128,7 +1138,7 @@ async function openDashboard(){
   fillTaskSubjects();
   document.getElementById("adminsTab").style.display=isSuperAdmin?"inline-flex":"none";
   resetPollOptionFields();
-  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins()]);
+  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers()]);
 }
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
@@ -1401,6 +1411,33 @@ if("serviceWorker" in navigator){
 
 const welcomeDateFormat=new Intl.DateTimeFormat("ro-RO",{day:"numeric",month:"long",year:"numeric"});
 const welcomeDayFormat=new Intl.DateTimeFormat("ro-RO",{weekday:"long"});
+async function renderOnlineUsers(){
+  const countEl=document.getElementById("onlineCount"),listEl=document.getElementById("onlineUserList");
+  if(!countEl||!listEl||!onlineChannel){if(countEl)countEl.textContent="0";if(listEl)listEl.innerHTML="<div class='empty'>Se conectează lista de utilizatori…</div>";return}
+  const state=onlineChannel.presenceState();
+  const users=[];
+  Object.values(state||{}).flat().forEach(meta=>{
+    const name=String(meta?.name||"").trim();
+    if(name)users.push({name,since:meta.since||null});
+  });
+  users.sort((a,b)=>a.name.localeCompare(b.name,"ro",{sensitivity:"base"}));
+  countEl.textContent=String(users.length);
+  listEl.innerHTML=users.length?users.map(u=>"<div class='online-user'><span class='online-dot'></span><div class='online-user-name'>"+escapeHtml(u.name)+"</div><div class='online-user-meta'>Online</div></div>").join(""):"<div class='empty'>Nu este nimeni online.</div>";
+}
+async function startOnlinePresence(){
+  const name=getVisitorName();
+  if(!name||onlineChannel)return;
+  onlineChannel=supabaseClient.channel("online-users",{config:{presence:{key:onlineSessionId}}});
+  onlineChannel.on("presence",{event:"sync"},()=>renderOnlineUsers());
+  onlineChannel.on("presence",{event:"join"},()=>renderOnlineUsers());
+  onlineChannel.on("presence",{event:"leave"},()=>renderOnlineUsers());
+  onlineChannel.subscribe(async status=>{
+    if(status==="SUBSCRIBED"){
+      await onlineChannel.track({name,since:new Date().toISOString()});
+      await renderOnlineUsers();
+    }
+  });
+}
 function unlockSite(name){
   const clean=String(name||"").trim().replace(/\s+/g," ");
   localStorage.setItem("visitorName",clean);
@@ -1408,6 +1445,7 @@ function unlockSite(name){
   document.body.classList.remove("site-locked");
   document.getElementById("nameGate").classList.add("hidden");
   const chatName=document.getElementById("chatName");if(chatName)chatName.value=clean;
+  startOnlinePresence();
 }
 function initNameGate(){
   const gate=document.getElementById("nameGate"),input=document.getElementById("visitorName"),form=document.getElementById("nameGateForm"),err=document.getElementById("nameGateError");
