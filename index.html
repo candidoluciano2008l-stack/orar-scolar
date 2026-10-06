@@ -612,6 +612,7 @@ const localDateKey=d=>{const x=d||new Date();return x.getFullYear()+"-"+String(x
 const fmtDate=d=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"long",year:"numeric"}).format(new Date(d+"T12:00:00"));
 const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(iso));
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const isTaskActive=t=>Boolean(t?.deadline)&&String(t.deadline)>=localDateKey(now);
 
 function isStandalonePwa(){return window.navigator.standalone===true||window.matchMedia?.("(display-mode: standalone)").matches===true}
 function base64ToUint8Array(value){const pad="=".repeat((4-value.length%4)%4),b64=(value+pad).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(b64);return Uint8Array.from(raw,c=>c.charCodeAt(0))}
@@ -904,7 +905,7 @@ async function render(){
   const dueTaskCount=document.getElementById("dueTaskCount");
   if(dueTaskCount){
     const todayKey=localDateKey(now);
-    dueTaskCount.textContent=String(tasks.filter(t=>t.deadline && String(t.deadline)>=todayKey).length);
+    dueTaskCount.textContent=String(tasks.filter(isTaskActive).length);
   }
   const arr=lessonsForDay(selected),cur=now.getHours()*60+now.getMinutes(),counts=await getCommentCounts(),tmap={};
   tasks.forEach(t=>{(tmap[t.subject]||(tmap[t.subject]=[])).push(t)});
@@ -913,7 +914,7 @@ async function render(){
   document.getElementById("lessons").innerHTML=arr.map(x=>{
     const a=mins(x[0]),b=mins(x[1]),isToday=selected===today,eff=getChangeForLesson(selected,x);
     const cls=(isToday&&cur>=a&&cur<b?"current ":"")+(isToday&&cur>=b?"past ":"")+(eff.status==="moved-away"?"lesson-moved ":"")+(eff.status==="moved-in"?"lesson-move-in ":"");
-    const c=counts[eff.subject]||0,subTasks=(tmap[eff.subject]||[]).slice(0,2);
+    const c=counts[eff.subject]||0,subTasks=(tmap[eff.subject]||[]).filter(isTaskActive).slice(0,2);
     const taskHtml=subTasks.map(t=>"<div class='task-line'><span class='badge'>"+escapeHtml(t.type)+"</span>"+escapeHtml(t.title)+" · <span class='deadline'>"+fmtDate(t.deadline)+"</span></div>").join("");
     let ch="";
     if(eff.status==="replace") ch="<div class='lesson-change'><s>"+escapeHtml(x[2])+"</s> → "+escapeHtml(eff.subject)+"</div>";
@@ -929,7 +930,7 @@ async function renderPreviews(){
   document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-sub'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+"</div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
   const taskBox=document.getElementById("taskPreview");
   if(taskBox){
-    const upcoming=tasks.filter(t=>t.deadline).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,5);
+    const upcoming=tasks.filter(isTaskActive).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,5);
     taskBox.innerHTML=upcoming.length?upcoming.map(t=>"<article class='task-preview-item'><div class='task-preview-main'><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type)+"</div></div><div class='task-preview-deadline'>"+fmtDate(t.deadline)+"</div></article>").join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
   }
   await renderPollPreview();
@@ -985,7 +986,7 @@ async function openComments(subject){
   selectedSubject=subject;document.getElementById("modalTitle").textContent=subject;document.getElementById("overlay").classList.add("open");document.body.style.overflow="hidden";document.getElementById("error").textContent="";await loadSubjectTasks();await loadComments();
 }
 async function loadSubjectTasks(){
-  const list=tasks.filter(t=>t.subject===selectedSubject);
+  const list=tasks.filter(t=>t.subject===selectedSubject&&isTaskActive(t));
   document.getElementById("subjectTasks").innerHTML="<h3 style='margin:0 0 8px'>Teme / proiecte</h3>"+(list.length?list.map(t=>"<article class='notice-card'><div class='notice-title'>"+escapeHtml(t.title)+"</div><div class='notice-meta'>"+escapeHtml(t.type)+" · Deadline: <b>"+fmtDate(t.deadline)+"</b></div>"+(t.description?"<div class='notice-message'>"+escapeHtml(t.description)+"</div>":"")+"</article>").join(""):"<div class='empty'>Nu există încă teme sau proiecte pentru această materie.</div>");
 }
 async function loadComments(){
