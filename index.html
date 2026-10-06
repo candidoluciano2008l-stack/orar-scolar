@@ -641,9 +641,9 @@ async function disablePushNotifications(){
     help.textContent=error?.message||"Nu am putut dezactiva notificările.";
   }
 }
-async function togglePushNotifications(){
-  const sub=await navigator.serviceWorker.ready.then(reg=>reg.pushManager.getSubscription()).catch(()=>null);
-  if(sub) return disablePushNotifications();
+function togglePushNotifications(){
+  const btn=document.getElementById("pushBtn");
+  if(btn?.classList.contains("notify-active")) return disablePushNotifications();
   return enablePushNotifications();
 }
 
