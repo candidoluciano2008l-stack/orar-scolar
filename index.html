@@ -88,6 +88,12 @@ body{background:var(--bg)}
 .task-image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:9px}.task-image-grid img{display:block;width:100%;aspect-ratio:1.35;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:rgba(127,150,180,.06);cursor:zoom-in}.task-image-button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
 .task-image-count{font-size:11px;font-weight:800;color:var(--blue);margin-top:5px}.task-image-count-btn{padding:0;border:0;background:transparent;cursor:pointer;font:inherit}.task-preview-image-btn{width:64px;height:64px;flex:none;padding:0;border:0;background:transparent;border-radius:11px;overflow:hidden;cursor:zoom-in}.task-preview-image-btn img{width:100%;height:100%;object-fit:cover;display:block;border:1px solid var(--line);border-radius:11px}
 .task-upload{margin-top:9px;padding:11px 12px;border:1px dashed var(--line);border-radius:12px;background:rgba(127,150,180,.03)}.task-upload-label{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;cursor:pointer}.task-upload input{display:none}.task-upload-help{margin-top:4px;font-size:11px;color:var(--muted)}
+.task-selected-images{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:10px}
+.task-selected-image{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:rgba(127,150,180,.05)}
+.task-selected-image img{display:block;width:100%;height:100%;object-fit:cover}
+.task-selected-remove{position:absolute;top:4px;right:4px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(8,18,30,.78);color:#fff;font-size:16px;line-height:24px;padding:0;cursor:pointer}
+.task-selected-empty{grid-column:1/-1;color:var(--muted);font-size:11px;padding-top:2px}
+@media(max-width:520px){.task-selected-images{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:520px){.task-image-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #changesSection{margin-top:0}.quick{font-size:12px}
 @media(max-width:1100px){
@@ -513,6 +519,7 @@ body{background:var(--bg)}
   <div class="task-upload">
     <label class="task-upload-label"><span>📷</span><span>Adaugă poze</span><input id="taskImages" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
     <div class="task-upload-help">Poți adăuga până la 5 imagini, maximum 5 MB fiecare. Formate: JPG, PNG sau WEBP.</div>
+    <div class="task-selected-images" id="taskSelectedImages"></div>
   </div>
   <div class="actions"><span></span><button class="send" id="taskSubmitBtn" type="submit">Adaugă</button></div>
   <div class="error" id="taskError"></div>
@@ -957,6 +964,37 @@ function renderAttention(){
     box.style.display="none";
   }
 }
+function getSelectedTaskFiles(){
+  const input=document.getElementById("taskImages");
+  return Array.from(input?.files||[]);
+}
+function setSelectedTaskFiles(files){
+  const input=document.getElementById("taskImages");
+  if(!input)return;
+  const dt=new DataTransfer();
+  files.forEach(file=>dt.items.add(file));
+  input.files=dt.files;
+  renderSelectedTaskFiles();
+}
+function renderSelectedTaskFiles(){
+  const box=document.getElementById("taskSelectedImages"),files=getSelectedTaskFiles();
+  if(!box)return;
+  box.innerHTML="";
+  if(!files.length){
+    box.innerHTML="<div class='task-selected-empty'>Nicio poză selectată.</div>";
+    return;
+  }
+  files.forEach((file,index)=>{
+    const url=URL.createObjectURL(file);
+    const item=document.createElement("div");item.className="task-selected-image";
+    item.innerHTML="<img src='"+escapeHtml(url)+"' alt='Previzualizare "+(index+1)+"'><button type='button' class='task-selected-remove' aria-label='Șterge poza' title='Șterge poza'>×</button>";
+    item.querySelector("button").onclick=()=>{
+      URL.revokeObjectURL(url);
+      const current=getSelectedTaskFiles();current.splice(index,1);setSelectedTaskFiles(current);
+    };
+    box.appendChild(item);
+  });
+}
 function taskImageUrls(task){
   return Array.isArray(task?.image_paths)
     ? task.image_paths.map(path=>supabaseClient.storage.from("task-images").getPublicUrl(path).data.publicUrl).filter(Boolean)
@@ -1211,7 +1249,11 @@ async function openDashboard(){
 }
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
-async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
+async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>{
+  const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
+  const thumb=firstPath?"<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+")' aria-label='Deschide poza'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"'></button>":"";
+  return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>";
+}).join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+(a.attention?"<span style='color:#b91c1c'>[ATENȚIE] </span>":"")+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 function addPollOptionInput(value=""){
@@ -1356,6 +1398,17 @@ document.getElementById("passwordForm").addEventListener("submit",async e=>{
   try{await callAdminAuth("set_password",{password:p});e.target.reset();err.textContent="Parola a fost schimbată.";err.style.color="var(--green)"}
   catch(error){err.textContent=error.message;err.style.color="var(--danger)"}
 });
+document.getElementById("taskImages").addEventListener("change",()=>{
+  const files=getSelectedTaskFiles();
+  if(files.length>5){
+    setSelectedTaskFiles(files.slice(0,5));
+    const err=document.getElementById("taskError");if(err)err.textContent="Poți încărca maximum 5 imagini.";
+    return;
+  }
+  const err=document.getElementById("taskError");if(err)err.textContent="";
+  renderSelectedTaskFiles();
+});
+renderSelectedTaskFiles();
 document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const err=document.getElementById("taskError"),button=document.getElementById("taskSubmitBtn"),fileInput=document.getElementById("taskImages");
@@ -1392,7 +1445,7 @@ document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
        throw updated.error;
      }
    }
-   e.target.reset();document.getElementById("taskType").value="Temă";
+   e.target.reset();document.getElementById("taskType").value="Temă";renderSelectedTaskFiles();
    await loadData();await render();await renderAdminTasks();
  }catch(error){
    err.textContent=error?.message||"Nu s-a putut adăuga tema/proiectul.";
