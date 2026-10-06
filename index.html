@@ -334,7 +334,7 @@ body{background:var(--bg)}
 /* Mobile-first Model A */
 @media(max-width:760px){
   html,body{overflow-x:hidden}
-  .app-shell{display:grid !important;grid-template-columns:128px minmax(0,1fr) !important;width:100%;min-width:0}
+  .app-shell{--sidebar-width:128px !important;display:grid !important;grid-template-columns:128px minmax(0,1fr) !important;width:100%;min-width:0}
   .sidebar{position:sticky !important;top:0 !important;width:128px !important;height:100vh !important;min-height:100vh !important;padding:12px 8px !important;border-right:1px solid rgba(255,255,255,.08) !important;border-bottom:0 !important;z-index:30}
   .sidebar-brand{justify-content:flex-start !important;padding:2px 4px 18px !important;gap:8px !important}
   .brand-mark{width:32px !important;height:32px !important;flex:none !important;font-size:16px !important}
@@ -382,7 +382,7 @@ body{background:var(--bg)}
   .task-preview-item{width:100% !important;min-width:0 !important}
 }
 @media(max-width:520px){
-  .app-shell{grid-template-columns:116px minmax(0,1fr) !important}
+  .app-shell{--sidebar-width:116px !important;grid-template-columns:116px minmax(0,1fr) !important}
   .sidebar{width:116px !important}
   .side-link{padding-left:6px !important;padding-right:5px !important}
   .side-link b{font-size:10px !important}
