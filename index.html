@@ -433,6 +433,77 @@ body{background:var(--bg)}
   window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+<style>
+.calendar-page{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:var(--shadow);min-height:calc(100vh - 120px)}
+.calendar-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:5px 3px 16px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.calendar-kicker{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--blue)}
+.calendar-title{font-size:30px;font-weight:950;line-height:1.05;margin:5px 0 7px}
+.calendar-subtitle{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.calendar-source{margin-top:5px;font-size:10px;color:var(--muted)}
+.calendar-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.calendar-month{font-size:17px;font-weight:900;min-width:150px;text-align:center}
+.calendar-nav-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-weight:900;cursor:pointer}
+.calendar-nav-btn:hover{background:rgba(127,150,180,.08)}
+.calendar-today-btn{border:1px solid var(--line);background:rgba(40,87,127,.08);color:var(--blue);border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer}
+.calendar-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-bottom:7px}
+.calendar-weekday{padding:5px;text-align:center;color:var(--muted);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.calendar-day{min-height:112px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:8px;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:.15s}
+.calendar-day:hover{background:rgba(127,150,180,.06);border-color:color-mix(in srgb,var(--blue) 30%,var(--line))}
+.calendar-day.outside{opacity:.35}
+.calendar-day.today{box-shadow:inset 0 0 0 2px var(--blue)}
+.calendar-day.selected{border-color:var(--blue);box-shadow:0 0 0 2px color-mix(in srgb,var(--blue) 22%,transparent)}
+.calendar-day.vacation{background:rgba(22,133,91,.06)}
+.calendar-day-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.calendar-day-number{font-weight:900;font-size:13px}
+.calendar-day-count{font-size:9px;color:var(--muted);font-weight:800}
+.calendar-events{display:flex;flex-direction:column;gap:4px;min-width:0}
+.calendar-event-chip{display:block;min-width:0;border-radius:7px;padding:4px 5px;font-size:9px;font-weight:800;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calendar-event-chip.task{background:rgba(40,87,127,.11);color:var(--blue)}
+.calendar-event-chip.vacation{background:rgba(22,133,91,.12);color:var(--green)}
+.calendar-event-chip.more{background:rgba(127,150,180,.1);color:var(--muted)}
+.calendar-bottom{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:12px;margin-top:14px}
+.calendar-selected-card,.calendar-upcoming-card{border:1px solid var(--line);border-radius:17px;background:var(--card);padding:15px}
+.calendar-selected-title{font-size:17px;font-weight:900}
+.calendar-selected-sub{margin-top:3px;color:var(--muted);font-size:11px}
+.calendar-events-list{display:flex;flex-direction:column;gap:8px;margin-top:11px}
+.calendar-detail{border:1px solid var(--line);border-radius:12px;padding:10px 11px}
+.calendar-detail-title{font-weight:850;font-size:13px}
+.calendar-detail-meta{margin-top:3px;color:var(--muted);font-size:11px}
+.calendar-detail-note{margin-top:5px;font-size:12px;line-height:1.4;white-space:pre-wrap}
+.calendar-detail.task{border-left:3px solid var(--blue)}
+.calendar-detail.vacation{border-left:3px solid var(--green)}
+.calendar-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:10px;font-weight:800}
+.calendar-legend span{display:inline-flex;align-items:center;gap:5px}
+.calendar-legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.calendar-legend .task-dot{background:var(--blue)}
+.calendar-legend .vacation-dot{background:var(--green)}
+.calendar-upcoming-list{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.calendar-upcoming-item{display:flex;gap:8px;align-items:flex-start;padding:8px 9px;border:1px solid var(--line);border-radius:11px}
+.calendar-upcoming-date{min-width:58px;color:var(--blue);font-size:10px;font-weight:900}
+.calendar-upcoming-main{min-width:0}
+.calendar-upcoming-title{font-size:12px;font-weight:850;line-height:1.25}
+.calendar-upcoming-meta{margin-top:2px;color:var(--muted);font-size:10px}
+@media(max-width:900px){.calendar-bottom{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .calendar-page{min-height:calc(100vh - 95px);padding:13px;border-radius:15px}
+  .calendar-head{flex-direction:column;align-items:stretch}
+  .calendar-title{font-size:26px}
+  .calendar-actions{justify-content:space-between}
+  .calendar-month{min-width:0;flex:1}
+  .calendar-day{min-height:84px;padding:6px;border-radius:11px}
+  .calendar-event-chip{font-size:8px;padding:3px 4px}
+  .calendar-weekdays{gap:4px}.calendar-grid{gap:4px}.calendar-weekday{font-size:8px}
+  .calendar-bottom{margin-top:10px}
+}
+@media(max-width:520px){
+  .calendar-day{min-height:72px;padding:5px}
+  .calendar-day-count{display:none}
+  .calendar-event-chip{font-size:7.5px}
+  .calendar-actions{gap:5px}.calendar-nav-btn{width:38px;height:38px}.calendar-today-btn{padding:9px 10px}
+}
+</style>
 </head>
 <body>
 <div class="app-shell">
@@ -442,7 +513,8 @@ body{background:var(--bg)}
       <button class="side-link active" id="todayBtn" data-nav="home"><span>⌂</span><div><b>Acasă</b><small>Dashboard</small></div></button>
       <button class="side-link" id="scheduleNav" data-nav="schedule"><span>▣</span><div><b>Orar</b><small>Programul săptămânii</small></div></button>
       <button class="side-link" id="tasksNav" data-nav="tasks"><span>✓</span><div><b>Teme</b><small>Teme și proiecte</small></div></button>
-      <button class="side-link" id="announcementsBtn" data-nav="announcements"><span>!</span><div><b>Anunțuri</b><small>Informații importante</small></div></button>
+<button class="side-link" id="calendarBtn" data-nav="calendar"><span>□</span><div><b>Calendar</b><small>Teme și vacanțe</small></div></button>
+            <button class="side-link" id="announcementsBtn" data-nav="announcements"><span>!</span><div><b>Anunțuri</b><small>Informații importante</small></div></button>
       <button class="side-link" id="pollsBtn" data-nav="polls"><span>◫</span><div><b>Polluri</b><small>Votează</small></div></button>
       <button class="side-link" id="chatBtn" data-nav="chat"><span>◉</span><div><b>Chat</b><small>Discuții publice</small></div></button>
       <button class="side-link" id="changesBtn" data-nav="changes"><span>↻</span><div><b>Schimbări</b><small>Modificări de program</small></div></button>
@@ -528,6 +600,42 @@ body{background:var(--bg)}
       <section class="dashboard-card" id="changesSection">
         <div class="section-head"><div><div class="section-title">Schimbări recente</div><div class="section-subtitle">Modificări aplicate programului.</div></div><button class="quick" id="openChanges">Vezi toate</button></div>
         <div id="changePreview"></div>
+      </section>
+
+
+      <section class="calendar-page" id="calendarPage" style="display:none">
+        <div class="calendar-head">
+          <div>
+            <div class="calendar-kicker">PLANIFICARE</div>
+            <div class="calendar-title">Calendar</div>
+            <p class="calendar-subtitle">Temele și proiectele cu deadline, plus vacanțele din anul școlar 2026–2027.</p>
+            <div class="calendar-source">Structura anului școlar: Ordinul nr. 3.194/2026.</div>
+          </div>
+          <div class="calendar-actions">
+            <button type="button" class="calendar-nav-btn" id="calendarPrev" aria-label="Luna anterioară">‹</button>
+            <div class="calendar-month" id="calendarMonth">—</div>
+            <button type="button" class="calendar-nav-btn" id="calendarNext" aria-label="Luna următoare">›</button>
+            <button type="button" class="calendar-today-btn" id="calendarToday">Astăzi</button>
+          </div>
+        </div>
+        <div class="calendar-weekdays" id="calendarWeekdays"></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="calendar-bottom">
+          <section class="calendar-selected-card">
+            <div class="calendar-selected-title" id="calendarSelectedTitle">—</div>
+            <div class="calendar-selected-sub" id="calendarSelectedSub">—</div>
+            <div class="calendar-events-list" id="calendarSelectedEvents"></div>
+            <div class="calendar-legend">
+              <span><i class="task-dot"></i> Temă / proiect</span>
+              <span><i class="vacation-dot"></i> Vacanță</span>
+            </div>
+          </section>
+          <section class="calendar-upcoming-card">
+            <div class="calendar-selected-title">Următoarele deadline-uri</div>
+            <div class="calendar-selected-sub">Cele mai apropiate teme și proiecte.</div>
+            <div class="calendar-upcoming-list" id="calendarUpcoming"></div>
+          </section>
+        </div>
       </section>
 
       <section class="chat-page" id="chatPage" style="display:none">
@@ -1315,6 +1423,82 @@ document.getElementById("tasksNav").onclick=()=>{showHomePage();scrollToSection(
 document.getElementById("announcementsBtn").onclick=()=>{showHomePage();setSideNavActive("announcements");openList("ann")};
 document.getElementById("changesBtn").onclick=()=>{showHomePage();setSideNavActive("changes");openList("changes")};
 document.getElementById("pollsBtn").onclick=()=>{showHomePage();setSideNavActive("polls");openList("polls")};
+
+const calendarMonthFormat=new Intl.DateTimeFormat("ro-RO",{month:"long",year:"numeric"});
+const calendarDayFormat=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const calendarShortFormat=new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit"});
+let calendarCursor=new Date(now.getFullYear(),now.getMonth(),1);
+let calendarSelectedDate=localDateKey(now);
+const calendarWeekdayNames=["Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă","Duminică"];
+const schoolVacations=[
+  {start:"2026-10-24",end:"2026-11-01",title:"Vacanța de toamnă"},
+  {start:"2026-12-23",end:"2027-01-10",title:"Vacanța de iarnă"},
+  {start:"2027-02-22",end:"2027-02-28",title:"Vacanța mobilă"},
+  {start:"2027-04-24",end:"2027-05-04",title:"Vacanța de primăvară"},
+  {start:"2027-06-19",end:"2027-09-05",title:"Vacanța de vară"}
+];
+function dateInRange(dateKey,start,end){return dateKey>=start&&dateKey<=end}
+function calendarEventsForDate(dateKey){
+  const events=[];
+  tasks.filter(t=>String(t?.deadline||"")===dateKey).forEach(t=>events.push({kind:"task",title:t.title||"Temă / proiect",subject:t.subject||"",type:t.type||"Temă",author:authorLabel(t),description:t.description||""}));
+  schoolVacations.filter(v=>dateInRange(dateKey,v.start,v.end)).forEach(v=>events.push({kind:"vacation",title:v.title,subject:"",type:"Vacanță",author:"",description:"Perioadă fără cursuri"}));
+  return events;
+}
+function vacationForDate(dateKey){return schoolVacations.find(v=>dateInRange(dateKey,v.start,v.end))||null}
+function calendarMonthKey(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")}
+function renderCalendar(){
+  const monthEl=document.getElementById("calendarMonth"),grid=document.getElementById("calendarGrid"),weekdays=document.getElementById("calendarWeekdays");
+  if(!monthEl||!grid||!weekdays)return;
+  monthEl.textContent=calendarMonthFormat.format(calendarCursor).replace(/^./,m=>m.toUpperCase());
+  weekdays.innerHTML=calendarWeekdayNames.map(x=>"<div class='calendar-weekday'>"+x+"</div>").join("");
+  const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);
+  const firstMonday=(first.getDay()+6)%7;
+  const daysInMonth=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,0).getDate();
+  const prevDays=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),0).getDate();
+  let html="";
+  for(let i=0;i<42;i++){
+    const dayOffset=i-firstMonday;
+    let cellDate;
+    let outside=false;
+    if(dayOffset<0){cellDate=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,prevDays+dayOffset+1);outside=true}
+    else if(dayOffset>=daysInMonth){cellDate=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,dayOffset-daysInMonth+1);outside=true}
+    else cellDate=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),dayOffset+1);
+    const key=localDateKey(cellDate),events=calendarEventsForDate(key),vac=vacationForDate(key);
+    const isToday=key===localDateKey(now),selectedDay=key===calendarSelectedDate;
+    const cls="calendar-day"+(outside?" outside":"")+(isToday?" today":"")+(selectedDay?" selected":"")+(vac?" vacation":"");
+    const chips=events.slice(0,3).map(ev=>"<span class='calendar-event-chip "+ev.kind+"'>"+escapeHtml(ev.kind==="vacation"?"Vacanță":(ev.type+" · "+ev.title))+"</span>").join("");
+    const more=events.length>3?"<span class='calendar-event-chip more'>+"+(events.length-3)+" altele</span>":"";
+    html+="<button type='button' class='"+cls+"' data-calendar-date='"+key+"' aria-label='"+escapeHtml(calendarDayFormat.format(cellDate))+"'><span class='calendar-day-head'><span class='calendar-day-number'>"+cellDate.getDate()+"</span><span class='calendar-day-count'>"+(events.length?events.length+" even.":"")+"</span></span><span class='calendar-events'>"+chips+more+"</span></button>";
+  }
+  grid.innerHTML=html;
+  grid.querySelectorAll("[data-calendar-date]").forEach(btn=>btn.addEventListener("click",()=>{
+    calendarSelectedDate=btn.dataset.calendarDate;
+    const d=new Date(calendarSelectedDate+"T12:00:00");
+    calendarCursor=new Date(d.getFullYear(),d.getMonth(),1);
+    renderCalendar();
+    renderCalendarSelected();
+  }));
+  renderCalendarSelected();
+}
+function renderCalendarSelected(){
+  const title=document.getElementById("calendarSelectedTitle"),sub=document.getElementById("calendarSelectedSub"),box=document.getElementById("calendarSelectedEvents"),upcoming=document.getElementById("calendarUpcoming");
+  if(!title||!sub||!box||!upcoming)return;
+  const d=new Date(calendarSelectedDate+"T12:00:00"),events=calendarEventsForDate(calendarSelectedDate),vac=vacationForDate(calendarSelectedDate);
+  title.textContent=calendarDayFormat.format(d).replace(/^./,m=>m.toUpperCase());
+  sub.textContent=events.length?(events.length===1?"1 eveniment":" "+events.length+" evenimente"):"Nu există evenimente pentru această zi.";
+  box.innerHTML=events.length?events.map(ev=>{
+    if(ev.kind==="vacation")return "<article class='calendar-detail vacation'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>Vacanță · "+fmtDate(schoolVacations.find(v=>v.title===ev.title&&dateInRange(calendarSelectedDate,v.start,v.end))?.start||calendarSelectedDate)+" – "+fmtDate(schoolVacations.find(v=>v.title===ev.title&&dateInRange(calendarSelectedDate,v.start,v.end))?.end||calendarSelectedDate)+"</div></article>";
+    return "<article class='calendar-detail task'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>"+escapeHtml(ev.type)+" · "+escapeHtml(ev.subject)+" · Postat de "+escapeHtml(ev.author||"Administrator")+"</div>"+(ev.description?"<div class='calendar-detail-note'>"+escapeHtml(ev.description)+"</div>":"")+"</article>";
+  }).join(""):"<div class='empty'>Alege o altă zi pentru a vedea teme, proiecte sau vacanțe.</div>";
+  const todayKey=localDateKey(now);
+  const upcomingTasks=tasks.filter(t=>t?.deadline&&String(t.deadline)>=todayKey).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,6);
+  upcoming.innerHTML=upcomingTasks.length?upcomingTasks.map(t=>"<div class='calendar-upcoming-item'><div class='calendar-upcoming-date'>"+escapeHtml(relativeDeadline(t.deadline))+"</div><div class='calendar-upcoming-main'><div class='calendar-upcoming-title'>"+escapeHtml(t.title)+"</div><div class='calendar-upcoming-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type||"Temă")+"</div></div></div>").join(""):"<div class='empty'>Nu există deadline-uri active.</div>";
+}
+document.getElementById("calendarPrev").onclick=()=>{calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1);renderCalendar()};
+document.getElementById("calendarNext").onclick=()=>{calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1);renderCalendar()};
+document.getElementById("calendarToday").onclick=()=>{calendarSelectedDate=localDateKey(now);calendarCursor=new Date(now.getFullYear(),now.getMonth(),1);renderCalendar()};
+renderCalendar();
+
 function showChatPage(){
   document.querySelectorAll(".dashboard-main > *").forEach(el=>{el.style.display=el.id==="chatPage"?"block":"none"});
   document.querySelector(".dashboard-main")?.scrollTo?.({top:0,behavior:"smooth"});
@@ -1325,8 +1509,14 @@ function showChatPage(){
   const online=document.getElementById("chatOnlineCount");if(online)online.textContent=count+" online";
 }
 function showHomePage(){
-  document.querySelectorAll(".dashboard-main > *").forEach(el=>{if(el.id==="chatPage")el.style.display="none";else el.style.display=""});
+  document.querySelectorAll(".dashboard-main > *").forEach(el=>{if(el.id==="chatPage"||el.id==="calendarPage")el.style.display="none";else el.style.display=""});
 }
+function showCalendarPage(){
+  document.querySelectorAll(".dashboard-main > *").forEach(el=>{el.style.display=el.id==="calendarPage"?"block":"none"});
+  window.scrollTo({top:0,behavior:"smooth"});
+  renderCalendar();
+}
+document.getElementById("calendarBtn").onclick=()=>{setSideNavActive("calendar");showCalendarPage()};
 document.getElementById("chatBtn").onclick=()=>{setSideNavActive("chat");showChatPage()};
 document.getElementById("openAnnouncements").onclick=()=>{setSideNavActive("announcements");openList("ann")};
 document.getElementById("openChanges").onclick=()=>{setSideNavActive("changes");openList("changes")};
@@ -1684,7 +1874,7 @@ document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
 });
 
 supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
-supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments();showLiveToast("Comentariu nou")}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none"){await loadChat();showLiveToast("Mesaj nou în chat")}}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Temă sau proiect nou")}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Schimbare de orar")}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Anunț nou")})
+supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments();showLiveToast("Comentariu nou")}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none"){await loadChat();showLiveToast("Mesaj nou în chat")}}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)renderAdminOverviewStats();showLiveToast("Temă sau proiect nou")}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Schimbare de orar")}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Anunț nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls();showLiveToast("Poll nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin){await renderAdminPolls();renderAdminOverviewStats()}}).subscribe();
 
@@ -1763,7 +1953,7 @@ document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
 document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);
 setSideNavActive("home");refreshAuth();loadData().then(()=>{renderTabs();render()});
 setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderSchoolState()},1000);
-setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render()},30000);
+setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render();if(document.getElementById("calendarPage")?.style.display!=="none"){calendarSelectedDate=localDateKey(now);renderCalendar()};},30000);
 </script>
 <div class="live-toast" id="liveToast" aria-live="polite"></div>
 
