@@ -609,7 +609,7 @@ body{background:var(--bg)}
             <div class="calendar-kicker">PLANIFICARE</div>
             <div class="calendar-title">Calendar</div>
             <p class="calendar-subtitle">Temele și proiectele cu deadline, plus vacanțele din anul școlar 2026–2027.</p>
-            <div class="calendar-source">Structura anului școlar: Ordinul nr. 3.194/2026.</div>
+            <div class="calendar-source">Calendar adaptat pentru filiera tehnologică/profesională · Ordinul nr. 3.194/2026.</div>
           </div>
           <div class="calendar-actions">
             <button type="button" class="calendar-nav-btn" id="calendarPrev" aria-label="Luna anterioară">‹</button>
@@ -1435,7 +1435,7 @@ const schoolVacations=[
   {start:"2026-12-23",end:"2027-01-10",title:"Vacanța de iarnă"},
   {start:"2027-02-22",end:"2027-02-28",title:"Vacanța mobilă"},
   {start:"2027-04-24",end:"2027-05-04",title:"Vacanța de primăvară"},
-  {start:"2027-06-19",end:"2027-09-05",title:"Vacanța de vară"}
+  {start:"2027-06-25",end:"2027-09-05",title:"Vacanța de vară",note:"Pentru filiera tehnologică și învățământul profesional."}
 ];
 function dateInRange(dateKey,start,end){return dateKey>=start&&dateKey<=end}
 function calendarEventsForDate(dateKey){
@@ -1487,7 +1487,7 @@ function renderCalendarSelected(){
   title.textContent=calendarDayFormat.format(d).replace(/^./,m=>m.toUpperCase());
   sub.textContent=events.length?(events.length===1?"1 eveniment":" "+events.length+" evenimente"):"Nu există evenimente pentru această zi.";
   box.innerHTML=events.length?events.map(ev=>{
-    if(ev.kind==="vacation")return "<article class='calendar-detail vacation'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>Vacanță · "+fmtDate(schoolVacations.find(v=>v.title===ev.title&&dateInRange(calendarSelectedDate,v.start,v.end))?.start||calendarSelectedDate)+" – "+fmtDate(schoolVacations.find(v=>v.title===ev.title&&dateInRange(calendarSelectedDate,v.start,v.end))?.end||calendarSelectedDate)+"</div></article>";
+    if(ev.kind==="vacation"){const v=schoolVacations.find(x=>x.title===ev.title&&dateInRange(calendarSelectedDate,x.start,x.end));return "<article class='calendar-detail vacation'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>Vacanță · "+fmtDate(v?.start||calendarSelectedDate)+" – "+fmtDate(v?.end||calendarSelectedDate)+"</div>"+(v?.note?"<div class='calendar-detail-note'>"+escapeHtml(v.note)+"</div>":"")+"</article>";}
     return "<article class='calendar-detail task'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>"+escapeHtml(ev.type)+" · "+escapeHtml(ev.subject)+" · Postat de "+escapeHtml(ev.author||"Administrator")+"</div>"+(ev.description?"<div class='calendar-detail-note'>"+escapeHtml(ev.description)+"</div>":"")+"</article>";
   }).join(""):"<div class='empty'>Alege o altă zi pentru a vedea teme, proiecte sau vacanțe.</div>";
   const todayKey=localDateKey(now);
