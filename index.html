@@ -85,6 +85,10 @@ body{background:var(--bg)}
 .schedule-card .lesson{border-top:1px solid var(--line);padding:12px 8px;min-width:0}.schedule-card .lesson:first-of-type{border-top:0}.schedule-card .lesson:hover{background:rgba(127,150,180,.06)}.schedule-card .lesson > div{min-width:0}.schedule-card .subject{overflow-wrap:anywhere}
 .dashboard-card .notice-card,.dashboard-card .change-card,.dashboard-card .poll-card{margin-bottom:8px}.dashboard-card .empty{padding:20px 12px}.dashboard-card .dash-list{margin-top:0}
 #taskPreview{display:flex;flex-direction:column;gap:8px}.task-preview-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:rgba(127,150,180,.03)}.task-preview-main{min-width:0}.task-preview-title{font-weight:800;font-size:14px}.task-preview-meta{font-size:11px;color:var(--muted);margin-top:3px}.task-preview-deadline{font-size:11px;font-weight:900;color:var(--blue);white-space:nowrap}
+.task-image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:9px}.task-image-grid img{display:block;width:100%;aspect-ratio:1.35;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:rgba(127,150,180,.06);cursor:zoom-in}
+.task-image-count{font-size:11px;font-weight:800;color:var(--blue);margin-top:5px}
+.task-upload{margin-top:9px;padding:11px 12px;border:1px dashed var(--line);border-radius:12px;background:rgba(127,150,180,.03)}.task-upload-label{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;cursor:pointer}.task-upload input{display:none}.task-upload-help{margin-top:4px;font-size:11px;color:var(--muted)}
+@media(max-width:520px){.task-image-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #changesSection{margin-top:0}.quick{font-size:12px}
 @media(max-width:1100px){
   .app-shell{grid-template-columns:76px minmax(0,1fr)}
@@ -504,7 +508,11 @@ body{background:var(--bg)}
     <div class="field-label">Descriere</div>
     <textarea class="textarea" id="taskDescription" maxlength="1000" placeholder="Detalii suplimentare (opțional)"></textarea>
   </div>
-  <div class="actions"><span></span><button class="send" type="submit">Adaugă</button></div>
+  <div class="task-upload">
+    <label class="task-upload-label"><span>📷</span><span>Adaugă poze</span><input id="taskImages" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+    <div class="task-upload-help">Poți adăuga până la 5 imagini, maximum 5 MB fiecare. Formate: JPG, PNG sau WEBP.</div>
+  </div>
+  <div class="actions"><span></span><button class="send" id="taskSubmitBtn" type="submit">Adaugă</button></div>
   <div class="error" id="taskError"></div>
 </form>
 <div class="dash-list" id="taskList"></div>
@@ -947,6 +955,16 @@ function renderAttention(){
     box.style.display="none";
   }
 }
+function taskImageUrls(task){
+  return Array.isArray(task?.image_paths)
+    ? task.image_paths.map(path=>supabaseClient.storage.from("task-images").getPublicUrl(path).data.publicUrl).filter(Boolean)
+    : [];
+}
+function taskImageGridHtml(task){
+  const urls=taskImageUrls(task);
+  if(!urls.length)return "";
+  return "<div class='task-image-grid'>"+urls.map((url,i)=>"<a href='"+escapeHtml(url)+"' target='_blank' rel='noopener'><img src='"+escapeHtml(url)+"' alt='Poză pentru "+escapeHtml(task.title||"tema")+"' loading='lazy'></a>").join("")+"</div>";
+}
 async function render(){
   document.getElementById("selectedTitle").textContent=selected;
   const dueTaskCount=document.getElementById("dueTaskCount");
@@ -978,7 +996,7 @@ async function renderPreviews(){
   const taskBox=document.getElementById("taskPreview");
   if(taskBox){
     const upcoming=tasks.filter(isTaskActive).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,5);
-    taskBox.innerHTML=upcoming.length?upcoming.map(t=>"<article class='task-preview-item'><div class='task-preview-main'><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type)+"</div></div><div class='task-preview-deadline'>"+fmtDate(t.deadline)+"</div></article>").join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
+    taskBox.innerHTML=upcoming.length?upcoming.map(t=>"<article class='task-preview-item'><div class='task-preview-main'><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type)+"</div>"+(t.image_paths?.length?"<div class='task-image-count'>📷 "+t.image_paths.length+" "+(t.image_paths.length===1?"poză":"poze")+"</div>":"")+"</div><div class='task-preview-deadline'>"+fmtDate(t.deadline)+"</div></article>").join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
   }
   await renderPollPreview();
 }
@@ -1034,7 +1052,7 @@ async function openComments(subject){
 }
 async function loadSubjectTasks(){
   const list=tasks.filter(t=>t.subject===selectedSubject&&isTaskActive(t));
-  document.getElementById("subjectTasks").innerHTML="<h3 style='margin:0 0 8px'>Teme / proiecte</h3>"+(list.length?list.map(t=>"<article class='notice-card'><div class='notice-title'>"+escapeHtml(t.title)+"</div><div class='notice-meta'>"+escapeHtml(t.type)+" · Deadline: <b>"+fmtDate(t.deadline)+"</b></div>"+(t.description?"<div class='notice-message'>"+escapeHtml(t.description)+"</div>":"")+"</article>").join(""):"<div class='empty'>Nu există încă teme sau proiecte pentru această materie.</div>");
+  document.getElementById("subjectTasks").innerHTML="<h3 style='margin:0 0 8px'>Teme / proiecte</h3>"+(list.length?list.map(t=>"<article class='notice-card'><div class='notice-title'>"+escapeHtml(t.title)+"</div><div class='notice-meta'>"+escapeHtml(t.type)+" · Deadline: <b>"+fmtDate(t.deadline)+"</b></div>"+(t.description?"<div class='notice-message'>"+escapeHtml(t.description)+"</div>":"")+taskImageGridHtml(t)+"</article>").join(""):"<div class='empty'>Nu există încă teme sau proiecte pentru această materie.</div>");
 }
 async function loadComments(){
   const box=document.getElementById("comments");box.innerHTML="<div class='no-comments'>Se încarcă…</div>";
@@ -1157,7 +1175,7 @@ async function openDashboard(){
 }
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
-async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
+async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+"</div></div><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 async function renderAdminChanges(){document.getElementById("changeList").innerHTML=changes.length?changes.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+" → "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end+"</div><div class='dash-item-meta'>"+escapeHtml(n.from_subject)+" → "+escapeHtml(n.to_subject)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div></div><button class='delete-btn' onclick='removeChange("+c.id+")'>Șterge</button></div>"}).join(""):"<div class='empty'>Nu există schimbări.</div>"}
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+(a.attention?"<span style='color:#b91c1c'>[ATENȚIE] </span>":"")+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 function addPollOptionInput(value=""){
@@ -1228,7 +1246,11 @@ async function renderAdminAdmins(){
   }).join(""):"<div class='empty'>Nu există administratori.</div>";
   resetSelect.innerHTML=rows.filter(a=>a.email.toLowerCase()!=="candidoluciano2008l@gmail.com").map(a=>"<option value='"+escapeHtml(a.email)+"'>"+escapeHtml(a.email)+"</option>").join("");
 }
-window.removeTask=async id=>{await adminDelete("tasks",id);await loadData();await render();await renderAdminTasks()};
+window.removeTask=async id=>{
+  const task=tasks.find(t=>Number(t.id)===Number(id));
+  if(task?.image_paths?.length)await supabaseClient.storage.from("task-images").remove(task.image_paths);
+  await adminDelete("tasks",id);await loadData();await render();await renderAdminTasks();
+};
 window.removeChange=async id=>{await adminDelete("schedule_changes",id);await loadData();await render();await renderAdminChanges()};
 window.removeAnnouncement=async id=>{await adminDelete("announcements",id);await loadData();await render();await renderAdminAnnouncements()};
 window.removeCommentAdmin=async id=>{await adminDelete("comments",id);await loadData();await render();await renderAdminComments()};
@@ -1299,9 +1321,48 @@ document.getElementById("passwordForm").addEventListener("submit",async e=>{
   catch(error){err.textContent=error.message;err.style.color="var(--danger)"}
 });
 document.getElementById("taskAdminForm").addEventListener("submit",async e=>{
- e.preventDefault();const err=document.getElementById("taskError");err.textContent="";
- const r=await supabaseClient.from("tasks").insert({subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null});
- if(r.error){err.textContent=r.error.message;return}e.target.reset();document.getElementById("taskType").value="Temă";await loadData();await render();await renderAdminTasks();
+ e.preventDefault();
+ const err=document.getElementById("taskError"),button=document.getElementById("taskSubmitBtn"),fileInput=document.getElementById("taskImages");
+ err.textContent="";
+ const files=Array.from(fileInput.files||[]);
+ if(files.length>5){err.textContent="Poți încărca maximum 5 imagini.";return}
+ for(const file of files){
+   if(!["image/jpeg","image/png","image/webp"].includes(file.type)){err.textContent="Sunt acceptate doar JPG, PNG sau WEBP.";return}
+   if(file.size>5*1024*1024){err.textContent="Fiecare imagine trebuie să aibă maximum 5 MB.";return}
+ }
+ button.disabled=true;
+ try{
+   const taskData={subject:document.getElementById("taskSubject").value,type:document.getElementById("taskType").value,title:document.getElementById("taskTitle").value.trim(),deadline:document.getElementById("taskDeadline").value,description:document.getElementById("taskDescription").value.trim()||null,image_paths:[]};
+   const created=await supabaseClient.from("tasks").insert(taskData).select("id").single();
+   if(created.error)throw created.error;
+   const taskId=created.data.id,uploaded=[];
+   try{
+     for(let i=0;i<files.length;i++){
+       const file=files[i],ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path="task/"+taskId+"/"+Date.now()+"-"+i+"-"+(window.crypto?.randomUUID?.()||Math.random().toString(36).slice(2))+"."+ext;
+       const up=await supabaseClient.storage.from("task-images").upload(path,file,{contentType:file.type,upsert:false});
+       if(up.error)throw up.error;
+       uploaded.push(path);
+     }
+   }catch(uploadError){
+     if(uploaded.length)await supabaseClient.storage.from("task-images").remove(uploaded);
+     await supabaseClient.from("tasks").delete().eq("id",taskId);
+     throw uploadError;
+   }
+   if(uploaded.length){
+     const updated=await supabaseClient.from("tasks").update({image_paths:uploaded}).eq("id",taskId);
+     if(updated.error){
+       await supabaseClient.storage.from("task-images").remove(uploaded);
+       await supabaseClient.from("tasks").delete().eq("id",taskId);
+       throw updated.error;
+     }
+   }
+   e.target.reset();document.getElementById("taskType").value="Temă";
+   await loadData();await render();await renderAdminTasks();
+ }catch(error){
+   err.textContent=error?.message||"Nu s-a putut adăuga tema/proiectul.";
+ }finally{
+   button.disabled=false;
+ }
 });
 function intervalOptionsForDate(dateValue){
   if(!dateValue)return [];
