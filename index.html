@@ -480,7 +480,7 @@ body{background:var(--bg)}
 <button class="dash-tab" data-panel="announcementsPanel">Anunțuri</button>
 <button class="dash-tab" data-panel="pollsPanel">Polluri</button>
 <button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
-<button class="dash-tab" data-panel="onlinePanel">Online</button>
+<button class="dash-tab" id="onlineTab" data-panel="onlinePanel" style="display:none">Online</button>
 <button class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
 <button class="dash-tab" data-panel="securityPanel">Securitate</button>
 </div>
@@ -730,6 +730,8 @@ async function refreshAuth(){
   const adminLabel=document.getElementById("adminBtnLabel");if(adminLabel)adminLabel.textContent=isAdmin?"Dashboard":"Admin";
   const adminsTab=document.getElementById("adminsTab");
   if(adminsTab) adminsTab.style.display=isSuperAdmin?"inline-flex":"none";
+  const onlineTab=document.getElementById("onlineTab");
+  if(onlineTab) onlineTab.style.display=isSuperAdmin?"inline-flex":"none";
 }
 async function authenticateAdmin(){
   const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");
@@ -1137,6 +1139,7 @@ async function openDashboard(){
   await loadData();
   fillTaskSubjects();
   document.getElementById("adminsTab").style.display=isSuperAdmin?"inline-flex":"none";
+  document.getElementById("onlineTab").style.display=isSuperAdmin?"inline-flex":"none";
   resetPollOptionFields();
   await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers()]);
 }
@@ -1385,7 +1388,7 @@ document.getElementById("announcementAdminForm").addEventListener("submit",async
  if(r.error){err.textContent=r.error.message;return}e.target.reset();await loadData();await render();await renderAdminAnnouncements();
 });
 document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
-  if(btn.id==="adminsTab"&&!isSuperAdmin)return;
+  if((btn.id==="adminsTab"||btn.id==="onlineTab")&&!isSuperAdmin)return;
   document.querySelectorAll(".dash-tab").forEach(x=>x.classList.remove("active"));
   document.querySelectorAll(".dash-panel").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active");
