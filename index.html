@@ -965,12 +965,26 @@ function taskImageUrls(task){
 function taskImageGridHtml(task){
   const urls=taskImageUrls(task);
   if(!urls.length)return "";
-  return "<div class='task-image-grid'>"+urls.map((url,i)=>"<button type='button' class='task-image-button' onclick='openTaskImage("+JSON.stringify(url)+")' aria-label='Deschide poza'><img src='"+escapeHtml(url)+"' alt='Poză pentru "+escapeHtml(task.title||"tema")+"' loading='lazy'></button>").join("")+"</div>";
+  const paths=Array.isArray(task?.image_paths)?task.image_paths:[];
+  return "<div class='task-image-grid'>"+paths.map((path,i)=>{
+    const url=supabaseClient.storage.from("task-images").getPublicUrl(path).data.publicUrl;
+    return "<button type='button' class='task-image-button' onclick='openTaskImage("+JSON.stringify(path)+")' aria-label='Deschide poza'><img src='"+escapeHtml(url)+"' alt='Poză pentru "+escapeHtml(task.title||"tema")+"' loading='lazy'></button>";
+  }).join("")+"</div>";
 }
-function openTaskImage(url){
+async function openTaskImage(path){
   const overlay=document.getElementById("taskImageViewer"),img=document.getElementById("taskImageViewerImg");
   if(!overlay||!img)return;
-  img.src=url;overlay.classList.add("open");document.body.style.overflow="hidden";
+  overlay.classList.add("open");document.body.style.overflow="hidden";img.src="";
+  try{
+    const signed=await supabaseClient.storage.from("task-images").createSignedUrl(path,3600);
+    if(!signed.error&&signed.data?.signedUrl){img.src=signed.data.signedUrl;return}
+    const downloaded=await supabaseClient.storage.from("task-images").download(path);
+    if(downloaded.error)throw downloaded.error;
+    img.src=URL.createObjectURL(downloaded.data);
+  }catch(error){
+    closeTaskImage();
+    alert("Nu am putut deschide poza. Încearcă din nou.");
+  }
 }
 function closeTaskImage(){
   const overlay=document.getElementById("taskImageViewer"),img=document.getElementById("taskImageViewerImg");
