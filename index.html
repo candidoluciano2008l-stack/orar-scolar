@@ -595,12 +595,12 @@ async function updatePushButton(){
   if(!supported){btn.textContent="Notificările nu sunt disponibile";btn.disabled=true;return}
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
   if(ios&&!isStandalonePwa()){btn.textContent="Instalează aplicația pentru notificări";help.textContent="Pe iPhone, notificările funcționează după ce aplicația este adăugată pe ecranul principal.";return}
-  if(Notification.permission==="denied"){btn.textContent="Notificări blocate";help.textContent="Le poți reactiva din setările de notificări ale dispozitivului.";return}
+  if(Notification.permission==="denied"){btn.textContent="Notificări blocate";help.textContent="Le poți reactiva din setările de notificări ale dispozitivului.";btn.classList.remove("notify-active");return}
   try{
     const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();
-    if(sub){btn.textContent="Notificări active";btn.classList.add("notify-active");help.textContent="Primești alerte pentru comentarii și anunțuri noi.";return}
+    if(sub){btn.textContent="Notificări active";btn.classList.add("notify-active");help.textContent="Primești alerte pentru comentarii, anunțuri, teme, schimbări și polluri noi.";return}
   }catch(_){}
-  btn.textContent="Activează notificările";help.textContent="Primești alerte pentru comentarii și anunțuri noi.";
+  btn.textContent="Activează notificările";btn.classList.remove("notify-active");help.textContent="Primești alerte pentru comentarii, anunțuri, teme, schimbări și polluri.";
 }
 async function enablePushNotifications(){
   const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
@@ -623,6 +623,30 @@ async function enablePushNotifications(){
   }
 }
 
+async function disablePushNotifications(){
+  const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
+  if(!btn)return;
+  try{
+    btn.disabled=true;btn.textContent="Se dezactivează…";
+    const registration=await navigator.serviceWorker.ready;
+    const sub=await registration.pushManager.getSubscription();
+    if(sub){
+      await supabaseClient.rpc("remove_push_subscription",{p_endpoint:sub.endpoint});
+      await sub.unsubscribe();
+    }
+    btn.disabled=false;btn.classList.remove("notify-active");btn.textContent="Activează notificările";
+    help.textContent="Notificările sunt dezactivate. Le poți reactiva oricând.";
+  }catch(error){
+    btn.disabled=false;btn.textContent="Încearcă din nou";
+    help.textContent=error?.message||"Nu am putut dezactiva notificările.";
+  }
+}
+async function togglePushNotifications(){
+  const sub=await navigator.serviceWorker.ready.then(reg=>reg.pushManager.getSubscription()).catch(()=>null);
+  if(sub) return disablePushNotifications();
+  return enablePushNotifications();
+}
+
 function applyTheme(theme){
   const t=theme==="dark"||theme==="light"?theme:(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
   document.documentElement.setAttribute("data-theme",t);localStorage.setItem("schoolTheme",t);
@@ -631,7 +655,7 @@ function applyTheme(theme){
 }
 applyTheme(localStorage.getItem("schoolTheme")||"auto");
 document.getElementById("themeBtn").onclick=()=>applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");
-document.getElementById("pushBtn").onclick=enablePushNotifications;
+document.getElementById("pushBtn").onclick=togglePushNotifications;
 updatePushButton();
 
 async function refreshAuth(){
