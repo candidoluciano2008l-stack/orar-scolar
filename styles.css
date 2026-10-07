@@ -278,8 +278,9 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .sidebar{grid-column:1;background:linear-gradient(180deg,#091321 0%,#0b1727 100%);width:100%}
 .sidebar-brand{padding-bottom:24px}
 .brand-mark{background:linear-gradient(145deg,#2b85c9,#1c598b);box-shadow:0 5px 16px rgba(35,106,163,.28)}
-.side-link{flex-direction:row;align-items:center;gap:11px;min-height:44px;padding:10px 12px}
+.side-link{flex-direction:row;align-items:center;gap:11px;min-height:44px;padding:10px 12px;appearance:none;-webkit-appearance:none;border:1px solid transparent;background:transparent;color:inherit;text-align:left}
 .side-link span{width:22px;height:22px;display:grid;place-items:center;border-radius:7px;background:rgba(255,255,255,.05);color:#91a8bd;font-size:12px;font-weight:900}
+.side-link span svg{width:16px;height:16px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .side-link b{font-size:13px;font-weight:800;letter-spacing:.01em}
 .side-link small{display:none}
 .side-link.active{background:linear-gradient(90deg,#1b5c92,#185078);box-shadow:none}.side-link.nav-selected{background:linear-gradient(90deg,#1b5c92,#185078);box-shadow:inset 3px 0 0 #78bdf3}.side-link.nav-selected span{background:rgba(255,255,255,.12);color:#fff}.side-link.nav-selected b{color:#fff}
