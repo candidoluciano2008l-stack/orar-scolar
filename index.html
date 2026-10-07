@@ -146,6 +146,23 @@ body{background:var(--bg)}
 .task-selected-images{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:10px}
 .task-selected-image{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:rgba(127,150,180,.05)}
 .task-selected-image img{display:block;width:100%;height:100%;object-fit:cover}
+.task-image-viewer-modal{width:min(1100px,100%);max-height:94vh}
+.task-image-viewer-count{font-size:11px;color:var(--muted);margin-top:3px}
+.task-image-viewer-body{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;min-height:320px;padding:14px;background:rgba(127,150,180,.04)}
+.task-image-viewer-body img{display:block;width:100%;height:min(72vh,680px);object-fit:contain;border-radius:12px}
+.task-image-nav{width:40px;height:48px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-size:30px;line-height:1;cursor:pointer}
+.task-image-nav:disabled{opacity:.3;cursor:default}
+.task-image-thumbs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px 14px;border-top:1px solid var(--line);background:var(--card)}
+.task-image-thumb{width:62px;height:62px;flex:0 0 62px;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;background:transparent;cursor:pointer}
+.task-image-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.task-image-thumb.active{border-color:var(--blue)}
+@media(max-width:760px){
+  .task-image-viewer-modal{width:100%;max-height:96vh;border-radius:20px 20px 0 0}
+  .task-image-viewer-body{grid-template-columns:36px minmax(0,1fr) 36px;gap:5px;padding:9px}
+  .task-image-viewer-body img{height:min(68vh,620px);border-radius:10px}
+  .task-image-nav{width:34px;height:44px;font-size:27px}
+  .task-image-thumb{width:56px;height:56px;flex-basis:56px}
+}
 .task-selected-remove{position:absolute;top:4px;right:4px;width:24px;height:24px;border:0;border-radius:50%;background:rgba(8,18,30,.78);color:#fff;font-size:16px;line-height:24px;padding:0;cursor:pointer}
 .task-selected-empty{grid-column:1/-1;color:var(--muted);font-size:11px;padding-top:2px}
 .task-existing-image{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:rgba(127,150,180,.05)}
@@ -672,7 +689,23 @@ body{background:var(--bg)}
   </div>
 </div>
 
-<div class="overlay" id="taskImageViewer"><section class="modal" style="max-width:1100px;max-height:94vh"><div class="modal-head"><div class="modal-title">Imagine</div><button class="close" id="taskImageViewerClose">×</button></div><div class="modal-body" style="display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.04)"><img id="taskImageViewerImg" src="" alt="Imagine atașată" style="display:block;max-width:100%;max-height:78vh;object-fit:contain;border-radius:12px"></div></section></div>
+<div class="overlay" id="taskImageViewer">
+  <section class="modal task-image-viewer-modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title">Poze atașate</div>
+        <div class="task-image-viewer-count" id="taskImageViewerCount"></div>
+      </div>
+      <button class="close" id="taskImageViewerClose">×</button>
+    </div>
+    <div class="task-image-viewer-body">
+      <button type="button" class="task-image-nav prev" id="taskImagePrev" aria-label="Poza anterioară">‹</button>
+      <img id="taskImageViewerImg" src="" alt="Imagine atașată">
+      <button type="button" class="task-image-nav next" id="taskImageNext" aria-label="Poza următoare">›</button>
+    </div>
+    <div class="task-image-thumbs" id="taskImageViewerThumbs"></div>
+  </section>
+</div>
 
 <div class="overlay" id="overlay"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div class="modal-title" id="modalTitle">—</div><button class="close" id="close">×</button></div><div class="modal-body"><div id="subjectTasks"></div><h3 style="margin:18px 0 8px">Comentarii</h3><div class="comments" id="comments" style="padding:0;overflow:visible"><div class="no-comments">Se încarcă…</div></div></div><form class="form" id="commentForm"><div class="row"><input class="input" id="name" maxlength="30" placeholder="Numele tău" autocomplete="nickname" required><textarea class="textarea" id="message" maxlength="500" placeholder="Scrie tema, un anunț sau un comentariu..." required></textarea></div><input id="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><div class="actions"><div class="hint">Max. 500 caractere.</div><button class="send" id="send" type="submit">Adaugă comentariu</button></div><div class="error" id="error"></div></form></section></div>
 
@@ -1211,7 +1244,7 @@ function renderExistingTaskImages(){
     const item=document.createElement("div");item.className="task-existing-image";
     item.innerHTML="<img src='"+escapeHtml(url)+"' alt='Poză existentă "+(index+1)+"'><button type='button' class='task-existing-remove' aria-label='Șterge poza' title='Șterge poza'>×</button>";
     item.querySelector("img").style.cursor="zoom-in";
-    item.querySelector("img").onclick=()=>openTaskImage(path);
+    item.querySelector("img").onclick=()=>openTaskImage(path,editingTaskImagePaths);
     item.querySelector("button").onclick=()=>{
       editingTaskImagePaths.splice(index,1);
       renderExistingTaskImages();
@@ -1250,30 +1283,56 @@ function taskImageGridHtml(task){
   const paths=Array.isArray(task?.image_paths)?task.image_paths:[];
   return "<div class='task-image-grid'>"+paths.map((path,i)=>{
     const url=supabaseClient.storage.from("task-images").getPublicUrl(path).data.publicUrl;
-    return "<button type='button' class='task-image-button' onclick='openTaskImage("+JSON.stringify(path)+")' aria-label='Deschide poza'><img src='"+escapeHtml(url)+"' alt='Poză pentru "+escapeHtml(task.title||"tema")+"' loading='lazy'></button>";
+    return "<button type='button' class='task-image-button' onclick='openTaskImage("+JSON.stringify(path)+","+JSON.stringify(paths)+")' aria-label='Deschide poza'><img src='"+escapeHtml(url)+"' alt='Poză pentru "+escapeHtml(task.title||"tema")+"' loading='lazy'></button>";
   }).join("")+"</div>";
 }
-async function openTaskImage(path){
-  const overlay=document.getElementById("taskImageViewer"),img=document.getElementById("taskImageViewerImg");
-  if(!overlay||!img)return;
-  overlay.classList.add("open");document.body.style.overflow="hidden";img.src="";
+let taskViewerPaths=[];
+let taskViewerIndex=0;
+function taskViewerRender(){
+  const img=document.getElementById("taskImageViewerImg"),count=document.getElementById("taskImageViewerCount"),thumbs=document.getElementById("taskImageViewerThumbs"),prev=document.getElementById("taskImagePrev"),next=document.getElementById("taskImageNext");
+  if(!img||!thumbs)return;
+  const total=taskViewerPaths.length;
+  const path=taskViewerPaths[taskViewerIndex];
+  count.textContent=total?((taskViewerIndex+1)+" / "+total):"";
+  prev.disabled=total<=1;
+  next.disabled=total<=1;
+  thumbs.innerHTML=taskViewerPaths.map((p,i)=>"<button type='button' class='task-image-thumb "+(i===taskViewerIndex?"active":"")+"' data-index='"+i+"' aria-label='Deschide poza "+(i+1)+"'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(p).data.publicUrl)+"' alt='Miniatură "+(i+1)+"'></button>").join("");
+  thumbs.querySelectorAll(".task-image-thumb").forEach(btn=>btn.onclick=()=>{taskViewerIndex=Number(btn.dataset.index);taskViewerLoadCurrent()});
+  if(path)taskViewerLoadCurrent();
+}
+async function taskViewerLoadCurrent(){
+  const img=document.getElementById("taskImageViewerImg"),path=taskViewerPaths[taskViewerIndex];
+  if(!img||!path)return;
+  img.src="";
   try{
     const signed=await supabaseClient.storage.from("task-images").createSignedUrl(path,3600);
     if(!signed.error&&signed.data?.signedUrl){img.src=signed.data.signedUrl;return}
     const downloaded=await supabaseClient.storage.from("task-images").download(path);
     if(downloaded.error)throw downloaded.error;
     img.src=URL.createObjectURL(downloaded.data);
-  }catch(error){
-    closeTaskImage();
-    alert("Nu am putut deschide poza. Încearcă din nou.");
-  }
+  }catch(_){img.alt="Nu am putut încărca această poză."}
+  document.querySelectorAll("#taskImageViewerThumbs .task-image-thumb").forEach((btn,i)=>btn.classList.toggle("active",i===taskViewerIndex));
+  const count=document.getElementById("taskImageViewerCount");if(count)count.textContent=(taskViewerIndex+1)+" / "+taskViewerPaths.length;
+}
+function openTaskImage(path,allPaths=[]){
+  const overlay=document.getElementById("taskImageViewer");
+  if(!overlay)return;
+  taskViewerPaths=Array.isArray(allPaths)&&allPaths.length?allPaths.slice():[path];
+  const found=taskViewerPaths.indexOf(path);
+  taskViewerIndex=found>=0?found:0;
+  overlay.classList.add("open");document.body.style.overflow="hidden";
+  taskViewerRender();
 }
 function closeTaskImage(){
   const overlay=document.getElementById("taskImageViewer"),img=document.getElementById("taskImageViewerImg");
   if(img)img.src="";
+  taskViewerPaths=[];
+  taskViewerIndex=0;
   if(overlay)overlay.classList.remove("open");
   if(!document.querySelector(".overlay.open:not(#taskImageViewer)"))document.body.style.overflow="";
 }
+document.getElementById("taskImagePrev").onclick=()=>{if(taskViewerPaths.length>1){taskViewerIndex=(taskViewerIndex-1+taskViewerPaths.length)%taskViewerPaths.length;taskViewerLoadCurrent()}};
+document.getElementById("taskImageNext").onclick=()=>{if(taskViewerPaths.length>1){taskViewerIndex=(taskViewerIndex+1)%taskViewerPaths.length;taskViewerLoadCurrent()}};
 async function render(){
   document.getElementById("selectedTitle").textContent=selected;
   const dueTaskCount=document.getElementById("dueTaskCount");
@@ -1329,9 +1388,9 @@ async function renderPreviews(){
     taskBox.innerHTML=upcoming.length?upcoming.map(t=>{
   const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
   const thumb=firstPath
-    ? "<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+")' aria-label='Deschide poza'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"' loading='lazy'></button>"
+    ? "<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")' aria-label='Deschide pozele'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"' loading='lazy'></button>"
     : "";
-  return "<article class='task-preview-item'>"+thumb+"<div class='task-preview-main'><div class='notice-type-badge'>"+escapeHtml(t.type)+"</div><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+"</div><div class='author-meta'>Postat de "+authorLabel(t)+"</div>"+(t.image_paths?.length?"<button type='button' class='task-image-count task-image-count-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+")'>📷 "+t.image_paths.length+" "+(t.image_paths.length===1?"poză":"poze")+"</button>":"")+"</div><div class='task-preview-deadline'>"+relativeDeadline(t.deadline)+"</div></article>";
+  return "<article class='task-preview-item'>"+thumb+"<div class='task-preview-main'><div class='notice-type-badge'>"+escapeHtml(t.type)+"</div><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+"</div><div class='author-meta'>Postat de "+authorLabel(t)+"</div>"+(t.image_paths?.length?"<button type='button' class='task-image-count task-image-count-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")'>📷 "+t.image_paths.length+" "+(t.image_paths.length===1?"poză":"poze")+"</button>":"")+"</div><div class='task-preview-deadline'>"+relativeDeadline(t.deadline)+"</div></article>";
 }).join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
   }
   await renderPollPreview();
@@ -1621,7 +1680,7 @@ function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Arr
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>{
   const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
-  const thumb=firstPath?"<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+")' aria-label='Deschide poza'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"'></button>":"";
+  const thumb=firstPath?"<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")' aria-label='Deschide pozele'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"'></button>":"";
   return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div><div style='display:flex;gap:7px;flex-wrap:wrap'><button class='quick' onclick='editTask("+t.id+")'>Editează</button><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div></div>";
 }).join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 window.editTask=async id=>{
