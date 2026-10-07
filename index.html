@@ -149,7 +149,7 @@ body{background:var(--bg)}
 .task-image-viewer-modal{width:min(1100px,100%);max-height:94vh}
 .task-image-viewer-count{font-size:11px;color:var(--muted);margin-top:3px}
 .task-image-viewer-body{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;min-height:320px;padding:14px;background:rgba(127,150,180,.04)}
-.task-image-viewer-body img{display:block;width:100%;height:min(72vh,680px);object-fit:contain;border-radius:12px}
+.task-image-viewer-body img{display:block;width:auto;height:auto;max-width:100%;max-height:min(72vh,680px);object-fit:contain;border-radius:12px}
 .task-image-nav{width:40px;height:48px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text);font-size:30px;line-height:1;cursor:pointer}
 .task-image-nav:disabled{opacity:.3;cursor:default}
 .task-image-thumbs{display:flex;gap:8px;overflow-x:auto;padding:10px 14px 14px;border-top:1px solid var(--line);background:var(--card)}
@@ -159,7 +159,7 @@ body{background:var(--bg)}
 @media(max-width:760px){
   .task-image-viewer-modal{width:100%;max-height:96vh;border-radius:20px 20px 0 0}
   .task-image-viewer-body{grid-template-columns:36px minmax(0,1fr) 36px;gap:5px;padding:9px}
-  .task-image-viewer-body img{height:min(68vh,620px);border-radius:10px}
+  .task-image-viewer-body img{height:auto;max-height:min(68vh,620px);max-width:100%;border-radius:10px}
   .task-image-nav{width:34px;height:44px;font-size:27px}
   .task-image-thumb{width:56px;height:56px;flex-basis:56px}
 }
@@ -1304,13 +1304,23 @@ async function taskViewerLoadCurrent(){
   const img=document.getElementById("taskImageViewerImg"),path=taskViewerPaths[taskViewerIndex];
   if(!img||!path)return;
   img.src="";
+  img.removeAttribute("srcset");
+  img.removeAttribute("sizes");
   try{
-    const signed=await supabaseClient.storage.from("task-images").createSignedUrl(path,3600);
-    if(!signed.error&&signed.data?.signedUrl){img.src=signed.data.signedUrl;return}
     const downloaded=await supabaseClient.storage.from("task-images").download(path);
     if(downloaded.error)throw downloaded.error;
-    img.src=URL.createObjectURL(downloaded.data);
-  }catch(_){img.alt="Nu am putut încărca această poză."}
+    const oldUrl=img.dataset.blobUrl;
+    if(oldUrl)URL.revokeObjectURL(oldUrl);
+    const blobUrl=URL.createObjectURL(downloaded.data);
+    img.dataset.blobUrl=blobUrl;
+    img.src=blobUrl;
+  }catch(_){
+    try{
+      const signed=await supabaseClient.storage.from("task-images").createSignedUrl(path,3600);
+      if(!signed.error&&signed.data?.signedUrl){img.src=signed.data.signedUrl}
+      else throw new Error("image");
+    }catch(__){img.alt="Nu am putut încărca această poză."}
+  }
   document.querySelectorAll("#taskImageViewerThumbs .task-image-thumb").forEach((btn,i)=>btn.classList.toggle("active",i===taskViewerIndex));
   const count=document.getElementById("taskImageViewerCount");if(count)count.textContent=(taskViewerIndex+1)+" / "+taskViewerPaths.length;
 }
@@ -1325,7 +1335,12 @@ function openTaskImage(path,allPaths=[]){
 }
 function closeTaskImage(){
   const overlay=document.getElementById("taskImageViewer"),img=document.getElementById("taskImageViewerImg");
-  if(img)img.src="";
+  if(img){
+    const blobUrl=img.dataset.blobUrl;
+    if(blobUrl)URL.revokeObjectURL(blobUrl);
+    delete img.dataset.blobUrl;
+    img.src="";
+  }
   taskViewerPaths=[];
   taskViewerIndex=0;
   if(overlay)overlay.classList.remove("open");
