@@ -139,7 +139,13 @@ body{background:var(--bg)}
 .dashboard-grid{display:grid;gap:14px;margin-bottom:14px}.dashboard-grid-main{grid-template-columns:minmax(0,1.38fr) minmax(315px,.62fr)}.dashboard-grid-lower{grid-template-columns:1fr 1fr}.dashboard-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:var(--shadow)}.schedule-card{min-width:0}.section-subtitle{font-size:11px;color:var(--muted);margin-top:3px}.dashboard-card .section-head{margin-bottom:12px}.dashboard-card .section-title{font-size:17px}.schedule-card .tabs{margin-bottom:4px;padding-bottom:10px}
 .schedule-card .lesson{border-top:1px solid var(--line);padding:12px 8px;min-width:0}.schedule-card .lesson:first-of-type{border-top:0}.schedule-card .lesson:hover{background:rgba(127,150,180,.06)}.schedule-card .lesson > div{min-width:0}.schedule-card .subject{overflow-wrap:anywhere}
 .dashboard-card .notice-card,.dashboard-card .change-card,.dashboard-card .poll-card{margin-bottom:8px}.dashboard-card .empty{padding:20px 12px}.dashboard-card .dash-list{margin-top:0}
-#taskPreview{display:flex;flex-direction:column;gap:8px}.task-preview-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:rgba(127,150,180,.03)}.task-preview-main{min-width:0}.task-preview-title{font-weight:800;font-size:14px}.task-preview-meta{font-size:11px;color:var(--muted);margin-top:3px}.task-preview-deadline{font-size:11px;font-weight:900;color:var(--blue);white-space:nowrap}
+#taskPreview{display:flex;flex-direction:column;gap:8px}.task-preview-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:rgba(127,150,180,.03)}.task-preview-main{min-width:0}.task-preview-title{font-weight:800;font-size:14px}.task-preview-meta{font-size:11px;color:var(--muted);margin-top:3px}.task-preview-deadline{font-size:11px;font-weight:900;color:var(--blue);white-space:nowrap}\n.task-complete-btn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:9px;padding:7px 9px;font-size:10px;font-weight:900;cursor:pointer}
+.task-complete-btn:hover{background:rgba(127,150,180,.08);color:var(--text)}
+.task-complete-btn.done{background:rgba(22,133,91,.10);border-color:rgba(22,133,91,.24);color:var(--green)}
+.task-preview-item.task-completed{opacity:.62}
+.task-preview-item.task-completed .task-preview-title{text-decoration:line-through}
+.task-card-completed .notice-title{text-decoration:line-through;opacity:.72}
+.task-complete-btn .task-check{width:16px;height:16px;display:grid;place-items:center;border:1px solid currentColor;border-radius:5px;font-size:10px;line-height:1}
 .task-image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:9px}.task-image-grid img{display:block;width:100%;aspect-ratio:1.35;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:rgba(127,150,180,.06);cursor:zoom-in}.task-image-button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
 .task-image-count{font-size:11px;font-weight:800;color:var(--blue);margin-top:5px}.task-image-count-btn{padding:0;border:0;background:transparent;cursor:pointer;font:inherit}.task-preview-image-btn{width:64px;height:64px;flex:none;padding:0;border:0;background:transparent;border-radius:11px;overflow:hidden;cursor:zoom-in}.task-preview-image-btn img{width:100%;height:100%;object-fit:cover;display:block;border:1px solid var(--line);border-radius:11px}
 .task-upload{margin-top:9px;padding:11px 12px;border:1px dashed var(--line);border-radius:12px;background:rgba(127,150,180,.03)}.task-upload-label{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;cursor:pointer}.task-upload input{display:none}.task-upload-help{margin-top:4px;font-size:11px;color:var(--muted)}
@@ -1385,6 +1391,36 @@ function renderTodayFocus(){
 function authorLabel(row){
   return escapeHtml(row?.author_name||"Administrator");
 }
+const taskCompletionStorageKey=()=>{
+  const name=getVisitorName().toLowerCase().trim()||"anonymous";
+  return "completedTasks:"+encodeURIComponent(name);
+};
+function getCompletedTaskMap(){
+  try{return JSON.parse(localStorage.getItem(taskCompletionStorageKey())||"{}")||{};}catch(_){return {};}
+}
+function isTaskCompleted(taskId){
+  const map=getCompletedTaskMap();
+  return map[String(taskId)]===true;
+}
+function setTaskCompleted(taskId,completed){
+  const map=getCompletedTaskMap();
+  if(completed)map[String(taskId)]=true;
+  else delete map[String(taskId)];
+  localStorage.setItem(taskCompletionStorageKey(),JSON.stringify(map));
+}
+async function toggleTaskCompleted(taskId){
+  const task=tasks.find(t=>Number(t.id)===Number(taskId));
+  if(!task)return;
+  setTaskCompleted(taskId,!isTaskCompleted(taskId));
+  await render();
+  if(selectedSubject)await loadSubjectTasks();
+}
+function taskCompletionButtonHtml(task){
+  const done=isTaskCompleted(task.id);
+  return "<button type='button' class='task-complete-btn "+(done?"done":"")+"' onclick='event.stopPropagation();toggleTaskCompleted("+Number(task.id)+")'><span class='task-check'>"+(done?"✓":"")+" </span>"+(done?"Finalizată":"Marchează ca finalizată")+"</button>";
+}
+window.toggleTaskCompleted=toggleTaskCompleted;
+
 function relativeDeadline(dateKey){
   if(!dateKey)return "";
   const todayKey=localDateKey(now),d=new Date(dateKey+"T12:00:00"),t=new Date(todayKey+"T12:00:00"),daysLeft=Math.round((d-t)/86400000);
@@ -1405,7 +1441,7 @@ async function renderPreviews(){
   const thumb=firstPath
     ? "<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")' aria-label='Deschide pozele'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"' loading='lazy'></button>"
     : "";
-  return "<article class='task-preview-item'>"+thumb+"<div class='task-preview-main'><div class='notice-type-badge'>"+escapeHtml(t.type)+"</div><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+"</div><div class='author-meta'>Postat de "+authorLabel(t)+"</div>"+(t.image_paths?.length?"<button type='button' class='task-image-count task-image-count-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")'>📷 "+t.image_paths.length+" "+(t.image_paths.length===1?"poză":"poze")+"</button>":"")+"</div><div class='task-preview-deadline'>"+relativeDeadline(t.deadline)+"</div></article>";
+  return "<article class='task-preview-item "+(isTaskCompleted(t.id)?"task-completed":"")+"' >"+thumb+"<div class='task-preview-main'><div class='notice-type-badge'>"+escapeHtml(t.type)+"</div><div class='task-preview-title'>"+escapeHtml(t.title)+"</div><div class='task-preview-meta'>"+escapeHtml(t.subject)+"</div><div class='author-meta'>Postat de "+authorLabel(t)+"</div>"+(t.image_paths?.length?"<button type='button' class='task-image-count task-image-count-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")'>📷 "+t.image_paths.length+" "+(t.image_paths.length===1?"poză":"poze")+"</button>":"")+taskCompletionButtonHtml(t)+"</div><div class='task-preview-deadline'>"+relativeDeadline(t.deadline)+"</div></article>";
 }).join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
   }
   await renderPollPreview();
@@ -1462,7 +1498,7 @@ async function openComments(subject){
 }
 async function loadSubjectTasks(){
   const list=tasks.filter(t=>t.subject===selectedSubject&&isTaskActive(t));
-  document.getElementById("subjectTasks").innerHTML="<h3 style='margin:0 0 8px'>Teme / proiecte</h3>"+(list.length?list.map(t=>"<article class='notice-card'><div class='notice-title'>"+escapeHtml(t.title)+"</div><div class='notice-meta'>"+escapeHtml(t.type)+" · Deadline: <b>"+fmtDate(t.deadline)+"</b></div>"+(t.description?"<div class='notice-message'>"+escapeHtml(t.description)+"</div>":"")+"<div class='author-meta'>Postat de "+authorLabel(t)+"</div>"+taskImageGridHtml(t)+"</article>").join(""):"<div class='empty'>Nu există încă teme sau proiecte pentru această materie.</div>");
+  document.getElementById("subjectTasks").innerHTML="<h3 style='margin:0 0 8px'>Teme / proiecte</h3>"+(list.length?list.map(t=>"<article class='notice-card "+(isTaskCompleted(t.id)?"task-card-completed":"")+"' id='subject-task-"+t.id+"'><div class='notice-title'>"+escapeHtml(t.title)+"</div><div class='notice-meta'>"+escapeHtml(t.type)+" · Deadline: <b>"+fmtDate(t.deadline)+"</b></div>"+(t.description?"<div class='notice-message'>"+escapeHtml(t.description)+"</div>":"")+"<div class='author-meta'>Postat de "+authorLabel(t)+"</div>"+taskCompletionButtonHtml(t)+taskImageGridHtml(t)+"</article>").join(""):"<div class='empty'>Nu există încă teme sau proiecte pentru această materie.</div>");
 }
 async function loadComments(){
   const box=document.getElementById("comments");box.innerHTML="<div class='no-comments'>Se încarcă…</div>";
