@@ -1,4 +1,4 @@
-const CACHE="orar-scolar-v14";
+const CACHE="orar-scolar-v15";
 const APP_SHELL=["/","/index.html","/manifest.json","/icon.svg"];
 
 self.addEventListener("install",event=>{
