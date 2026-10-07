@@ -824,7 +824,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
       <section class="stat-grid">
         <div class="stat-card stat-primary" id="nextCard"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div></div>
         <div class="stat-card" id="stateCard"><div class="stat-label">Stare</div><div class="stat-note state-context" id="schoolContext">Programul se actualizează automat.</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state" style="display:none">—</div></div>
-        <div class="stat-card" id="dueCard"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div><div class="install-banner" id="installBanner"><button class="install-btn" id="installBtn">Instalează aplicația</button></div></div>
+        <div class="stat-card" id="dueCard"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div></div>
       </section>
 
       <section class="today-focus" id="todayFocus">
@@ -2322,8 +2322,7 @@ supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"p
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls();showLiveToast("Poll nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin){await renderAdminPolls();renderAdminOverviewStats()}}).subscribe();
 
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBanner").classList.add("show")});
-document.getElementById("installBtn").onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBanner").classList.remove("show")};
+
 if("serviceWorker" in navigator){
   window.addEventListener("load",async()=>{
     try{
