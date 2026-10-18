@@ -871,6 +871,84 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .dashboard-grid-main, .dashboard-grid-lower { grid-template-columns: minmax(0, 1fr); }
   .welcome-art { right: 70px; opacity: .48; }
 }
+
+/* Clear contrast and touch-friendly phone layout */
+.welcome-card{color:#fff}
+.welcome-card .eyebrow,.welcome-card h1,.welcome-card p,.welcome-date{color:#fff}
+.welcome-card .eyebrow,.welcome-copy p{opacity:.9}
+.calendar-day{color:var(--text)}
+@media(min-width:761px){.overlay{align-items:center}}
+@media(max-width:600px){
+  .app-shell{display:block!important;width:100%!important;min-width:0!important}
+  .sidebar{
+    position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;
+    display:flex!important;flex-direction:column!important;justify-content:center!important;gap:4px!important;
+    width:100%!important;height:calc(96px + env(safe-area-inset-bottom))!important;min-height:0!important;
+    padding:6px 7px calc(6px + env(safe-area-inset-bottom))!important;
+    border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;
+    background:color-mix(in srgb,var(--card) 94%,transparent)!important;backdrop-filter:blur(14px);
+    box-shadow:0 -8px 24px rgba(17,38,63,.12);z-index:40;overflow:hidden;
+  }
+  .sidebar-brand{display:none!important}
+  .side-nav{display:flex!important;flex-direction:row!important;gap:2px!important;width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;padding:0!important;scrollbar-width:thin;overscroll-behavior-x:contain}
+  .side-nav .side-link{
+    flex:0 0 44px!important;width:44px!important;min-width:44px!important;height:49px!important;min-height:49px!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;
+    padding:3px 1px!important;border:1px solid transparent!important;border-radius:10px!important;
+    color:var(--muted)!important;background:transparent!important;box-shadow:none!important;text-align:center!important;
+  }
+  .side-nav .side-link span{display:grid!important;width:20px!important;height:20px!important;place-items:center!important;background:transparent!important;color:currentColor!important}
+  .side-nav .side-link span svg{display:block!important;width:18px!important;height:18px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  .side-nav .side-link>div{display:block!important;min-width:0!important}
+  .side-nav .side-link b{display:block!important;font-size:8px!important;line-height:1!important;white-space:nowrap!important;color:inherit!important}
+  .side-nav .side-link small{display:none!important}
+  .side-nav .side-link.active,.side-nav .side-link.nav-selected{background:color-mix(in srgb,var(--blue) 14%,var(--card))!important;border-color:color-mix(in srgb,var(--blue) 28%,var(--line))!important;color:var(--blue)!important;box-shadow:none!important}
+  .sidebar-bottom{display:flex!important;flex-direction:row!important;justify-content:flex-end!important;gap:8px!important;min-height:24px!important;margin:0!important;padding-top:4px!important;border-top:1px solid var(--line)!important}
+  .sidebar-bottom .side-link{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:5px!important;width:72px!important;min-width:72px!important;height:24px!important;min-height:24px!important;padding:1px 5px!important;border-radius:8px!important;color:var(--muted)!important;background:transparent!important}
+  .sidebar-bottom .side-link span{display:grid!important;width:17px!important;height:17px!important;background:transparent!important;color:currentColor!important}
+  .sidebar-bottom .side-link span svg{display:block!important;width:16px!important;height:16px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  .sidebar-bottom .side-link>div{display:block!important}
+  .sidebar-bottom .side-link b{display:block!important;font-size:9px!important;line-height:1!important;color:inherit!important;white-space:nowrap!important}
+  .sidebar-bottom .side-link small{display:none!important}
+  .main-shell{width:100%!important;min-width:0!important}
+  .topbar{height:52px!important;padding:0 12px!important;position:sticky!important;top:0!important;z-index:20!important}
+  .topbar-actions{gap:6px!important}
+  .topbar .status-pill{display:none!important}
+  .dashboard-main{width:100%!important;max-width:100%!important;margin:0!important;padding:12px 12px calc(108px + env(safe-area-inset-bottom))!important;overflow:visible!important}
+  .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .stat-card{min-width:0!important;padding:11px 12px!important}
+  .stat-value{font-size:17px!important;overflow-wrap:anywhere}
+  .welcome-card{min-height:120px!important;padding:16px!important}
+  .welcome-copy h1{font-size:25px!important}
+  .welcome-copy p{max-width:220px!important}
+  .dashboard-card,.calendar-page,.chat-page{min-width:0!important;width:100%!important}
+  .calendar-weekdays{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:3px!important}
+  .calendar-weekday{font-size:9px!important;padding:4px 0!important;letter-spacing:0!important}
+  .calendar-grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:3px!important}
+  .calendar-day{min-height:46px!important;height:46px!important;padding:5px 2px!important;align-items:center!important;gap:2px!important;border-radius:9px!important}
+  .calendar-day-head{width:100%;justify-content:center!important}
+  .calendar-day-number{font-size:12px!important}
+  .calendar-day-count{display:block!important;width:5px;height:5px;margin:1px auto 0;border-radius:50%;font-size:0!important;line-height:0!important;color:transparent!important;background:transparent}
+  .calendar-day-count:not(:empty){background:var(--blue)}
+  .calendar-day.vacation .calendar-day-count:not(:empty){background:var(--green)}
+  .calendar-events{display:none!important}
+  .calendar-bottom{grid-template-columns:1fr!important;gap:9px!important}
+  .calendar-selected-card,.calendar-upcoming-card{padding:12px!important}
+  .calendar-actions{gap:5px!important}
+  .calendar-month{font-size:15px!important}
+  .overlay{align-items:flex-end!important;padding:0!important}
+  .modal,.modal.full{width:100%!important;max-width:100%!important;max-height:92dvh!important;border-radius:20px 20px 0 0!important}
+  .modal-head{padding:13px 15px!important}
+  .modal-body{padding:12px 15px!important}
+  .form{padding:12px 15px!important}
+}
+@media(max-width:380px){
+  .side-nav .side-link{flex-basis:40px!important;width:40px!important;min-width:40px!important}
+  .dashboard-main{padding-left:9px!important;padding-right:9px!important}
+  .calendar-day{min-height:42px!important;height:42px!important}
+  .calendar-day-number{font-size:11px!important}
+  .row{grid-template-columns:1fr!important}
+}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -928,7 +1006,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
           <h1>Bun venit!</h1>
           <p>Iată ce se întâmplă astăzi la școală.</p>
           <button class="notify-btn" id="pushBtn" type="button">Activează notificările</button>
-          <span class="notify-help" id="pushHelp">Primești alerte pentru comentarii și anunțuri noi.</span>
+          <span class="notify-help" id="pushHelp">Primești alerte pentru anunțuri, teme și schimbări de program.</span>
         </div>
         <div class="welcome-art" aria-hidden="true"><div class="art-sun"></div><div class="art-building"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
         <div class="welcome-date"><div class="welcome-day" id="welcomeDay">—</div><div id="welcomeDate">—</div></div>
@@ -945,17 +1023,17 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
       <section class="today-focus" id="todayFocus">
         <div class="today-focus-head"><div><div class="eyebrow">AZI PE SCURT</div><div class="today-focus-title">Ce merită atenția ta</div></div><div class="today-focus-date" id="todayFocusDate">—</div></div>
         <div class="today-focus-items">
-          <div class="today-focus-item"><span class="focus-icon">◷</span><div><b id="focusLessons">0</b><small>ore</small></div></div>
-          <div class="today-focus-item"><span class="focus-icon">✓</span><div><b id="focusTasks">0</b><small>teme active</small></div></div>
-          <div class="today-focus-item"><span class="focus-icon">!</span><div><b id="focusAnnouncements">0</b><small>anunțuri</small></div></div>
-          <div class="today-focus-item"><span class="focus-icon">↻</span><div><b id="focusChanges">0</b><small>schimbări</small></div></div>
+          <div class="today-focus-item" data-focus-metric="lessons"><span class="focus-icon">◷</span><div><b id="focusLessons">0</b><small>ore</small></div></div>
+          <div class="today-focus-item" data-focus-metric="tasks"><span class="focus-icon">✓</span><div><b id="focusTasks">0</b><small>teme active</small></div></div>
+          <div class="today-focus-item" data-focus-metric="announcements"><span class="focus-icon">!</span><div><b id="focusAnnouncements">0</b><small>anunțuri</small></div></div>
+          <div class="today-focus-item" data-focus-metric="changes"><span class="focus-icon">↻</span><div><b id="focusChanges">0</b><small>schimbări</small></div></div>
         </div>
       </section>
 
       <div class="dashboard-grid dashboard-grid-main">
         <section class="dashboard-card schedule-card" id="scheduleSection">
           <div class="section-head">
-            <div><div class="section-title">Orarul de azi</div><div class="section-subtitle">Alege o zi pentru a vedea programul complet.</div></div>
+            <div><div class="section-title">Programul săptămânii</div><div class="section-subtitle">Alege o zi pentru a vedea programul complet.</div></div>
             <div class="schedule-title" id="selectedTitle">Luni</div>
           </div>
           <nav class="tabs" id="tabs"></nav>
@@ -1293,7 +1371,7 @@ async function enablePushNotifications(){
     const p256dh=arrayBufferToBase64Url(sub.getKey("p256dh")),auth=arrayBufferToBase64Url(sub.getKey("auth"));
     const {error}=await supabaseClient.rpc("save_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:p256dh,p_auth:auth});
     if(error)throw error;
-    btn.disabled=false;btn.classList.add("notify-active");btn.textContent="Notificări active";help.textContent="Primești alerte pentru comentarii și anunțuri noi.";
+    btn.disabled=false;btn.classList.add("notify-active");btn.textContent="Notificări active";help.textContent="Primești alerte pentru anunțuri, teme și schimbări de program.";
   }catch(error){
     btn.disabled=false;help.textContent=error?.message||"Nu am putut activa notificările.";btn.textContent="Încearcă din nou";
   }
@@ -1709,20 +1787,25 @@ function closeTaskImage(){
 }
 document.getElementById("taskImagePrev").onclick=()=>{if(taskViewerPaths.length>1){taskViewerIndex=(taskViewerIndex-1+taskViewerPaths.length)%taskViewerPaths.length;taskViewerLoadCurrent()}};
 document.getElementById("taskImageNext").onclick=()=>{if(taskViewerPaths.length>1){taskViewerIndex=(taskViewerIndex+1)%taskViewerPaths.length;taskViewerLoadCurrent()}};
+let renderGeneration=0;
 async function render(){
-  document.getElementById("selectedTitle").textContent=selected;
+  const generation=++renderGeneration,day=selected;
+  const counts=await getCommentCounts();
+  if(generation!==renderGeneration)return;
+  const selectedTitle=document.getElementById("selectedTitle");
+  if(selectedTitle)selectedTitle.textContent=day;
+  const activeTaskCount=tasks.filter(isTaskActive).length;
   const dueTaskCount=document.getElementById("dueTaskCount");
-  if(dueTaskCount){
-    const todayKey=localDateKey(now);
-    dueTaskCount.textContent=String(tasks.filter(isTaskActive).length);
-  }
-  const arr=lessonsForDay(selected),cur=now.getHours()*60+now.getMinutes(),counts=await getCommentCounts(),tmap={};
+  if(dueTaskCount)dueTaskCount.textContent=String(activeTaskCount);
+  const dueCard=document.getElementById("dueCard");
+  if(dueCard)dueCard.style.display=activeTaskCount?"":"none";
+  const arr=lessonsForDay(day),cur=now.getHours()*60+now.getMinutes(),tmap={};
   tasks.forEach(t=>{(tmap[t.subject]||(tmap[t.subject]=[])).push(t)});
   renderSchoolState();
   renderAttention();
   renderTodayFocus();
   document.getElementById("lessons").innerHTML=arr.map(x=>{
-    const a=mins(x[0]),b=mins(x[1]),isToday=selected===today,eff=getChangeForLesson(selected,x);
+    const a=mins(x[0]),b=mins(x[1]),isToday=day===today,eff=getChangeForLesson(day,x);
     const cls=(isToday&&cur>=a&&cur<b?"current ":"")+(isToday&&cur>=b?"past ":"")+(eff.status==="moved-away"?"lesson-moved ":"")+(eff.status==="moved-in"?"lesson-move-in ":"");
     const c=counts[eff.subject]||0,subTasks=(tmap[eff.subject]||[]).filter(isTaskActive).slice(0,2);
     const taskHtml=subTasks.map(t=>"<div class='task-line'><span class='badge'>"+escapeHtml(t.type)+"</span>"+escapeHtml(t.title)+" · <span class='deadline'>"+fmtDate(t.deadline)+"</span></div>").join("");
@@ -1735,13 +1818,24 @@ async function render(){
   await renderPreviews();
 }
 function renderTodayFocus(){
-  const dayEl=document.getElementById("todayFocusDate");if(dayEl)dayEl.textContent=welcomeDateFormat.format(now);
+  const dayEl=document.getElementById("todayFocusDate");
+  if(dayEl)dayEl.textContent=welcomeDateFormat.format(now);
+  const values={
+    lessons:days.includes(today)?lessonsForDay(today).length:0,
+    tasks:tasks.filter(isTaskActive).length,
+    announcements:announcements.length,
+    changes:changes.filter(x=>String(x.change_date||x.from_date||"")>=localDateKey(now)).length
+  };
+  document.querySelectorAll("[data-focus-metric]").forEach(item=>{
+    item.style.display=values[item.dataset.focusMetric]?"":"none";
+  });
+  const section=document.getElementById("todayFocus");
+  if(section)section.style.display=Object.values(values).some(value=>value>0)?"":"none";
   const lessonsEl=document.getElementById("focusLessons"),tasksEl=document.getElementById("focusTasks"),annEl=document.getElementById("focusAnnouncements"),changesEl=document.getElementById("focusChanges");
-  const todayLessons=days.includes(today)?lessonsForDay(today):[];
-  if(lessonsEl)lessonsEl.textContent=String(todayLessons.length);
-  if(tasksEl)tasksEl.textContent=String(tasks.filter(isTaskActive).length);
-  if(annEl)annEl.textContent=String(announcements.length);
-  if(changesEl)changesEl.textContent=String(changes.filter(x=>String(x.change_date||x.from_date||"")>=localDateKey(now)).length);
+  if(lessonsEl)lessonsEl.textContent=String(values.lessons);
+  if(tasksEl)tasksEl.textContent=String(values.tasks);
+  if(annEl)annEl.textContent=String(values.announcements);
+  if(changesEl)changesEl.textContent=String(values.changes);
 }
 function authorLabel(row){
   return escapeHtml(row?.author_name||"Administrator");
@@ -1968,7 +2062,8 @@ function renderCalendar(){
   const monthEl=document.getElementById("calendarMonth"),grid=document.getElementById("calendarGrid"),weekdays=document.getElementById("calendarWeekdays");
   if(!monthEl||!grid||!weekdays)return;
   monthEl.textContent=calendarMonthFormat.format(calendarCursor).replace(/^./,m=>m.toUpperCase());
-  weekdays.innerHTML=calendarWeekdayNames.map(x=>"<div class='calendar-weekday'>"+x+"</div>").join("");
+  const weekdayLabels=window.matchMedia("(max-width:600px)").matches?["Lu","Ma","Mi","Jo","Vi","Sâ","Du"]:calendarWeekdayNames;
+  weekdays.innerHTML=weekdayLabels.map(x=>"<div class='calendar-weekday'>"+x+"</div>").join("");
   const first=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth(),1);
   const firstMonday=(first.getDay()+6)%7;
   const daysInMonth=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,0).getDate();
@@ -1994,7 +2089,6 @@ function renderCalendar(){
     const d=new Date(calendarSelectedDate+"T12:00:00");
     calendarCursor=new Date(d.getFullYear(),d.getMonth(),1);
     renderCalendar();
-    renderCalendarSelected();
   }));
   renderCalendarSelected();
 }
@@ -2012,12 +2106,26 @@ function renderCalendarSelected(){
   const upcomingTasks=tasks.filter(t=>t?.deadline&&String(t.deadline)>=todayKey).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,6);
   upcoming.innerHTML=upcomingTasks.length?upcomingTasks.map(t=>"<div class='calendar-upcoming-item'><div class='calendar-upcoming-date'>"+escapeHtml(relativeDeadline(t.deadline))+"</div><div class='calendar-upcoming-main'><div class='calendar-upcoming-title'>"+escapeHtml(t.title)+"</div><div class='calendar-upcoming-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type||"Temă")+"</div></div></div>").join(""):"<div class='empty'>Nu există deadline-uri active.</div>";
 }
-document.getElementById("calendarPrev").onclick=()=>{calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1);renderCalendar()};
-document.getElementById("calendarNext").onclick=()=>{calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1);renderCalendar()};
+function moveCalendarMonth(offset){
+  calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+offset,1);
+  const isCurrentMonth=calendarCursor.getFullYear()===now.getFullYear()&&calendarCursor.getMonth()===now.getMonth();
+  calendarSelectedDate=isCurrentMonth?localDateKey(now):localDateKey(calendarCursor);
+  renderCalendar();
+}
+document.getElementById("calendarPrev").onclick=()=>moveCalendarMonth(-1);
+document.getElementById("calendarNext").onclick=()=>moveCalendarMonth(1);
 document.getElementById("calendarToday").onclick=()=>{calendarSelectedDate=localDateKey(now);calendarCursor=new Date(now.getFullYear(),now.getMonth(),1);renderCalendar()};
 renderCalendar();
 
+function closeNavigationOverlays(){
+  closeComments();
+  closeList();
+  closeTaskImage();
+  ["authOverlay","dashboardOverlay"].forEach(id=>document.getElementById(id)?.classList.remove("open"));
+  document.body.style.overflow="";
+}
 function showChatPage(){
+  closeNavigationOverlays();
   document.querySelectorAll(".dashboard-main > *").forEach(el=>{el.style.display=el.id==="chatPage"?"block":"none"});
   document.querySelector(".dashboard-main")?.scrollTo?.({top:0,behavior:"smooth"});
   window.scrollTo({top:0,behavior:"smooth"});
@@ -2027,9 +2135,11 @@ function showChatPage(){
   const online=document.getElementById("chatOnlineCount");if(online)online.textContent=count+" online";
 }
 function showHomePage(){
+  closeNavigationOverlays();
   document.querySelectorAll(".dashboard-main > *").forEach(el=>{if(el.id==="chatPage"||el.id==="calendarPage")el.style.display="none";else el.style.display=""});
 }
 function showCalendarPage(){
+  closeNavigationOverlays();
   document.querySelectorAll(".dashboard-main > *").forEach(el=>{el.style.display=el.id==="calendarPage"?"block":"none"});
   window.scrollTo({top:0,behavior:"smooth"});
   renderCalendar();
@@ -2511,7 +2621,7 @@ document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
 document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);
 setSideNavActive("home");refreshAuth();loadData().then(()=>{renderTabs();render()});
 setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderSchoolState()},1000);
-setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render();if(document.getElementById("calendarPage")?.style.display!=="none"){calendarSelectedDate=localDateKey(now);renderCalendar()};},30000);
+setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();},30000);
 </script>
 <div class="live-toast" id="liveToast" aria-live="polite"></div>
 
