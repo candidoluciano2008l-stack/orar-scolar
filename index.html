@@ -65,7 +65,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .admin-overview-value{font-size:22px;font-weight:950;line-height:1}.admin-overview-label{margin-top:3px;font-size:11px;color:var(--muted);font-weight:800}
 .admin-modern .dashboard-tabs{display:flex;gap:7px;flex-wrap:nowrap;overflow:auto;padding:3px 0 9px;margin:0 0 14px;border-bottom:1px solid var(--line);scrollbar-width:none}.admin-modern .dashboard-tabs::-webkit-scrollbar{display:none}
 .admin-modern .dash-tab{border:0;background:transparent;color:var(--muted);border-radius:11px;padding:10px 12px;font-size:12px;white-space:nowrap}.admin-modern .dash-tab.active{background:var(--text);color:var(--card)}
-.admin-modern .dash-panel{min-height:0}.admin-modern .dash-panel.active{animation:adminPanelIn .16s ease-out}
+.admin-modern .dash-panel{display:none;min-height:0}.admin-modern .dash-panel.active{display:block;animation:adminPanelIn .16s ease-out}
 @keyframes adminPanelIn{from{opacity:.55;transform:translateY(2px)}to{opacity:1;transform:none}}
 .admin-modern #tasksPanel.active{display:grid;grid-template-columns:minmax(360px,.92fr) minmax(0,1.08fr);gap:16px;align-items:start}
 .admin-modern #tasksPanel > form{padding:24px !important;border:1px solid var(--line)!important;border-radius:19px!important;background:var(--card)!important;box-shadow:var(--shadow)}
@@ -1165,7 +1165,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   <div class="name-gate-card">
     <div class="name-gate-brand">ORARUL MEU</div>
     <div class="name-gate-title">Bun venit!</div>
-    <div class="name-gate-copy">Înainte să intri pe site, scrie numele cu care vrei să apari în chat și în lista de utilizatori online.</div>
+    <div class="name-gate-copy">Înainte să intri pe site, scrie numele cu care vrei să apari în chat și în lista de utilizatori online. Numele introdus și ora accesării sunt înregistrate pentru administratori.</div>
     <form id="nameGateForm">
       <input class="input" id="visitorName" maxlength="30" autocomplete="name" placeholder="Numele tău" required>
       <button class="send" style="width:100%;margin-top:10px" type="submit">Intră pe site</button>
@@ -1213,6 +1213,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 <button class="dash-tab" data-panel="pollsPanel">Polluri</button>
 <button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
 <button class="dash-tab" id="onlineTab" data-panel="onlinePanel" style="display:none">Online</button>
+<button class="dash-tab" id="siteVisitsTab" data-panel="siteVisitsPanel" style="display:none">Accesări</button>
 <button class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
 <button class="dash-tab" data-panel="securityPanel">Securitate</button>
 </div>
@@ -1313,6 +1314,12 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   <div class="dash-list" id="onlineUserList"></div>
 </div>
 
+<div class="dash-panel" id="siteVisitsPanel">
+  <div class="online-summary"><div><div class="section-title">Accesări recente</div><div class="section-subtitle">Numele este cel introdus la intrare; ora apare după fusul orar al dispozitivului tău.</div></div><div class="online-count" id="siteVisitTotal">0</div></div>
+  <div class="dash-list" id="siteVisitList"></div>
+  <div class="actions" style="justify-content:space-between"><button class="quick" id="siteVisitsNewer" type="button" disabled>Mai noi</button><span class="hint" id="siteVisitsPageLabel"></span><button class="quick" id="siteVisitsOlder" type="button" disabled>Mai vechi</button></div>
+</div>
+
 <div class="dash-panel" id="securityPanel">
   <div class="auth-help" style="margin-bottom:10px">Schimbă parola contului cu care ești autentificat. Această operațiune nu trimite niciun email.</div>
   <form class="form" id="passwordForm" style="border:0;padding:0;background:none">
@@ -1372,6 +1379,8 @@ const schedule={
 const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
 let now=new Date(),today=names[now.getDay()],selected=days.includes(today)?today:"Luni",selectedSubject=null,isAdmin=false,isSuperAdmin=false,currentUser=null,adminRole=null;
 let tasks=[],changes=[],announcements=[],polls=[];
+let siteVisitsPage=0;
+const SITE_VISITS_PAGE_SIZE=50;
 let deferredPrompt=null;
 let onlineChannel=null;
 let onlineSessionId=sessionStorage.getItem("onlineSessionId");
@@ -1384,6 +1393,11 @@ const formatTime=iso=>new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-di
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
 const isTaskActive=t=>Boolean(t?.deadline)&&String(t.deadline)>=localDateKey(now);
 const getVisitorName=()=>String(localStorage.getItem("visitorName")||"").trim();
+async function logSiteVisit(name){
+  if(!name||sessionStorage.getItem("siteVisitLogged")==="1")return;
+  const {error}=await supabaseClient.from("site_visits").insert({session_id:onlineSessionId,visitor_name:name});
+  if(!error)sessionStorage.setItem("siteVisitLogged","1");
+}
 
 function isStandalonePwa(){return window.navigator.standalone===true||window.matchMedia?.("(display-mode: standalone)").matches===true}
 function base64ToUint8Array(value){const pad="=".repeat((4-value.length%4)%4),b64=(value+pad).replace(/-/g,"+").replace(/_/g,"/"),raw=atob(b64);return Uint8Array.from(raw,c=>c.charCodeAt(0))}
@@ -1477,6 +1491,8 @@ async function refreshAuth(){
   renderVisitorBadge();
   const onlineTab=document.getElementById("onlineTab");
   if(onlineTab) onlineTab.style.display=isSuperAdmin?"inline-flex":"none";
+  const siteVisitsTab=document.getElementById("siteVisitsTab");
+  if(siteVisitsTab) siteVisitsTab.style.display=isSuperAdmin?"inline-flex":"none";
 }
 async function authenticateAdmin(){
   const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");
@@ -2234,6 +2250,7 @@ async function openDashboard(){
   fillTaskSubjects();
   document.getElementById("adminsTab").style.display=isSuperAdmin?"inline-flex":"none";
   document.getElementById("onlineTab").style.display=isSuperAdmin?"inline-flex":"none";
+  document.getElementById("siteVisitsTab").style.display=isSuperAdmin?"inline-flex":"none";
   resetPollOptionFields();
   await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers()]);
   renderAdminOverviewStats();
@@ -2582,11 +2599,14 @@ document.getElementById("announcementAdminForm").addEventListener("submit",async
  if(r.error){err.textContent=r.error.message;return}e.target.reset();await loadData();await render();await renderAdminAnnouncements();
 });
 document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
-  if((btn.id==="adminsTab"||btn.id==="onlineTab")&&!isSuperAdmin)return;
+  if((btn.id==="adminsTab"||btn.id==="onlineTab"||btn.id==="siteVisitsTab")&&!isSuperAdmin)return;
   document.querySelectorAll(".dash-tab").forEach(x=>x.classList.remove("active"));
   document.querySelectorAll(".dash-panel").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active");
+  if(btn.id==="siteVisitsTab")renderSiteVisits();
 });
+document.getElementById("siteVisitsNewer").onclick=()=>{if(siteVisitsPage>0){siteVisitsPage--;renderSiteVisits()}};
+document.getElementById("siteVisitsOlder").onclick=()=>{siteVisitsPage++;renderSiteVisits()};
 
 supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
 supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments();showLiveToast("Comentariu nou")}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none"){await loadChat();showLiveToast("Mesaj nou în chat")}}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)renderAdminOverviewStats();showLiveToast("Temă sau proiect nou")}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Schimbare de orar")}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Anunț nou")})
@@ -2622,6 +2642,22 @@ async function renderOnlineUsers(){
   const chatOnline=document.getElementById("chatOnlineCount");if(chatOnline)chatOnline.textContent=String(users.length)+" online";
   listEl.innerHTML=users.length?users.map(u=>"<div class='online-user'><span class='online-dot'></span><div class='online-user-name'>"+escapeHtml(u.name)+"</div><div class='online-user-meta'>Online</div></div>").join(""):"<div class='empty'>Nu este nimeni online.</div>";
 }
+function formatVisitTime(iso){return new Intl.DateTimeFormat("ro-RO",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(new Date(iso))}
+async function renderSiteVisits(){
+  const totalEl=document.getElementById("siteVisitTotal"),listEl=document.getElementById("siteVisitList"),labelEl=document.getElementById("siteVisitsPageLabel"),newerBtn=document.getElementById("siteVisitsNewer"),olderBtn=document.getElementById("siteVisitsOlder");
+  if(!isSuperAdmin||!listEl)return;
+  listEl.innerHTML="<div class='empty'>Se încarcă accesările…</div>";
+  const from=siteVisitsPage*SITE_VISITS_PAGE_SIZE,to=from+SITE_VISITS_PAGE_SIZE-1;
+  const r=await supabaseClient.from("site_visits").select("id,visitor_name,visited_at",{count:"exact"}).order("visited_at",{ascending:false}).range(from,to);
+  if(r.error){listEl.innerHTML="<div class='empty'>Nu s-au putut încărca accesările: "+escapeHtml(r.error.message)+"</div>";return}
+  const total=r.count||0;
+  if(totalEl)totalEl.textContent=String(total);
+  if(from>=total&&siteVisitsPage>0){siteVisitsPage=Math.max(0,Math.ceil(total/SITE_VISITS_PAGE_SIZE)-1);return renderSiteVisits()}
+  if(labelEl)labelEl.textContent=total?"Afișate "+(from+1)+"–"+Math.min(from+SITE_VISITS_PAGE_SIZE,total)+" din "+total:"Nicio accesare încă";
+  if(newerBtn)newerBtn.disabled=siteVisitsPage===0;
+  if(olderBtn)olderBtn.disabled=from+SITE_VISITS_PAGE_SIZE>=total;
+  listEl.innerHTML=r.data?.length?r.data.map(v=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(v.visitor_name)+"</div><div class='dash-item-meta'>Accesat la "+escapeHtml(formatVisitTime(v.visited_at))+"</div></div></div>").join(""):"<div class='empty'>Nu există accesări înregistrate.</div>";
+}
 async function startOnlinePresence(){
   const name=getVisitorName();
   if(!name||onlineChannel)return;
@@ -2640,6 +2676,7 @@ function unlockSite(name){
   const clean=String(name||"").trim().replace(/\s+/g," ");
   localStorage.setItem("visitorName",clean);
   localStorage.setItem("chatName",clean);
+  void logSiteVisit(clean);
   document.body.classList.remove("site-locked");
   document.getElementById("nameGate").classList.add("hidden");
   const chatName=document.getElementById("chatName");if(chatName)chatName.value=clean;
