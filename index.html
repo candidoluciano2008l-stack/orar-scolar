@@ -987,8 +987,8 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .admin-overview-icon{width:28px;height:28px;border-radius:9px}
   .admin-overview-value{font-size:18px}
   .admin-overview-label{font-size:10px}
-  .admin-modern .dashboard-tabs{gap:4px;padding:2px 0 7px;margin-bottom:10px}
-  .admin-modern .dash-tab{padding:8px 9px;border-radius:9px;font-size:11px}
+  .admin-modern .dashboard-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:visible;gap:4px;padding:2px 0 8px;margin-bottom:10px}
+  .admin-modern .dash-tab{display:flex;align-items:center;justify-content:center;min-width:0;min-height:34px;padding:6px 4px;border-radius:9px;font-size:10px;line-height:1.15;text-align:center;white-space:normal}
   .admin-modern #tasksPanel>form{padding:14px!important;border-radius:14px!important}
   .admin-modern #changesPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{border-radius:14px!important}
   .admin-modern .dash-item{padding:10px;border-radius:12px}
