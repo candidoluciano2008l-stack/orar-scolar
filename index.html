@@ -1006,7 +1006,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
           <h1>Bun venit!</h1>
           <p>Iată ce se întâmplă astăzi la școală.</p>
           <button class="notify-btn" id="pushBtn" type="button">Activează notificările</button>
-          <span class="notify-help" id="pushHelp">Primești alerte pentru anunțuri, teme și schimbări de program.</span>
+          <span class="notify-help" id="pushHelp">Primești alerte pentru anunțuri, teme, schimbări și polluri noi.</span>
         </div>
         <div class="welcome-art" aria-hidden="true"><div class="art-sun"></div><div class="art-building"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
         <div class="welcome-date"><div class="welcome-day" id="welcomeDay">—</div><div id="welcomeDate">—</div></div>
@@ -1352,9 +1352,9 @@ async function updatePushButton(){
   if(Notification.permission==="denied"){btn.textContent="Notificări blocate";help.textContent="Le poți reactiva din setările de notificări ale dispozitivului.";btn.classList.remove("notify-active");return}
   try{
     const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();
-    if(sub){btn.textContent="Notificări active";btn.classList.add("notify-active");help.textContent="Primești alerte pentru comentarii, anunțuri, teme, schimbări și polluri noi.";return}
+    if(sub){btn.textContent="Notificări active";btn.classList.add("notify-active");help.textContent="Primești alerte pentru anunțuri, teme, schimbări și polluri noi.";return}
   }catch(_){}
-  btn.textContent="Activează notificările";btn.classList.remove("notify-active");help.textContent="Primești alerte pentru comentarii, anunțuri, teme, schimbări și polluri.";
+  btn.textContent="Activează notificările";btn.classList.remove("notify-active");help.textContent="Primești alerte pentru anunțuri, teme, schimbări și polluri noi.";
 }
 async function enablePushNotifications(){
   const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
@@ -1371,7 +1371,7 @@ async function enablePushNotifications(){
     const p256dh=arrayBufferToBase64Url(sub.getKey("p256dh")),auth=arrayBufferToBase64Url(sub.getKey("auth"));
     const {error}=await supabaseClient.rpc("save_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:p256dh,p_auth:auth});
     if(error)throw error;
-    btn.disabled=false;btn.classList.add("notify-active");btn.textContent="Notificări active";help.textContent="Primești alerte pentru anunțuri, teme și schimbări de program.";
+    btn.disabled=false;btn.classList.add("notify-active");btn.textContent="Notificări active";help.textContent="Primești alerte pentru anunțuri, teme, schimbări și polluri noi.";
   }catch(error){
     btn.disabled=false;help.textContent=error?.message||"Nu am putut activa notificările.";btn.textContent="Încearcă din nou";
   }
