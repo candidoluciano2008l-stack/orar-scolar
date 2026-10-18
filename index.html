@@ -962,6 +962,39 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .side-nav #pollsBtn{order:7!important}
   .side-nav #changesBtn{order:8!important}
 }
+
+/* Compact, contained admin dashboard on phones */
+#dashboardOverlay{overscroll-behavior-x:none}
+.admin-modern{max-width:100%;min-width:0}
+.admin-modern-body{min-width:0;overflow-x:hidden;overscroll-behavior-x:contain}
+.admin-modern .dash-panel,.admin-modern .dash-panel>*{min-width:0;max-width:100%}
+.admin-modern .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.admin-modern .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.admin-modern .row{grid-template-columns:minmax(0,150px) minmax(0,1fr)}
+.admin-modern .input,.admin-modern .select,.admin-modern .textarea{min-width:0;max-width:100%}
+.admin-modern .dashboard-tabs{overscroll-behavior-x:contain}
+@media(max-width:760px){
+  #dashboardOverlay{padding:8px}
+  .admin-modern{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);border-radius:18px}
+  .admin-modern-head{padding:13px 15px;gap:10px}
+  .admin-modern-title{font-size:24px}
+  .admin-modern-sub{margin-top:5px;font-size:11px}
+  .admin-head-actions{gap:6px}
+  .admin-user-chip{padding:6px 9px}
+  .admin-modern-body{padding:11px}
+  .admin-overview-grid{gap:7px;margin-bottom:10px}
+  .admin-overview-card{gap:8px;padding:9px 10px;border-radius:13px}
+  .admin-overview-icon{width:28px;height:28px;border-radius:9px}
+  .admin-overview-value{font-size:18px}
+  .admin-overview-label{font-size:10px}
+  .admin-modern .dashboard-tabs{gap:4px;padding:2px 0 7px;margin-bottom:10px}
+  .admin-modern .dash-tab{padding:8px 9px;border-radius:9px;font-size:11px}
+  .admin-modern #tasksPanel>form{padding:14px!important;border-radius:14px!important}
+  .admin-modern #changesPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{border-radius:14px!important}
+  .admin-modern .dash-item{padding:10px;border-radius:12px}
+  .admin-modern .input,.admin-modern .select,.admin-modern .textarea{padding:9px 10px;border-radius:10px}
+  .admin-modern .quick,.admin-modern .send{padding:9px 12px;border-radius:9px}
+}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
