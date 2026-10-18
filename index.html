@@ -995,6 +995,88 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .admin-modern .input,.admin-modern .select,.admin-modern .textarea{padding:9px 10px;border-radius:10px}
   .admin-modern .quick,.admin-modern .send{padding:9px 12px;border-radius:9px}
 }
+
+/* Admin workspace refresh: quieter surfaces, grouped navigation, and a real desktop layout. */
+#dashboardOverlay{align-items:center;padding:20px}
+.admin-modern{width:min(1320px,100%);height:min(900px,calc(100vh - 40px));height:min(900px,calc(100dvh - 40px));max-height:calc(100dvh - 40px);border:1px solid var(--line);border-radius:22px;box-shadow:0 28px 90px rgba(4,16,32,.28)}
+.admin-modern-head{flex:0 0 auto;min-height:90px;padding:16px 24px;align-items:center;background:var(--card);color:var(--text);border-bottom:1px solid var(--line)}
+.admin-modern-head>div:first-child{min-width:0}
+.admin-kicker{color:var(--blue);opacity:1;letter-spacing:.12em}
+.admin-modern-title{margin-top:4px;color:var(--text);font-size:26px;line-height:1.1}
+.admin-modern-sub{max-width:none;margin-top:4px;color:var(--muted);font-size:13px;line-height:1.4}
+.admin-head-actions{flex:none;align-items:center}
+.admin-user-chip{max-width:260px;padding:8px 12px;background:rgba(127,150,180,.09);border-color:var(--line);color:var(--text)}
+.admin-modern .admin-head-actions .quick{border:1px solid var(--line);background:var(--card);color:var(--text)}
+.admin-modern .admin-head-actions .quick:hover{background:rgba(127,150,180,.09)}
+.admin-modern .admin-head-actions .close{flex:none;border:1px solid var(--line);background:rgba(127,150,180,.08);color:var(--text)}
+.admin-modern-body{flex:1;min-height:0;display:grid;grid-template-columns:196px minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);column-gap:24px;row-gap:20px;overflow-x:hidden;overflow-y:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;padding:22px 24px 24px;background:var(--bg)}
+.admin-overview-grid{grid-column:1/-1;grid-row:1;gap:12px;margin:0}
+.admin-overview-card{min-height:76px;padding:14px 16px;border-radius:14px;box-shadow:none}
+.admin-overview-icon{width:36px;height:36px;border-radius:11px}
+.admin-overview-value{font-size:23px}
+.admin-overview-label{font-size:11px}
+.admin-modern .dashboard-tabs{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:stretch;gap:18px;overflow:visible;margin:0;padding:0 14px 0 0;border:0;border-right:1px solid var(--line);overscroll-behavior:initial}
+.admin-modern .dashboard-tabs::-webkit-scrollbar{display:none}
+.dashboard-nav-group{display:grid;align-content:start;gap:4px}
+.dashboard-nav-label{margin:0 9px 4px;color:var(--muted);font-size:10px;font-weight:850;letter-spacing:.11em;text-transform:uppercase}
+.admin-modern .dashboard-nav-group .dash-tab{width:100%;min-width:0;min-height:40px;display:flex;align-items:center;justify-content:flex-start;padding:9px 11px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:13px;font-weight:700;line-height:1.25;text-align:left;white-space:normal}
+.admin-modern .dashboard-nav-group .dash-tab:hover{background:rgba(127,150,180,.08);color:var(--text)}
+.admin-modern .dashboard-nav-group .dash-tab.active{border-color:color-mix(in srgb,var(--blue) 18%,var(--line));background:color-mix(in srgb,var(--blue) 10%,var(--card));color:var(--blue);box-shadow:none}
+.admin-modern .dash-panel{grid-column:2;grid-row:2;min-width:0}
+.admin-modern .dash-panel-heading{margin:0 0 16px}
+.admin-modern .dash-panel-title{margin:0;color:var(--text);font-size:22px;font-weight:850;line-height:1.2}
+.admin-modern .dash-panel-description{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+.admin-modern #tasksPanel.active{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:18px;align-items:start}
+.admin-modern #tasksPanel>.dash-panel-heading{grid-column:1/-1;margin-bottom:0}
+.admin-modern #tasksPanel>form{padding:20px!important;border:1px solid var(--line)!important;border-radius:16px!important;background:var(--card)!important;box-shadow:none}
+.admin-modern #tasksPanel>.dash-list{margin-top:0;padding:0}
+.admin-modern #changesPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{padding:20px!important;border:1px solid var(--line)!important;border-radius:16px!important;background:var(--card)!important;box-shadow:none}
+.admin-modern #adminsPanel>#resetAdminPasswordForm{margin-top:14px!important}
+.admin-modern .dash-list{display:grid;align-content:start;gap:9px}
+.admin-modern .dash-item{padding:12px 14px;border-radius:12px;box-shadow:none}
+.admin-modern #onlinePanel .online-summary{padding:13px 15px;border-radius:14px;box-shadow:none}
+.admin-modern #onlinePanel .online-user{padding:10px 12px;border-radius:12px;box-shadow:none}
+.admin-modern .dash-tab:focus-visible,.admin-modern .quick:focus-visible,.admin-modern .send:focus-visible,.admin-modern .close:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 55%,transparent);outline-offset:2px}
+@media(max-width:900px){
+  #dashboardOverlay{padding:12px}
+  .admin-modern{height:calc(100vh - 24px);height:calc(100dvh - 24px);max-height:calc(100dvh - 24px);border-radius:20px}
+  .admin-modern-head{flex-direction:row}
+  .admin-modern-body{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);gap:14px;padding:18px}
+  .admin-overview-grid{grid-column:1;grid-row:1;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .admin-modern .dashboard-tabs{grid-column:1;grid-row:2;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:0 0 12px;border-right:0;border-bottom:1px solid var(--line)}
+  .dashboard-nav-group{display:contents}
+  .dashboard-nav-label{display:none}
+  .admin-modern .dashboard-nav-group .dash-tab{justify-content:center;min-height:42px;padding:8px 5px;text-align:center}
+  .admin-modern .dash-panel{grid-column:1;grid-row:3}
+  .admin-modern #tasksPanel.active{grid-template-columns:minmax(0,1fr)}
+  .admin-modern #tasksPanel>.dash-panel-heading{grid-column:1}
+}
+@media(max-width:640px){
+  #dashboardOverlay{padding:8px}
+  .admin-modern{height:calc(100vh - 16px);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);border-radius:17px}
+  .admin-modern-head{flex-direction:column;align-items:flex-start;gap:10px;padding:14px 15px}
+  .admin-modern-title{font-size:23px}
+  .admin-modern-sub{max-width:38ch;font-size:12px}
+  .admin-head-actions{width:100%;justify-content:flex-start;gap:6px}
+  .admin-user-chip{max-width:calc(100% - 110px);min-width:0;padding:7px 10px;font-size:10px}
+  .admin-user-chip span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .admin-modern-body{gap:12px;padding:13px}
+  .admin-overview-grid{gap:7px}
+  .admin-overview-card{min-height:62px;gap:9px;padding:9px 10px;border-radius:12px}
+  .admin-overview-icon{width:30px;height:30px;border-radius:9px}
+  .admin-overview-value{font-size:19px}
+  .admin-overview-label{font-size:10px}
+  .admin-modern .dashboard-tabs{gap:4px;padding-bottom:10px}
+  .admin-modern .dashboard-nav-group .dash-tab{min-height:40px;padding:7px 3px;border-radius:9px;font-size:10.5px;line-height:1.15;overflow-wrap:anywhere}
+  .admin-modern .dash-panel-heading{margin-bottom:12px}
+  .admin-modern .dash-panel-title{font-size:20px}
+  .admin-modern .dash-panel-description{font-size:12px}
+  .admin-modern #tasksPanel>form,.admin-modern #changesPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{padding:14px!important;border-radius:13px!important}
+  .admin-modern #adminsPanel>#resetAdminPasswordForm{margin-top:10px!important}
+  .admin-modern .input,.admin-modern .select,.admin-modern .textarea{padding:9px 10px;border-radius:10px}
+  .admin-modern .quick,.admin-modern .send{padding:9px 12px;border-radius:9px}
+}
+@media(prefers-reduced-motion:reduce){.admin-modern .dash-panel.active{animation:none}}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1198,7 +1280,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 
 <div class="overlay" id="authOverlay"><section class="modal" role="dialog" aria-modal="true" style="max-width:520px"><div class="modal-head"><div class="modal-title">Administrator</div><button class="close" id="authClose">×</button></div><div class="modal-body"><div class="auth-help">Autentificare cu email și parolă. Nu este nevoie de Magic Link la fiecare conectare.</div><div id="authStatus" class="auth-help" style="margin-top:10px"></div></div><form class="form" id="authForm"><div class="grid"><input class="input" id="adminEmail" type="email" placeholder="adresa de email" autocomplete="email" required><input class="input" id="adminPassword" type="password" placeholder="Parolă" autocomplete="current-password" minlength="8" required></div><div class="actions"><div class="hint">Minim 8 caractere</div><button class="send" id="authSend" type="submit">Autentificare</button></div><div class="error" id="authError"></div></form></section></div>
 
-<div class="overlay" id="dashboardOverlay"><section class="modal full admin-modern"><div class="admin-modern-head"><div><div class="admin-kicker">ORARUL MEU · ADMIN</div><div class="admin-modern-title">Admin Dashboard</div><div class="admin-modern-sub">Controlează rapid temele, anunțurile, schimbările și activitatea site-ului.</div></div><div class="admin-head-actions"><div class="admin-user-chip"><span class="admin-user-dot"></span><span id="adminHeaderUser">—</span></div><button class="quick" id="logoutBtn">Delogare</button><button class="close" id="dashboardClose">×</button></div></div>
+<div class="overlay" id="dashboardOverlay"><section class="modal full admin-modern"><div class="admin-modern-head"><div><div class="admin-kicker">ORARUL MEU · ADMIN</div><div class="admin-modern-title">Panou de administrare</div><div class="admin-modern-sub">Gestionează temele, schimbările de program și activitatea școlii.</div></div><div class="admin-head-actions"><div class="admin-user-chip"><span class="admin-user-dot"></span><span id="adminHeaderUser">—</span></div><button class="quick" id="logoutBtn">Delogare</button><button class="close" id="dashboardClose">×</button></div></div>
 <div class="modal-body admin-modern-body">
 <div class="admin-overview-grid">
   <div class="admin-overview-card"><div class="admin-overview-icon">✓</div><div><div class="admin-overview-value" id="adminStatTasks">0</div><div class="admin-overview-label">Teme active</div></div></div>
@@ -1206,18 +1288,25 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   <div class="admin-overview-card"><div class="admin-overview-icon">◫</div><div><div class="admin-overview-value" id="adminStatPolls">0</div><div class="admin-overview-label">Polluri active</div></div></div>
   <div class="admin-overview-card"><div class="admin-overview-icon">●</div><div><div class="admin-overview-value" id="adminStatOnline">0</div><div class="admin-overview-label">Online</div></div></div>
 </div>
-<div class="dashboard-tabs">
-<button class="dash-tab active" data-panel="tasksPanel">Teme / Proiecte</button>
-<button class="dash-tab" data-panel="changesPanel">Schimbări</button>
-<button class="dash-tab" data-panel="announcementsPanel">Anunțuri</button>
-<button class="dash-tab" data-panel="pollsPanel">Polluri</button>
-<button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
-<button class="dash-tab" id="onlineTab" data-panel="onlinePanel" style="display:none">Online</button>
-<button class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
-<button class="dash-tab" data-panel="securityPanel">Securitate</button>
-</div>
+<nav class="dashboard-tabs" aria-label="Secțiuni admin">
+  <div class="dashboard-nav-group"><div class="dashboard-nav-label">Conținut</div>
+    <button type="button" class="dash-tab active" data-panel="tasksPanel">Teme / Proiecte</button>
+    <button type="button" class="dash-tab" data-panel="changesPanel">Schimbări</button>
+    <button type="button" class="dash-tab" data-panel="announcementsPanel">Anunțuri</button>
+    <button type="button" class="dash-tab" data-panel="pollsPanel">Polluri</button>
+  </div>
+  <div class="dashboard-nav-group"><div class="dashboard-nav-label">Comunitate</div>
+    <button type="button" class="dash-tab" data-panel="commentsPanel">Comentarii</button>
+    <button type="button" class="dash-tab" id="onlineTab" data-panel="onlinePanel" style="display:none">Online</button>
+  </div>
+  <div class="dashboard-nav-group"><div class="dashboard-nav-label">Cont și acces</div>
+    <button type="button" class="dash-tab" data-panel="securityPanel">Securitate</button>
+    <button type="button" class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
+  </div>
+</nav>
 
 <div class="dash-panel active" id="tasksPanel">
+<div class="dash-panel-heading"><h2 class="dash-panel-title">Teme și proiecte</h2><p class="dash-panel-description">Creează sau actualizează ce au de predat elevii.</p></div>
 <form class="form" id="taskAdminForm" style="border:0;padding:0;background:none">
   <div class="grid">
     <div class="field-wrap"><div class="field-label">Materia</div><select class="select" id="taskSubject"></select></div>
@@ -1244,6 +1333,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 </div>
 
 <div class="dash-panel" id="changesPanel">
+<div class="dash-panel-heading"><h2 class="dash-panel-title">Schimbări de program</h2><p class="dash-panel-description">Înlocuiește o oră sau mut-o pe altă zi.</p></div>
 <form class="form" id="changeAdminForm" style="border:0;padding:0;background:none">
   <div class="change-builder">
     <div class="change-section">
@@ -1289,6 +1379,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 </div>
 
 <div class="dash-panel" id="announcementsPanel">
+<div class="dash-panel-heading"><h2 class="dash-panel-title">Anunțuri</h2><p class="dash-panel-description">Publică informații importante pentru elevi.</p></div>
 <form class="form" id="announcementAdminForm" style="border:0;padding:0;background:none"><input class="input" id="announcementTitle" maxlength="160" placeholder="Titlu" required><textarea class="textarea" id="announcementMessage" maxlength="2000" placeholder="Mesaj" style="margin-top:9px" required></textarea><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:9px;color:var(--text);font-weight:700">
 <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="announcementPinned"> Fixat sus</label>
 <label style="display:flex;gap:8px;align-items:center;color:#b91c1c"><input type="checkbox" id="announcementAttention"> Atenție!</label>
@@ -1296,6 +1387,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 </div>
 
 <div class="dash-panel" id="pollsPanel">
+<div class="dash-panel-heading"><h2 class="dash-panel-title">Polluri</h2><p class="dash-panel-description">Adună răspunsurile clasei la o întrebare.</p></div>
 <form class="form" id="pollAdminForm" style="border:0;padding:0;background:none">
   <div class="field-wrap"><div class="field-label">Întrebarea</div><input class="input" id="pollQuestion" maxlength="300" placeholder="Ex.: Ce materie vreți să aibă mai multe ore?" required></div>
   <div class="field-wrap" style="margin-top:10px"><div class="field-label">Variante de răspuns</div><div id="pollOptionFields"></div></div>
@@ -1306,15 +1398,17 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 <div class="dash-list" id="pollList"></div>
 </div>
 
-<div class="dash-panel" id="commentsPanel"><div class="dash-list" id="adminCommentList"></div></div>
+<div class="dash-panel" id="commentsPanel"><div class="dash-panel-heading"><h2 class="dash-panel-title">Comentarii</h2><p class="dash-panel-description">Moderează discuțiile lăsate la materii.</p></div><div class="dash-list" id="adminCommentList"></div></div>
 
 <div class="dash-panel" id="onlinePanel">
-  <div class="online-summary"><div><div class="section-title">Utilizatori online</div><div class="section-subtitle">Lista se actualizează în timp real.</div></div><div class="online-count" id="onlineCount">0</div></div>
+  <div class="dash-panel-heading"><h2 class="dash-panel-title">Utilizatori online</h2><p class="dash-panel-description">Vezi cine folosește site-ul acum.</p></div>
+  <div class="online-summary"><div><div class="section-subtitle">Lista se actualizează în timp real.</div></div><div class="online-count" id="onlineCount">0</div></div>
   <div class="dash-list" id="onlineUserList"></div>
 </div>
 
 <div class="dash-panel" id="securityPanel">
-  <div class="auth-help" style="margin-bottom:10px">Schimbă parola contului cu care ești autentificat. Această operațiune nu trimite niciun email.</div>
+  <div class="dash-panel-heading"><h2 class="dash-panel-title">Securitatea contului</h2><p class="dash-panel-description">Schimbă parola contului cu care ești autentificat.</p></div>
+  <div class="auth-help" style="margin-bottom:10px">Această operațiune nu trimite niciun email.</div>
   <form class="form" id="passwordForm" style="border:0;padding:0;background:none">
     <div class="grid">
       <input class="input" id="myPassword" type="password" placeholder="Parolă nouă" autocomplete="new-password" minlength="8" required>
@@ -1326,6 +1420,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 </div>
 
 <div class="dash-panel" id="adminsPanel">
+  <div class="dash-panel-heading"><h2 class="dash-panel-title">Administratori</h2><p class="dash-panel-description">Gestionează conturile care pot administra site-ul.</p></div>
   <div class="auth-help" style="margin-bottom:10px">Doar Super Admin poate adăuga, promova sau elimina administratori.</div>
   <form class="form" id="adminManageForm" style="border:0;padding:0;background:none">
     <div class="grid">
