@@ -1054,6 +1054,37 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @keyframes planet-glow{0%,100%{filter:brightness(.94);transform:translate(-50%,-50%) scale(.97)}50%{filter:brightness(1.18);transform:translate(-50%,-50%) scale(1.04)}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 @media(max-width:760px){.welcome-card{min-height:220px!important;padding:24px 20px!important}.welcome-card h1{font-size:38px!important}.welcome-art{right:4%!important;top:auto!important;bottom:-42px!important;width:185px!important;height:185px!important;transform:none!important;opacity:.68!important}.welcome-card:after{right:-2%;top:auto;bottom:-80px;width:200px;height:200px;transform:none}.art-sun{width:64px!important;height:64px!important}.welcome-date{padding:8px 10px;font-size:10px!important}.welcome-copy{max-width:78%}.notify-help{max-width:250px}.stat-card,.dashboard-card,.today-focus{backdrop-filter:none}}
+/* Home dashboard: focus on the next useful thing, with an explicit way to expand. */
+.home-view-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:0 13px;border:1px solid rgba(103,232,249,.24);border-radius:12px;background:rgba(103,232,249,.08);color:#8ceeff;font-size:12px;font-weight:800;white-space:nowrap;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+.home-view-toggle:hover{transform:translateY(-1px);border-color:rgba(103,232,249,.48);background:rgba(103,232,249,.14)}
+.home-view-toggle:focus-visible{outline:3px solid rgba(103,232,249,.35);outline-offset:3px}
+.dashboard-main.focus-mode{row-gap:12px}
+.dashboard-main.focus-mode .welcome-card{min-height:116px!important;padding:18px 22px!important;border-radius:19px!important;background:linear-gradient(110deg,rgba(17,33,60,.96),rgba(16,24,47,.96))!important;box-shadow:0 14px 42px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.05)!important}
+.dashboard-main.focus-mode .welcome-card:before,.dashboard-main.focus-mode .welcome-card:after,.dashboard-main.focus-mode .welcome-art{display:none!important}
+.dashboard-main.focus-mode .welcome-card h1{font-size:30px!important;letter-spacing:-.03em;margin:5px 0 2px!important}
+.dashboard-main.focus-mode .welcome-card .eyebrow{font-size:9px;letter-spacing:.16em}
+.dashboard-main.focus-mode .welcome-copy p,.dashboard-main.focus-mode .notify-help{display:none!important}
+.dashboard-main.focus-mode .notify-btn{margin:0 12px 0 0;padding:9px 12px!important;font-size:11px}
+.dashboard-main.focus-mode .welcome-date{padding:8px 11px;font-size:10px!important}
+.dashboard-main.focus-mode .welcome-day{font-size:12px}
+.dashboard-main.focus-mode .stat-grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:0}
+.dashboard-main.focus-mode .stat-card{min-height:86px;padding:13px 16px;border-radius:16px}
+.dashboard-main.focus-mode #todayFocus{display:none!important}
+.dashboard-main.focus-mode #announcementsSection[data-home-empty="true"],.dashboard-main.focus-mode #tasksSection[data-home-empty="true"],.dashboard-main.focus-mode #pollsSection[data-home-empty="true"],.dashboard-main.focus-mode #changesSection[data-home-empty="true"]{display:none!important}
+.dashboard-main.focus-mode .dashboard-grid-main:has(#announcementsSection[data-home-empty="true"]){grid-template-columns:minmax(0,1fr)}
+.dashboard-main.focus-mode .dashboard-grid-lower:has(#tasksSection[data-home-empty="true"]):has(#pollsSection[data-home-empty="true"]){display:none!important}
+.dashboard-main.focus-mode .dashboard-grid-main{grid-template-columns:minmax(0,1.45fr) minmax(270px,.55fr);gap:12px;margin:0}
+.dashboard-main.focus-mode .dashboard-grid-lower{gap:12px;margin:0}
+.dashboard-main.focus-mode #scheduleSection{padding:20px;border-radius:20px}
+.dashboard-main.focus-mode #scheduleSection .section-head{align-items:center;margin-bottom:10px}
+.dashboard-main.focus-mode #changesSection{margin:0}
+.dashboard-main.focus-mode .dashboard-card{padding:14px;border-radius:16px}
+.dashboard-main.focus-mode .empty{padding:13px 10px!important;border-style:solid!important;background:rgba(130,164,224,.025)!important;font-size:12px}
+.dashboard-main:not(.focus-mode) .home-view-toggle{border-color:var(--line);background:rgba(127,150,180,.07);color:var(--muted)}
+:root[data-theme="light"] .home-view-toggle{border-color:rgba(8,127,155,.2);background:rgba(8,127,155,.07);color:#087f9b}
+:root[data-theme="light"] .dashboard-main.focus-mode .welcome-card{background:linear-gradient(110deg,#e0f1ff,#eeeaff)!important}
+@media(max-width:900px){.dashboard-main.focus-mode .dashboard-grid-main{grid-template-columns:minmax(0,1fr)}.dashboard-main.focus-mode .dashboard-grid-lower{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.home-view-toggle{min-height:34px;padding:0 9px;font-size:10px}.dashboard-main.focus-mode{row-gap:9px}.dashboard-main.focus-mode .welcome-card{min-height:98px!important;padding:14px!important;border-radius:15px!important}.dashboard-main.focus-mode .welcome-card h1{font-size:24px!important}.dashboard-main.focus-mode .welcome-copy{max-width:none}.dashboard-main.focus-mode .notify-btn{margin:6px 0 0;padding:8px 10px!important;font-size:10px}.dashboard-main.focus-mode .welcome-date{display:none}.dashboard-main.focus-mode .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.dashboard-main.focus-mode .stat-card{min-height:76px;padding:11px 12px}.dashboard-main.focus-mode .dashboard-grid-lower{grid-template-columns:minmax(0,1fr)}.dashboard-main.focus-mode #scheduleSection{padding:13px;border-radius:15px}}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1100,6 +1131,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
       </div>
       <div class="topbar-actions">
         <div class="user-badge"><div class="user-badge-name" id="visitorDisplayName"></div><div class="user-badge-role" id="visitorDisplayRole">Elev</div></div>
+        <button class="home-view-toggle" id="homeViewToggle" type="button" aria-pressed="true">Afișează tot</button>
         <div class="status-pill">Online</div>
       </div>
     </header>
@@ -2027,6 +2059,14 @@ async function renderPreviews(){
 }).join(""):"<div class='empty'>Nu există teme sau proiecte active.</div>";
   }
   await renderPollPreview();
+  updateHomePreviewState();
+}
+function updateHomePreviewState(){
+  const groups=[["announcementsSection","announcementPreview"],["tasksSection","taskPreview"],["pollsSection","pollPreview"],["changesSection","changePreview"]];
+  groups.forEach(([sectionId,previewId])=>{
+    const section=document.getElementById(sectionId),preview=document.getElementById(previewId);
+    if(section)section.dataset.homeEmpty=String(!preview||Boolean(preview.querySelector(".empty")));
+  });
 }
 async function getPollResults(pollId){
   const r=await supabaseClient.rpc("get_poll_results",{p_poll_id:pollId});
@@ -2157,14 +2197,23 @@ function setSideNavActive(key){
     btn.classList.remove("active");
   });
 }
+function setHomeFocusMode(enabled,save=true){
+  const main=document.querySelector(".dashboard-main"),button=document.getElementById("homeViewToggle");
+  if(!main)return;
+  main.classList.toggle("focus-mode",enabled);
+  if(button){button.setAttribute("aria-pressed",String(enabled));button.textContent=enabled?"Afișează tot":"Focus"}
+  if(save)localStorage.setItem("homeDashboardView",enabled?"focus":"all");
+}
+setHomeFocusMode(localStorage.getItem("homeDashboardView")!=="all",false);
+document.getElementById("homeViewToggle")?.addEventListener("click",()=>setHomeFocusMode(!document.querySelector(".dashboard-main")?.classList.contains("focus-mode")));
 function scrollToSection(sectionId,key){
   setSideNavActive(key);
   const el=document.getElementById(sectionId);
   if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
 }
-document.getElementById("todayBtn").onclick=()=>{showHomePage();setSideNavActive("home");selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("todayBtn").onclick=()=>{showHomePage();setHomeFocusMode(true);setSideNavActive("home");selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
 document.getElementById("scheduleNav").onclick=()=>{showHomePage();scrollToSection("scheduleSection","schedule")};
-document.getElementById("tasksNav").onclick=()=>{showHomePage();scrollToSection("tasksSection","tasks")};
+document.getElementById("tasksNav").onclick=()=>{showHomePage();setHomeFocusMode(false);scrollToSection("tasksSection","tasks")};
 document.getElementById("announcementsBtn").onclick=()=>{showHomePage();setSideNavActive("announcements");openList("ann")};
 document.getElementById("changesBtn").onclick=()=>{showHomePage();setSideNavActive("changes");openList("changes")};
 document.getElementById("pollsBtn").onclick=()=>{showHomePage();setSideNavActive("polls");openList("polls")};
