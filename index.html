@@ -65,7 +65,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .admin-overview-value{font-size:22px;font-weight:950;line-height:1}.admin-overview-label{margin-top:3px;font-size:11px;color:var(--muted);font-weight:800}
 .admin-modern .dashboard-tabs{display:flex;gap:7px;flex-wrap:nowrap;overflow:auto;padding:3px 0 9px;margin:0 0 14px;border-bottom:1px solid var(--line);scrollbar-width:none}.admin-modern .dashboard-tabs::-webkit-scrollbar{display:none}
 .admin-modern .dash-tab{border:0;background:transparent;color:var(--muted);border-radius:11px;padding:10px 12px;font-size:12px;white-space:nowrap}.admin-modern .dash-tab.active{background:var(--text);color:var(--card)}
-.admin-modern .dash-panel{min-height:0}.admin-modern .dash-panel.active{animation:adminPanelIn .16s ease-out}
+.admin-modern .dash-panel{display:none;min-height:0}.admin-modern .dash-panel.active{display:block;animation:adminPanelIn .16s ease-out}
 @keyframes adminPanelIn{from{opacity:.55;transform:translateY(2px)}to{opacity:1;transform:none}}
 .admin-modern #tasksPanel.active{display:grid;grid-template-columns:minmax(360px,.92fr) minmax(0,1.08fr);gap:16px;align-items:start}
 .admin-modern #tasksPanel > form{padding:24px !important;border:1px solid var(--line)!important;border-radius:19px!important;background:var(--card)!important;box-shadow:var(--shadow)}
