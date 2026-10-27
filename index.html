@@ -1182,6 +1182,13 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:1050px){.topbar{height:68px!important;padding-inline:20px!important}.topbar-left{gap:18px!important}.topbar-home-copy small{display:none}}
 @media(max-width:760px){.topbar{height:64px!important;padding:0 12px!important;gap:8px!important}.topbar-left{display:flex!important;gap:8px!important;flex:0 1 auto!important}.topbar-home{width:40px;min-height:40px;justify-content:center;padding:4px;border-radius:13px}.topbar-home svg{width:30px;height:30px}.topbar-home-copy,.topbar-date{display:none!important}.topbar-actions{gap:5px!important}.topbar-utility{width:38px;min-width:38px;height:38px;min-height:38px;padding:0;border-radius:12px}.topbar-utility-label{display:none}.topbar-utility-icon{font-size:18px}.topbar .user-badge{max-width:138px!important;min-height:38px!important;padding:6px 9px 6px 28px!important}.topbar .user-badge-name{max-width:100px!important;font-size:10px!important}.topbar .user-badge-role{font-size:7px!important}.topbar .status-pill{display:none!important}.dashboard-main{padding-top:18px!important}}
 
+
+.site-visit-note{margin:12px 0 8px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:rgba(130,164,224,.035)}
+.site-visit-row{padding:13px 15px}
+.site-visit-row .dash-item-title{font-weight:850}
+.site-visit-row .dash-item-meta{font-variant-numeric:tabular-nums}
+#refreshSiteVisits{margin-top:12px}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1389,6 +1396,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 <button class="dash-tab" data-panel="pollsPanel">Polluri</button>
 <button class="dash-tab" data-panel="commentsPanel">Comentarii</button>
 <button class="dash-tab" id="onlineTab" data-panel="onlinePanel" style="display:none">Online</button>
+<button class="dash-tab" id="siteVisitsTab" data-panel="siteVisitsPanel" style="display:none">Istoric vizite</button>
 <button class="dash-tab" id="adminsTab" data-panel="adminsPanel" style="display:none">Administratori</button>
 <button class="dash-tab" data-panel="securityPanel">Securitate</button>
 </div>
@@ -1502,6 +1510,13 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 <div class="dash-panel" id="onlinePanel">
   <div class="online-summary"><div><div class="section-title">Utilizatori online</div><div class="section-subtitle">Lista se actualizează în timp real.</div></div><div class="online-count" id="onlineCount">0</div></div>
   <div class="dash-list" id="onlineUserList"></div>
+</div>
+
+<div class="dash-panel" id="siteVisitsPanel">
+  <div class="online-summary"><div><div class="section-title">Istoric vizite</div><div class="section-subtitle">Numele și ora sesiunilor înregistrate pe acest site.</div></div><div class="online-count" id="siteVisitCount">0</div></div>
+  <div class="auth-help site-visit-note">Numele este cel ales de vizitator la intrare. Nu sunt colectate adrese IP.</div>
+  <div class="dash-list" id="siteVisitsList"><div class="empty">Se încarcă istoricul…</div></div>
+  <button class="quick" id="refreshSiteVisits" type="button">Reîncarcă istoricul</button>
 </div>
 
 <div class="dash-panel" id="securityPanel">
@@ -1668,6 +1683,8 @@ async function refreshAuth(){
   renderVisitorBadge();
   const onlineTab=document.getElementById("onlineTab");
   if(onlineTab) onlineTab.style.display=isSuperAdmin?"inline-flex":"none";
+  const visitsTab=document.getElementById("siteVisitsTab");
+  if(visitsTab) visitsTab.style.display=isSuperAdmin?"inline-flex":"none";
 }
 async function authenticateAdmin(){
   const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");
@@ -2474,8 +2491,9 @@ async function openDashboard(){
   fillTaskSubjects();
   document.getElementById("adminsTab").style.display=isSuperAdmin?"inline-flex":"none";
   document.getElementById("onlineTab").style.display=isSuperAdmin?"inline-flex":"none";
+  document.getElementById("siteVisitsTab").style.display=isSuperAdmin?"inline-flex":"none";
   resetPollOptionFields();
-  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminDaysOff(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers()]);
+  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminDaysOff(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers(),renderAdminSiteVisits()]);
   renderAdminOverviewStats();
 }
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
@@ -2852,7 +2870,7 @@ document.getElementById("daysOffAdminForm").addEventListener("submit",async e=>{
   e.target.reset();updateDaysOffFormKind();await loadData();await render();renderCalendar();await renderAdminDaysOff();
 });
 document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
-  if((btn.id==="adminsTab"||btn.id==="onlineTab")&&!isSuperAdmin)return;
+  if((btn.id==="adminsTab"||btn.id==="onlineTab"||btn.id==="siteVisitsTab")&&!isSuperAdmin)return;
   document.querySelectorAll(".dash-tab").forEach(x=>x.classList.remove("active"));
   document.querySelectorAll(".dash-panel").forEach(x=>x.classList.remove("active"));
   btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active");
@@ -2878,6 +2896,20 @@ if("serviceWorker" in navigator){
 
 const welcomeDateFormat=new Intl.DateTimeFormat("ro-RO",{day:"numeric",month:"long",year:"numeric"});
 const welcomeDayFormat=new Intl.DateTimeFormat("ro-RO",{weekday:"long"});
+async function renderAdminSiteVisits(){
+  const countEl=document.getElementById("siteVisitCount"),listEl=document.getElementById("siteVisitsList");
+  if(!countEl||!listEl)return;
+  if(!isSuperAdmin){listEl.innerHTML="<div class='empty'>Istoricul este disponibil doar pentru Super Admin.</div>";return}
+  listEl.innerHTML="<div class='empty'>Se încarcă istoricul…</div>";
+  const {data,error}=await supabaseClient.from("site_visits").select("visitor_name,visited_at").order("visited_at",{ascending:false}).limit(100);
+  if(error){countEl.textContent="—";listEl.innerHTML="<div class='empty'>Nu s-a putut încărca istoricul vizitelor.</div>";return}
+  const visits=Array.isArray(data)?data:[];
+  countEl.textContent=String(visits.length);
+  const formatVisitTime=value=>{const date=new Date(value);return Number.isNaN(date.getTime())?"Oră necunoscută":new Intl.DateTimeFormat("ro-RO",{dateStyle:"medium",timeStyle:"short"}).format(date)};
+  listEl.innerHTML=visits.length?visits.map(visit=>"<div class='dash-item site-visit-row'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(visit.visitor_name||"Vizitator")+"</div><div class='dash-item-meta'>"+escapeHtml(formatVisitTime(visit.visited_at))+"</div></div></div>").join(""):"<div class='empty'>Nu există vizite înregistrate.</div>";
+}
+document.getElementById("refreshSiteVisits")?.addEventListener("click",renderAdminSiteVisits);
+
 async function renderOnlineUsers(){
   const countEl=document.getElementById("onlineCount"),listEl=document.getElementById("onlineUserList");
   if(!countEl||!listEl||!onlineChannel){if(countEl)countEl.textContent="0";if(listEl)listEl.innerHTML="<div class='empty'>Se conectează lista de utilizatori…</div>";return}
@@ -2907,8 +2939,14 @@ async function startOnlinePresence(){
     }
   });
 }
+async function recordSiteVisit(name){
+  if(!name||!onlineSessionId||sessionStorage.getItem("siteVisitRecorded")==="1")return;
+  const {error}=await supabaseClient.from("site_visits").insert({session_id:onlineSessionId,visitor_name:name});
+  if(!error||error.code==="23505")sessionStorage.setItem("siteVisitRecorded","1");
+}
 function unlockSite(name){
   const clean=String(name||"").trim().replace(/\s+/g," ");
+  recordSiteVisit(clean);
   localStorage.setItem("visitorName",clean);
   localStorage.setItem("chatName",clean);
   document.body.classList.remove("site-locked");
