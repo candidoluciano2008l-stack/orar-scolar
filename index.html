@@ -1056,37 +1056,37 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:760px){.welcome-card{min-height:220px!important;padding:24px 20px!important}.welcome-card h1{font-size:38px!important}.welcome-art{right:4%!important;top:auto!important;bottom:-42px!important;width:185px!important;height:185px!important;transform:none!important;opacity:.68!important}.welcome-card:after{right:-2%;top:auto;bottom:-80px;width:200px;height:200px;transform:none}.art-sun{width:64px!important;height:64px!important}.welcome-date{padding:8px 10px;font-size:10px!important}.welcome-copy{max-width:78%}.notify-help{max-width:250px}.stat-card,.dashboard-card,.today-focus{backdrop-filter:none}}
 /* One interactive school workspace: all everyday tools live in a single panel. */
 .smart-stack{width:100%;max-width:1600px;align-self:center;overflow:hidden;border:1px solid rgba(117,192,255,.2);border-radius:25px;background:linear-gradient(145deg,rgba(13,21,39,.98),rgba(9,15,29,.98));box-shadow:0 24px 70px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.045)}
-.smart-stack-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 28px 18px;background:radial-gradient(ellipse at 95% 0%,rgba(112,99,218,.16),transparent 36%),linear-gradient(110deg,rgba(26,54,87,.54),transparent 74%);border-bottom:1px solid var(--line)}
-.smart-stack-title{margin:5px 0 4px;color:var(--text);font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:-.04em;line-height:1.1}
+.smart-stack-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 22px 15px;background:radial-gradient(ellipse at 95% 0%,rgba(112,99,218,.13),transparent 36%),linear-gradient(110deg,rgba(26,54,87,.42),transparent 74%);border-bottom:1px solid var(--line)}
+.smart-stack-title{margin:4px 0 3px;color:var(--text);font-size:27px;font-weight:900;letter-spacing:-.035em;line-height:1.12;white-space:nowrap}
 .smart-stack-subtitle{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
-.smart-stack-heading .eyebrow{color:#80eaff;font-size:10px;font-weight:850;letter-spacing:.18em}
+.smart-stack-heading .eyebrow{color:#80eaff;font-size:9px;font-weight:850;letter-spacing:.16em}
 .smart-stack-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-.smart-stack-date{display:grid;gap:3px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(8,14,28,.42);text-align:right}
-.smart-stack-date b{color:var(--text);font-size:12px;text-transform:capitalize}.smart-stack-date span{color:var(--muted);font-size:10px}
-.smart-stack-heading .notify-btn{margin:0;padding:10px 13px!important;font-size:11px}
-.smart-stack-head-actions .notify-help{max-width:195px;color:var(--muted);font-size:10px;line-height:1.35}
+.smart-stack-heading .notify-btn{margin:0;padding:9px 12px!important;font-size:10px}
+.smart-stack-head-actions .notify-help{max-width:150px;color:var(--muted);font-size:9px;line-height:1.3}
 .smart-stack .attention-alert{margin:14px 0 0}
-.smart-stack .stat-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0;padding:0 22px 17px}
-.smart-stack .stat-card{display:flex;flex-direction:column;justify-content:center;min-height:82px;padding:12px 15px;border-radius:14px;box-shadow:none!important}
+.smart-stack .stat-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:0;padding:0 18px 14px}
+.smart-stack .stat-grid[data-day-off="true"]{grid-template-columns:minmax(0,1fr)}
+.smart-stack .stat-card{display:flex;flex-direction:column;justify-content:center;min-height:72px;padding:10px 14px;border-radius:13px;box-shadow:none!important}
 .smart-stack .stat-label{font-size:9px;letter-spacing:.1em}.smart-stack .stat-value{margin-top:5px;font-size:18px}.smart-stack .stat-sub,.smart-stack .stat-note{font-size:11px;margin-top:3px}
-.smart-stack-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(5,10,21,.58)}
+.smart-stack-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(5,10,21,.48)}
 .smart-stack-tabs{display:flex;align-items:center;gap:5px;min-width:0;overflow-x:auto;scrollbar-width:none}.smart-stack-tabs::-webkit-scrollbar{display:none}
-.smart-stack-tab{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 13px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;white-space:nowrap;cursor:pointer;transition:background .18s,color .18s,border-color .18s}
+.smart-stack-tab{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:0 11px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--muted);font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;transition:background .18s,color .18s,border-color .18s}
 .smart-stack-tab:hover{background:rgba(128,168,226,.08);color:var(--text)}
 .smart-stack-tab[aria-selected="true"]{border-color:rgba(103,232,249,.2);background:linear-gradient(110deg,rgba(103,232,249,.14),rgba(139,156,255,.13));color:#9ceeff;box-shadow:inset 0 1px rgba(255,255,255,.04)}
-.smart-stack-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:rgba(143,171,220,.1);color:var(--muted);font-size:9px;font-weight:900}
+.smart-stack-count{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 4px;border-radius:99px;background:rgba(143,171,220,.1);color:var(--muted);font-size:9px;font-weight:900}
+.smart-stack-count[hidden]{display:none}
 .smart-stack-tab[aria-selected="true"] .smart-stack-count{background:rgba(103,232,249,.16);color:#a0f0ff}
 .smart-stack-quick-actions{display:flex;align-items:center;gap:7px;flex:none}
 .smart-stack-quick-actions .quick{min-height:36px;padding:0 11px;font-size:11px}
-.smart-stack-panels{min-height:430px;padding:20px 22px 23px}
-.smart-stack-panels>.stack-panel{display:none;min-height:380px;margin:0;padding:0;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;animation:stack-panel-in .25s ease-out}
+.smart-stack-panels{min-height:0;padding:14px 18px 17px}
+.smart-stack-panels>.stack-panel{display:none;min-height:0;margin:0;padding:0;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;animation:stack-panel-in .22s ease-out}
 .smart-stack-panels>.stack-panel.stack-active{display:block}
 .smart-stack-panels .section-head{margin-bottom:14px}
 .smart-stack-panels .section-title{font-size:20px}
 .smart-stack-panels .section-subtitle{font-size:12px}
 .smart-stack-panels .tabs{padding-bottom:12px}
 .smart-stack-panels .lesson{padding:14px 12px;border-radius:12px}
-.smart-stack-panels .empty{max-width:100%;padding:32px 18px!important;border-style:dashed!important;background:rgba(130,164,224,.025)!important}
+.smart-stack-panels .empty{max-width:100%;padding:20px 16px!important;border-style:solid!important;background:rgba(130,164,224,.025)!important}
 .smart-stack-panels .notice-card,.smart-stack-panels .task-preview-item,.smart-stack-panels .poll-card,.smart-stack-panels .change-card{margin-bottom:9px}
 .smart-stack .notice{margin-top:13px}
 .smart-stack .today-focus{display:none!important}
@@ -1096,7 +1096,8 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 :root[data-theme="light"] .smart-stack-tab[aria-selected="true"]{color:#087f9b}
 @keyframes stack-panel-in{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.smart-stack-panels>.stack-panel{animation:none}}
-@media(max-width:760px){.smart-stack{border-radius:18px}.smart-stack-heading{align-items:flex-start;flex-direction:column;gap:14px;padding:19px 16px 14px}.smart-stack-title{font-size:25px}.smart-stack-head-actions{width:100%;justify-content:space-between}.smart-stack-date{padding:7px 9px}.smart-stack-heading .notify-btn{padding:9px 10px!important;font-size:10px}.smart-stack .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:0 12px 12px}.smart-stack .stat-card{min-height:72px;padding:10px;border-radius:12px}.smart-stack .stat-value{font-size:16px}.smart-stack-toolbar{align-items:stretch;flex-direction:column;padding:9px 10px;gap:8px}.smart-stack-tabs{width:100%}.smart-stack-tab{min-height:38px;padding:0 11px;font-size:11px}.smart-stack-quick-actions{justify-content:flex-end}.smart-stack-quick-actions .quick{min-height:32px}.smart-stack-panels{min-height:360px;padding:14px 12px 17px}.smart-stack-panels>.stack-panel{min-height:320px}.smart-stack-panels .section-head{align-items:flex-start}.smart-stack-panels .section-title{font-size:17px}}
+@media(max-width:1050px){.smart-stack-heading{padding:16px 18px 13px}.smart-stack-title{font-size:23px}.smart-stack-head-actions{gap:7px}.smart-stack-head-actions .notify-help{max-width:125px}}
+@media(max-width:760px){.smart-stack{border-radius:18px}.smart-stack-heading{align-items:flex-start;flex-direction:column;gap:11px;padding:15px 14px 12px}.smart-stack-title{font-size:22px}.smart-stack-head-actions{width:100%;justify-content:flex-start}.smart-stack-heading .notify-btn{padding:8px 10px!important;font-size:10px}.smart-stack .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:0 11px 11px}.smart-stack .stat-grid[data-day-off="true"]{grid-template-columns:minmax(0,1fr)}.smart-stack .stat-card{min-height:64px;padding:9px 10px;border-radius:11px}.smart-stack .stat-value{font-size:15px}.smart-stack-toolbar{align-items:stretch;flex-direction:column;padding:8px 9px;gap:7px}.smart-stack-tabs{width:100%}.smart-stack-tab{min-height:36px;padding:0 9px;font-size:10px}.smart-stack-quick-actions{justify-content:flex-end}.smart-stack-quick-actions .quick{min-height:31px}.smart-stack-panels{padding:12px 11px 14px}.smart-stack-panels .section-head{align-items:flex-start}.smart-stack-panels .section-title{font-size:17px}}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1152,13 +1153,13 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
         <header class="smart-stack-heading">
           <div>
             <div class="eyebrow">ORARUL MEU · SPAȚIUL TĂU ȘCOLAR</div>
-            <h1 class="smart-stack-title">Tot ce ai nevoie, într-un singur loc.</h1>
-            <p class="smart-stack-subtitle" id="smartStackSubtitle">Alege o secțiune. Panoul se actualizează fără să părăsești pagina.</p>
+            <h1 class="smart-stack-title">Panoul tău</h1>
+            <p class="smart-stack-subtitle" id="smartStackSubtitle">Orarul și activitatea clasei, într-o singură vedere.</p>
           </div>
           <div class="smart-stack-head-actions">
-            <div class="smart-stack-date"><b id="welcomeDay">—</b><span id="welcomeDate">—</span></div>
-            <button class="notify-btn" id="pushBtn" type="button">Activează notificările</button>
+            <button class="notify-btn" id="pushBtn" type="button" title="Activează notificările">Notificări</button>
             <span class="notify-help" id="pushHelp">Primești alerte pentru anunțuri, teme, schimbări și polluri noi.</span>
+            <span id="welcomeDay" hidden>—</span><span id="welcomeDate" hidden>—</span>
           </div>
         </header>
 
@@ -1503,15 +1504,15 @@ async function updatePushButton(){
   const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
   if(!btn)return;
   const supported="Notification" in window&&"serviceWorker" in navigator&&"PushManager" in window;
-  if(!supported){btn.textContent="Notificările nu sunt disponibile";btn.disabled=true;return}
+  if(!supported){btn.textContent="Indisponibile";btn.disabled=true;return}
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(ios&&!isStandalonePwa()){btn.textContent="Instalează aplicația pentru notificări";help.textContent="Pe iPhone, notificările funcționează după ce aplicația este adăugată pe ecranul principal.";return}
+  if(ios&&!isStandalonePwa()){btn.textContent="Instalează pentru alerte";help.textContent="Pe iPhone, notificările funcționează după ce aplicația este adăugată pe ecranul principal.";return}
   if(Notification.permission==="denied"){btn.textContent="Notificări blocate";help.textContent="Le poți reactiva din setările de notificări ale dispozitivului.";btn.classList.remove("notify-active");return}
   try{
     const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();
     if(sub){btn.textContent="Notificări active";btn.classList.add("notify-active");help.textContent="Primești alerte pentru anunțuri, teme, schimbări și polluri noi.";return}
   }catch(_){}
-  btn.textContent="Activează notificările";btn.classList.remove("notify-active");help.textContent="Primești alerte pentru anunțuri, teme, schimbări și polluri noi.";
+  btn.textContent="Notificări";btn.classList.remove("notify-active");help.textContent="Primești alerte pentru anunțuri, teme, schimbări și polluri noi.";
 }
 async function enablePushNotifications(){
   const btn=document.getElementById("pushBtn"),help=document.getElementById("pushHelp");
@@ -1718,9 +1719,13 @@ function getSchoolState(){
 }
 function renderSchoolState(){
   const s=getSchoolState(),next=document.getElementById("next"),nextTime=document.getElementById("nextTime"),count=document.getElementById("count"),state=document.getElementById("state"),ctx=document.getElementById("schoolContext");
+  const stateCard=document.getElementById("stateCard"),nextLabel=document.querySelector("#nextCard .stat-label"),statGrid=document.querySelector(".smart-stack .stat-grid");
+  if(stateCard)stateCard.style.display=s.kind==="day-off"?"none":"";
+  if(nextLabel)nextLabel.textContent=s.kind==="day-off"?"Programul de azi":"Următoarea oră";
+  if(statGrid)statGrid.dataset.dayOff=String(s.kind==="day-off");
   if(s.kind==="day-off"){
     next.textContent=s.dayOff.title;
-    nextTime.textContent="";
+    nextTime.textContent=s.dayOff.note||"Astăzi nu sunt cursuri.";
     count.textContent=s.dayOff.kind==="vacation"?"Vacanță":"Zi liberă";
     state.textContent="";
     ctx.textContent=s.dayOff.note||"Astăzi nu sunt cursuri.";
@@ -2067,7 +2072,7 @@ async function renderPreviews(){
 }
 function updateSmartStackCounts(){
   const values={stackCountSchedule:lessonsForDay(selected).length,stackCountTasks:tasks.filter(isTaskActive).length,stackCountAnnouncements:announcements.length,stackCountPolls:polls.filter(p=>!p.closed).length,stackCountChanges:changes.filter(x=>String(x.change_date||x.from_date||"")>=localDateKey(now)).length};
-  Object.entries(values).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=String(value)});
+  Object.entries(values).forEach(([id,value])=>{const el=document.getElementById(id);if(el){el.textContent=String(value);el.hidden=value===0}});
 }
 async function getPollResults(pollId){
   const r=await supabaseClient.rpc("get_poll_results",{p_poll_id:pollId});
