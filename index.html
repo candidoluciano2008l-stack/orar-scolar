@@ -1139,6 +1139,19 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:1050px){.smart-stack-heading{align-items:flex-start;gap:18px;padding-bottom:22px}.smart-stack-heading>div:first-child{max-width:none}.smart-stack-head-actions{width:100%;max-width:620px;flex:0 1 auto;align-items:stretch}.smart-stack-notification-line{justify-content:flex-start}}
 @media(max-width:760px){.smart-stack-heading{gap:15px;padding-bottom:18px}.smart-stack-head-actions{width:100%;max-width:none;gap:12px}.smart-stack-notification-line{align-items:stretch;flex-direction:column;gap:8px}.smart-stack-notification-line .notify-btn{width:100%}.smart-stack-notification-line .notify-help{max-width:none}.smart-stack .stat-grid{width:100%;padding:0 6px 0}.smart-stack .stat-card#nextCard{width:100%;min-width:0;min-height:94px!important}}
 
+
+/* Unify the top area into one intentional desktop hero surface. */
+.smart-stack-heading{position:relative;isolation:isolate;overflow:hidden;min-height:190px;margin:0 8px 24px;padding:clamp(24px,2.5vw,38px);border:1px solid rgba(157,202,255,.17);border-radius:28px;background:radial-gradient(ellipse at 92% 0%,rgba(113,103,243,.16),transparent 38%),radial-gradient(ellipse at 5% 100%,rgba(48,198,232,.1),transparent 38%),linear-gradient(120deg,rgba(18,31,54,.92),rgba(12,19,37,.9));box-shadow:inset 0 1px rgba(255,255,255,.08),0 20px 54px rgba(0,0,0,.17)}
+.smart-stack-heading:before{content:"";position:absolute;z-index:-1;inset:1px 18% auto;height:1px;background:linear-gradient(90deg,transparent,rgba(219,243,255,.24),transparent)}
+.smart-stack-heading>div:first-child{position:relative;z-index:1}
+.smart-stack-title{font-size:clamp(34px,3.2vw,48px);letter-spacing:-.06em}
+.smart-stack-head-actions{position:relative;z-index:1}
+.smart-stack .stat-card#nextCard{border-color:rgba(153,201,251,.13);background:linear-gradient(135deg,rgba(77,130,177,.13),rgba(109,101,183,.12));box-shadow:inset 0 1px rgba(255,255,255,.07)}
+:root[data-theme="light"] .smart-stack-heading{border-color:rgba(69,96,152,.14);background:radial-gradient(ellipse at 92% 0%,rgba(118,132,255,.11),transparent 38%),radial-gradient(ellipse at 5% 100%,rgba(51,189,220,.08),transparent 38%),linear-gradient(120deg,rgba(255,255,255,.92),rgba(239,244,255,.9));box-shadow:inset 0 1px rgba(255,255,255,.9),0 20px 54px rgba(44,62,102,.1)}
+:root[data-theme="light"] .smart-stack .stat-card#nextCard{border-color:rgba(66,96,151,.12);background:rgba(235,242,255,.55)}
+@media(max-width:1050px){.smart-stack-heading{min-height:0;padding:24px;border-radius:24px}}
+@media(max-width:760px){.smart-stack-heading{margin:0 0 18px;padding:20px 18px;border-radius:22px}.smart-stack-heading>div:first-child{max-width:none}.smart-stack-title{font-size:32px}.smart-stack-head-actions{gap:12px}.smart-stack-notification-line{align-items:stretch;flex-direction:column;gap:8px}}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
