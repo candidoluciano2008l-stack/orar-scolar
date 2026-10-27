@@ -1127,6 +1127,18 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 :root[data-theme="light"] .topbar .user-badge-role{color:#647693!important}
 @media(max-width:760px){.smart-stack .stat-card#nextCard{flex:1 1 100%;min-width:0;min-height:94px!important}.topbar .topbar-actions .user-badge{max-width:155px!important;min-height:38px;padding:6px 10px 6px 29px!important;border-radius:13px}.topbar .topbar-actions .user-badge:before{left:11px;width:8px;height:8px}.topbar .user-badge-name{max-width:115px!important;font-size:11px!important}.topbar .user-badge-role{font-size:8px!important}}
 
+
+/* Wide-screen header: bind the day summary and notifications into one cluster. */
+.smart-stack-heading{align-items:stretch;gap:clamp(28px,5vw,80px);padding-bottom:24px}
+.smart-stack-heading>div:first-child{display:flex;flex-direction:column;justify-content:center;max-width:720px;flex:1 1 auto}
+.smart-stack-head-actions{width:min(44%,520px);max-width:520px;flex:0 1 520px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:11px}
+.smart-stack-notification-line{display:flex;align-items:center;justify-content:flex-end;gap:12px;min-height:44px}
+.smart-stack-notification-line .notify-help{max-width:195px}
+.smart-stack .stat-grid{width:100%;justify-content:stretch;margin:0;padding:0;pointer-events:none}
+.smart-stack .stat-card#nextCard{width:100%;max-width:none;min-width:0;min-height:91px!important}
+@media(max-width:1050px){.smart-stack-heading{align-items:flex-start;gap:18px;padding-bottom:22px}.smart-stack-heading>div:first-child{max-width:none}.smart-stack-head-actions{width:100%;max-width:620px;flex:0 1 auto;align-items:stretch}.smart-stack-notification-line{justify-content:flex-start}}
+@media(max-width:760px){.smart-stack-heading{gap:15px;padding-bottom:18px}.smart-stack-head-actions{width:100%;max-width:none;gap:12px}.smart-stack-notification-line{align-items:stretch;flex-direction:column;gap:8px}.smart-stack-notification-line .notify-btn{width:100%}.smart-stack-notification-line .notify-help{max-width:none}.smart-stack .stat-grid{width:100%;padding:0 6px 0}.smart-stack .stat-card#nextCard{width:100%;min-width:0;min-height:94px!important}}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1185,19 +1197,20 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
             <p class="smart-stack-subtitle" id="smartStackSubtitle">Programul săptămânii și noutățile clasei.</p>
           </div>
           <div class="smart-stack-head-actions">
-            <button class="notify-btn" id="pushBtn" type="button" title="Activează notificările">Notificări</button>
-            <span class="notify-help" id="pushHelp">Primești alerte pentru anunțuri, teme, schimbări și polluri noi.</span>
+            <div class="smart-stack-notification-line">
+              <button class="notify-btn" id="pushBtn" type="button" title="Activează notificările">Notificări</button>
+              <span class="notify-help" id="pushHelp">Primești alerte pentru anunțuri, teme, schimbări și polluri noi.</span>
+            </div>
+            <section class="stat-grid" aria-label="Rezumatul zilei">
+              <div class="stat-card stat-primary" id="nextCard"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div></div>
+              <div class="stat-card" id="stateCard"><div class="stat-label">Stare</div><div class="stat-note state-context" id="schoolContext">Programul se actualizează automat.</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state" style="display:none">—</div></div>
+              <div class="stat-card" id="dueCard"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div></div>
+            </section>
             <span id="welcomeDay" hidden>—</span><span id="welcomeDate" hidden>—</span>
           </div>
         </header>
 
         <section class="attention-alert smart-stack-alert" id="attentionWelcome" style="display:none"></section>
-
-        <section class="stat-grid" aria-label="Rezumatul zilei">
-          <div class="stat-card stat-primary" id="nextCard"><div class="stat-label">Următoarea oră</div><div class="stat-value" id="next">—</div><div class="stat-sub" id="nextTime">—</div></div>
-          <div class="stat-card" id="stateCard"><div class="stat-label">Stare</div><div class="stat-note state-context" id="schoolContext">Programul se actualizează automat.</div><div class="stat-value" id="count">—</div><div class="stat-sub" id="state" style="display:none">—</div></div>
-          <div class="stat-card" id="dueCard"><div class="stat-label">Teme cu termen</div><div class="stat-value" id="dueTaskCount">0</div><div class="stat-sub">Teme și proiecte active</div></div>
-        </section>
 
         <div class="smart-stack-toolbar">
           <nav class="smart-stack-tabs" role="tablist" aria-label="Funcțiile panoului">
