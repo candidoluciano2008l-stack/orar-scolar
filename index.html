@@ -1096,6 +1096,8 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 .smart-stack-panels .section-title{font-size:clamp(22px,2.4vw,30px);letter-spacing:-.04em}
 .smart-stack-panels .section-subtitle{font-size:13px}
 .smart-stack-panels .tabs{padding-bottom:16px}
+.smart-stack-panels .schedule-dayoff-note{margin:0 0 16px;padding:11px 14px;border:1px solid rgba(103,232,249,.12);border-radius:13px;background:rgba(103,232,249,.045);color:var(--muted);font-size:11px;line-height:1.5}
+:root[data-theme="light"] .smart-stack-panels .schedule-dayoff-note{border-color:rgba(8,127,155,.14);background:rgba(8,127,155,.04)}
 .smart-stack-panels .lesson{padding:16px 15px;border-radius:15px}
 .smart-stack-panels .empty{max-width:100%;min-height:124px;display:grid;place-items:center;padding:25px!important;border:1px dashed rgba(165,199,246,.2)!important;border-radius:19px!important;background:rgba(129,169,236,.035)!important;color:var(--muted)}
 .smart-stack-panels .notice-card,.smart-stack-panels .task-preview-item,.smart-stack-panels .poll-card,.smart-stack-panels .change-card{margin-bottom:11px}
@@ -1180,7 +1182,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
         <header class="smart-stack-heading">
           <div>
             <h1 class="smart-stack-title">Orarul tău</h1>
-            <p class="smart-stack-subtitle" id="smartStackSubtitle">Orarul și activitatea clasei, într-o singură vedere.</p>
+            <p class="smart-stack-subtitle" id="smartStackSubtitle">Programul săptămânii și noutățile clasei.</p>
           </div>
           <div class="smart-stack-head-actions">
             <button class="notify-btn" id="pushBtn" type="button" title="Activează notificările">Notificări</button>
@@ -1762,20 +1764,14 @@ function renderSchoolState(){
     ctx.textContent=s.dayOff.note||"Astăzi nu sunt cursuri.";
   }else if(s.kind==="current"){
     const currentInfo=getChangeForLesson(today,s.current);
-    if(s.next){
-      const nextInfo=getChangeForLesson(today,s.next);
-      next.textContent=nextInfo.subject;
-      nextTime.textContent=s.next[0]+"–"+s.next[1];
-    }else{
-      next.textContent="Program încheiat";
-      nextTime.textContent="";
-    }
+    if(nextLabel)nextLabel.textContent="Ora de acum";
+    next.textContent=currentInfo.subject;
+    nextTime.textContent=s.current[0]+"–"+s.current[1];
     count.textContent="În oră";
     state.textContent="";
-    ctx.textContent=s.next
-      ? "Acum: "+currentInfo.subject+" · Se termină la "+s.current[1]
-      : "Acum: "+currentInfo.subject+" · Se termină la "+s.current[1];
+    ctx.textContent="Se termină la "+s.current[1];
   }else if(s.kind==="break-or-before"){
+    if(nextLabel)nextLabel.textContent="Următoarea oră";
     if(s.next){
       const e=getChangeForLesson(today,s.next);
       next.textContent=e.subject;
@@ -1795,8 +1791,10 @@ function renderSchoolState(){
       ctx.textContent=(inBreak?"Până la ":"Începe la ")+s.next[0]+" · Mai sunt "+mm+":"+ss;
     }else{next.textContent="—";nextTime.textContent="—";count.textContent="—";state.textContent="—";ctx.textContent=""}
   }else if(s.kind==="after"){
+    if(nextLabel)nextLabel.textContent="Programul de azi";
     next.textContent="Program încheiat";nextTime.textContent="";count.textContent="Liber";state.textContent="";ctx.textContent="";
   }else{
+    if(nextLabel)nextLabel.textContent="Programul de azi";
     next.textContent="Weekend";nextTime.textContent="";count.textContent="Liber";state.textContent="";ctx.textContent="";
   }
 }
@@ -1992,6 +1990,14 @@ function closeTaskImage(){
 document.getElementById("taskImagePrev").onclick=()=>{if(taskViewerPaths.length>1){taskViewerIndex=(taskViewerIndex-1+taskViewerPaths.length)%taskViewerPaths.length;taskViewerLoadCurrent()}};
 document.getElementById("taskImageNext").onclick=()=>{if(taskViewerPaths.length>1){taskViewerIndex=(taskViewerIndex+1)%taskViewerPaths.length;taskViewerLoadCurrent()}};
 let renderGeneration=0;
+function updateCurrentLessonHighlight(){
+  const inSession=!schoolDayOffForDate(localDateKey(now)),isTodaySelected=selected===today,cur=now.getHours()*60+now.getMinutes();
+  document.querySelectorAll("#lessons .lesson[data-start][data-end]").forEach(lesson=>{
+    const start=mins(lesson.dataset.start),end=mins(lesson.dataset.end),live=inSession&&isTodaySelected;
+    lesson.classList.toggle("current",live&&cur>=start&&cur<end);
+    lesson.classList.toggle("past",live&&cur>=end);
+  });
+}
 async function render(){
   const generation=++renderGeneration,day=selected;
   const counts=await getCommentCounts();
@@ -2009,17 +2015,21 @@ async function render(){
   renderSchoolState();
   renderAttention();
   renderTodayFocus();
-  document.getElementById("lessons").innerHTML=selectedDayOff?"<div class='empty' style='margin:12px 0'>"+(selectedDayOff.kind==="vacation"?"Vacanță":"Zi liberă")+" · "+escapeHtml(selectedDayOff.title)+" · Nu sunt cursuri în această zi.</div>":arr.map(x=>{
-    const a=mins(x[0]),b=mins(x[1]),isToday=day===today,eff=getChangeForLesson(day,x);
-    const cls=(isToday&&cur>=a&&cur<b?"current ":"")+(isToday&&cur>=b?"past ":"")+(eff.status==="moved-away"?"lesson-moved ":"")+(eff.status==="moved-in"?"lesson-move-in ":"");
+  const currentDateOff=schoolDayOffForDate(localDateKey(now));
+  const dayOffNote=selectedDayOff?"<div class='schedule-dayoff-note'>"+escapeHtml(selectedDayOff.kind==="vacation"?"Vacanță":"Zi liberă")+" · "+escapeHtml(selectedDayOff.title)+" · Orarul obișnuit este afișat pentru consultare.</div>":"";
+  const lessonRows=arr.map(x=>{
+    const a=mins(x[0]),b=mins(x[1]),isToday=day===today,showLiveState=isToday&&!currentDateOff,eff=getChangeForLesson(day,x);
+    const cls=(showLiveState&&cur>=a&&cur<b?"current ":"")+(showLiveState&&cur>=b?"past ":"")+(eff.status==="moved-away"?"lesson-moved ":"")+(eff.status==="moved-in"?"lesson-move-in ":"");
     const c=counts[eff.subject]||0,subTasks=(tmap[eff.subject]||[]).filter(isTaskActive).slice(0,2);
     const taskHtml=subTasks.map(t=>"<div class='task-line'><span class='badge'>"+escapeHtml(t.type)+"</span>"+escapeHtml(t.title)+" · <span class='deadline'>"+fmtDate(t.deadline)+"</span></div>").join("");
     let ch="";
     if(eff.status==="replace") ch="<div class='lesson-change'><s>"+escapeHtml(x[2])+"</s> → "+escapeHtml(eff.subject)+"</div>";
     if(eff.status==="moved-away") ch="<div class='lesson-change'>Mutată → "+escapeHtml(dayNameFromDate(eff.change.to_date))+" "+escapeHtml(eff.change.to_start)+"–"+escapeHtml(eff.change.to_end)+"</div>";
     if(eff.status==="moved-in"){const replaced=destinationOriginalSubject(eff.change)||x[2];ch="<div class='lesson-change'><s>"+escapeHtml(replaced)+"</s> → "+escapeHtml(eff.subject)+" · mutată din "+escapeHtml(dayNameFromDate(eff.change.from_date))+" "+escapeHtml(eff.change.from_start)+"</div>";}
-    return "<div class='lesson "+cls+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='teacher-sub'>Profesor: "+escapeHtml(teacherForSubject(eff.subject))+"</div></div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
+    return "<div class='lesson "+cls+"' data-start='"+x[0]+"' data-end='"+x[1]+"' onclick='openComments(\""+String(eff.subject).replace(/"/g,"&quot;")+"\")'><div class='time'>"+x[0]+"–"+x[1]+"</div><div><div class='subject-main'><div><div class='subject'>"+escapeHtml(eff.subject)+"</div><div class='teacher-sub'>Profesor: "+escapeHtml(teacherForSubject(eff.subject))+"</div></div><div class='comment-count'>"+c+" "+(c===1?"comentariu":"comentarii")+"</div></div>"+ch+taskHtml+"</div><div></div></div>";
   }).join("");
+  document.getElementById("lessons").innerHTML=dayOffNote+(lessonRows||(selectedDayOff?"<div class='empty' style='margin:12px 0'>"+escapeHtml(selectedDayOff.title)+" · Nu sunt ore programate în această zi.</div>":"<div class='empty' style='margin:12px 0'>Nu sunt ore programate în această zi.</div>"));
+  updateCurrentLessonHighlight();
   await renderPreviews();
 }
 function renderTodayFocus(){
@@ -2241,8 +2251,6 @@ function setSmartStackPanel(panelId){
   document.documentElement.style.setProperty("--stack-enter",index>=oldIndex?"18px":"-18px");
   panels.forEach((panel,i)=>{const active=i===index;panel.classList.toggle("stack-active",active);panel.setAttribute("aria-hidden",String(!active))});
   buttons.forEach((button,i)=>{button.setAttribute("aria-selected",String(i===index));button.tabIndex=i===index?0:-1});
-  const headings={scheduleSection:"Programul săptămânii și orele tale",tasksSection:"Teme și proiecte active",announcementsSection:"Anunțuri importante",pollsSection:"Polluri în care poți vota",changesSection:"Schimbări recente de program"};
-  const subtitle=document.getElementById("smartStackSubtitle");if(subtitle)subtitle.textContent=headings[panelId]||"Alege o secțiune.";
   const position=document.getElementById("smartStackPosition");if(position)position.textContent=`${index+1} / ${panels.length}`;
   buttons[index]?.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
 }
@@ -2883,7 +2891,7 @@ document.getElementById("dayLabel").textContent=today;
 document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
 document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);
 setSideNavActive("home");refreshAuth();loadData().then(()=>{renderTabs();render();renderCalendar()});
-setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderSchoolState()},1000);
+setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderSchoolState();updateCurrentLessonHighlight()},1000);
 setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();},30000);
 </script>
 <div class="live-toast" id="liveToast" aria-live="polite"></div>
