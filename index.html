@@ -1722,9 +1722,11 @@ function getChangeForLesson(day,lesson){
   return {subject,change:null,status:"normal"};
 }
 function lessonsForDay(day){
-  const dateKey=weekDateForDay(day);
-  if(schoolDayOffForDate(dateKey))return [];
-  const base=schedule[day].map(x=>[...x]);
+  const dateKey=weekDateForDay(day),dayOff=schoolDayOffForDate(dateKey);
+  // During a vacation, keep the regular weekly timetable visible for reference.
+  // Individual free days still show no scheduled lessons.
+  if(dayOff&&dayOff.kind!=="vacation")return [];
+  const base=(schedule[day]||[]).map(x=>[...x]);
   const incoming=changes.map(normalizeChange).filter(c=>c.to_date===dateKey);
   for(const c of incoming){
     const exists=base.some(x=>x[0]===c.to_start&&x[1]===c.to_end);
