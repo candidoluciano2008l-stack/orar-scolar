@@ -36,6 +36,7 @@ create policy "Admins can delete school days off"
 insert into public.school_days_off (kind, title, start_date, end_date, note, author_name)
 values
   ('vacation', 'Vacanța de toamnă', '2026-10-24', '2026-11-01', null, 'Calendar școlar'),
+  ('vacation', 'Vacanță', '2026-11-02', '2026-11-08', null, 'Administrator'),
   ('vacation', 'Vacanța de iarnă', '2026-12-23', '2027-01-10', null, 'Calendar școlar'),
   ('vacation', 'Vacanța mobilă', '2027-02-22', '2027-02-28', null, 'Calendar școlar'),
   ('vacation', 'Vacanța de primăvară', '2027-04-24', '2027-05-04', null, 'Calendar școlar'),
