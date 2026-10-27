@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#070b18">
 <title>Orarul meu</title>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#132238;--muted:#718096;--line:#e5eaf0;--blue:#28577f;--blue2:#1f6fa8;--green:#16855b;--danger:#b42318;--shadow:0 7px 24px rgba(17,38,63,.06)}
@@ -997,6 +997,63 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .admin-modern .input,.admin-modern .select,.admin-modern .textarea{padding:9px 10px;border-radius:10px}
   .admin-modern .quick,.admin-modern .send{padding:9px 12px;border-radius:9px}
 }
+/* ── DIGITAL CAMPUS / immersive interface ── */
+:root{--bg:#070b18;--card:#0d1425;--text:#edf4ff;--muted:#91a1bd;--line:rgba(143,171,220,.14);--blue:#67e8f9;--blue2:#8b9cff;--green:#4ce0b1;--danger:#ff8196;--shadow:0 18px 50px rgba(0,0,0,.28)}
+:root[data-theme="dark"]{--bg:#070b18;--card:#0d1425;--text:#edf4ff;--muted:#91a1bd;--line:rgba(143,171,220,.14);--blue:#67e8f9;--blue2:#8b9cff;--green:#4ce0b1;--danger:#ff8196;--shadow:0 18px 50px rgba(0,0,0,.28)}
+:root[data-theme="light"]{--bg:#eef3ff;--card:rgba(255,255,255,.88);--text:#101a33;--muted:#687590;--line:rgba(51,75,130,.13);--blue:#087f9b;--blue2:#6158d9;--green:#07855f;--danger:#c23f60;--shadow:0 16px 40px rgba(48,68,120,.09)}
+body{background:radial-gradient(ellipse at 15% -10%,rgba(36,93,165,.18),transparent 36%),radial-gradient(ellipse at 100% 20%,rgba(104,68,188,.12),transparent 34%),var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.005em}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(130,165,220,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(130,165,220,.025) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 78%)}
+.app-shell{background:transparent}
+.sidebar{background:rgba(7,11,24,.88)!important;border-color:var(--line)!important;backdrop-filter:blur(24px);box-shadow:10px 0 45px rgba(0,0,0,.12)}
+.sidebar-brand{filter:drop-shadow(0 0 12px rgba(103,232,249,.25))}
+.side-nav button,.side-nav a,.sidebar-bottom button{transition:background .2s,border-color .2s,color .2s,transform .2s}
+.side-nav button:hover,.side-nav a:hover,.sidebar-bottom button:hover{transform:translateX(2px);border-color:rgba(103,232,249,.28)!important}
+.topbar{background:rgba(7,11,24,.76)!important;border-bottom:1px solid var(--line);backdrop-filter:blur(22px);box-shadow:0 10px 40px rgba(0,0,0,.1)}
+.status-pill{border:1px solid rgba(76,224,177,.2);background:rgba(76,224,177,.08);color:#78f0c5;box-shadow:0 0 22px rgba(76,224,177,.06)}
+.status-pill:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#4ce0b1;margin-right:7px;box-shadow:0 0 12px #4ce0b1;vertical-align:1px}
+.dashboard-main{animation:interface-enter .7s cubic-bezier(.2,.7,.2,1) both}
+.welcome-card{isolation:isolate;position:relative;overflow:hidden;min-height:260px!important;padding:38px 42px!important;border:1px solid rgba(117,192,255,.22)!important;border-radius:26px!important;background:radial-gradient(ellipse at 77% 52%,rgba(46,131,212,.28),transparent 34%),radial-gradient(ellipse at 95% 5%,rgba(137,91,235,.25),transparent 36%),linear-gradient(115deg,#0b142b 0%,#101c38 49%,#10152e 100%)!important;box-shadow:0 26px 85px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.06)!important}
+.welcome-card:before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,transparent 49.9%,rgba(141,190,255,.08) 50%,transparent 50.1%),linear-gradient(0deg,transparent 49.9%,rgba(141,190,255,.06) 50%,transparent 50.1%);background-size:54px 54px;mask-image:linear-gradient(90deg,transparent 18%,black 100%);opacity:.65}
+.welcome-card:after{content:"";position:absolute;z-index:-1;right:17%;top:50%;width:250px;height:250px;border:1px solid rgba(103,232,249,.19);border-radius:50%;transform:translateY(-50%);box-shadow:0 0 0 26px rgba(103,232,249,.035),0 0 0 53px rgba(139,156,255,.035),inset 0 0 55px rgba(103,232,249,.08);animation:orbit-breathe 7s ease-in-out infinite}
+.welcome-copy{max-width:590px;position:relative;z-index:2}
+.welcome-card .eyebrow{color:#80eaff;letter-spacing:.2em;font-size:11px;font-weight:800;opacity:1}
+.welcome-card h1{font-size:clamp(38px,5vw,62px)!important;line-height:1.02;letter-spacing:-.045em;margin:12px 0 10px!important;text-shadow:0 0 35px rgba(103,232,249,.19)}
+.welcome-copy p{font-size:15px!important;color:#b5c5df!important;opacity:1!important}
+.notify-btn{background:linear-gradient(110deg,#64e8f3,#8e9bff)!important;color:#081222!important;border:0!important;border-radius:12px!important;padding:11px 17px!important;font-weight:850!important;box-shadow:0 8px 28px rgba(93,206,240,.18);transition:transform .2s,box-shadow .2s}
+.notify-btn:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(93,206,240,.3)}
+.notify-help{color:#90a5c3!important}
+.welcome-art{display:block!important;right:19%!important;top:50%!important;width:270px!important;height:270px!important;opacity:1!important;transform:translateY(-50%);pointer-events:none}
+.art-sun{position:absolute!important;width:88px!important;height:88px!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;border-radius:50%!important;background:radial-gradient(circle at 34% 30%,#e2fdff 0%,#67e8f9 15%,#3985df 47%,#5d4cc8 75%,transparent 77%)!important;box-shadow:0 0 28px rgba(103,232,249,.7),0 0 85px rgba(96,116,255,.45)!important;animation:planet-glow 4s ease-in-out infinite}
+.art-building{display:none!important}
+.welcome-date{position:relative;z-index:2;align-self:flex-start!important;margin-left:auto;padding:11px 14px;border:1px solid rgba(173,198,255,.16);background:rgba(10,17,36,.55);border-radius:14px;backdrop-filter:blur(12px);font-size:12px!important;color:#afc2e0!important;text-align:right!important}
+.welcome-day{font-size:14px;font-weight:800;color:#eaf6ff}
+.stat-card,.today-focus,.dashboard-card,.card,.notice-card,.task-card,.poll-card{background:linear-gradient(145deg,rgba(16,25,45,.94),rgba(11,18,34,.94))!important;border:1px solid var(--line)!important;box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.035)!important;backdrop-filter:blur(16px);transition:transform .22s,border-color .22s,box-shadow .22s}
+.stat-card:hover,.dashboard-card:hover,.notice-card:hover{transform:translateY(-2px);border-color:rgba(103,232,249,.23)!important;box-shadow:0 22px 55px rgba(0,0,0,.32),0 0 28px rgba(103,232,249,.035)!important}
+.stat-primary{background:radial-gradient(ellipse at 100% 0%,rgba(103,232,249,.15),transparent 54%),linear-gradient(145deg,#101e37,#101729)!important}
+.stat-label,.label,.section-subtitle{letter-spacing:.08em}
+.stat-value,.next,.count{color:#e8f7ff}
+.today-focus-item{background:rgba(130,164,224,.045)!important;border-color:var(--line)!important;border-radius:14px!important}
+.focus-icon{color:#75e7f4!important;text-shadow:0 0 15px rgba(103,232,249,.3)}
+.section-title,.schedule-title{letter-spacing:-.02em}
+.tab,.quick{background:rgba(15,23,42,.8)!important;border-color:var(--line)!important;color:var(--text)!important;transition:all .18s}
+.tab:hover,.quick:hover{border-color:rgba(103,232,249,.36)!important;transform:translateY(-1px)}
+.tab.active,.quick.primary{background:linear-gradient(115deg,#2bb8d0,#778bff)!important;color:#071222!important;border-color:transparent!important;box-shadow:0 7px 22px rgba(72,166,232,.19)}
+.lesson{transition:background .18s,border-color .18s}.lesson:hover{background:rgba(103,232,249,.055)!important}.lesson.current{background:rgba(76,224,177,.08)!important;box-shadow:inset 3px 0 #4ce0b1,0 0 22px rgba(76,224,177,.045)!important}
+input,textarea,select,.input,.select,.textarea{background-color:rgba(8,14,28,.72)!important;color:var(--text)!important;border-color:var(--line)!important}
+input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:focus{outline:2px solid rgba(103,232,249,.22)!important;border-color:rgba(103,232,249,.55)!important}
+:root[data-theme="light"] body{background:radial-gradient(ellipse at 15% -10%,rgba(78,161,238,.12),transparent 36%),radial-gradient(ellipse at 100% 20%,rgba(132,99,221,.09),transparent 34%),var(--bg)}
+:root[data-theme="light"] .sidebar{background:rgba(247,249,255,.88)!important}
+:root[data-theme="light"] .topbar{background:rgba(245,248,255,.78)!important}
+:root[data-theme="light"] .welcome-card{background:radial-gradient(ellipse at 78% 52%,rgba(56,169,221,.2),transparent 36%),radial-gradient(ellipse at 95% 4%,rgba(141,118,243,.18),transparent 36%),linear-gradient(115deg,#142543,#253e70 55%,#354181)!important}
+:root[data-theme="light"] .stat-card,:root[data-theme="light"] .today-focus,:root[data-theme="light"] .dashboard-card,:root[data-theme="light"] .card,:root[data-theme="light"] .notice-card,:root[data-theme="light"] .task-card,:root[data-theme="light"] .poll-card{background:rgba(255,255,255,.86)!important}
+:root[data-theme="light"] .tab,:root[data-theme="light"] .quick{background:rgba(255,255,255,.8)!important;color:var(--text)!important}
+:root[data-theme="light"] .tab.active,:root[data-theme="light"] .quick.primary{background:linear-gradient(115deg,#2bb8d0,#778bff)!important;color:#071222!important}
+:root[data-theme="light"] input,:root[data-theme="light"] textarea,:root[data-theme="light"] select,:root[data-theme="light"] .input,:root[data-theme="light"] .select,:root[data-theme="light"] .textarea{background-color:rgba(255,255,255,.9)!important;color:var(--text)!important}
+@keyframes interface-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes orbit-breathe{0%,100%{opacity:.6;transform:translateY(-50%) scale(.97)}50%{opacity:1;transform:translateY(-50%) scale(1.03)}}
+@keyframes planet-glow{0%,100%{filter:brightness(.94);transform:translate(-50%,-50%) scale(.97)}50%{filter:brightness(1.18);transform:translate(-50%,-50%) scale(1.04)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+@media(max-width:760px){.welcome-card{min-height:220px!important;padding:24px 20px!important}.welcome-card h1{font-size:38px!important}.welcome-art{right:4%!important;top:auto!important;bottom:-42px!important;width:185px!important;height:185px!important;transform:none!important;opacity:.68!important}.welcome-card:after{right:-2%;top:auto;bottom:-80px;width:200px;height:200px;transform:none}.art-sun{width:64px!important;height:64px!important}.welcome-date{padding:8px 10px;font-size:10px!important}.welcome-copy{max-width:78%}.notify-help{max-width:250px}.stat-card,.dashboard-card,.today-focus{backdrop-filter:none}}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1471,7 +1528,7 @@ function applyTheme(theme){
   document.getElementById("themeColor").setAttribute("content",t==="dark"?"#0b1220":"#28577f");
   const themeLabel=document.getElementById("themeBtnLabel");if(themeLabel)themeLabel.textContent=t==="dark"?"Temă deschisă":"Temă întunecată";
 }
-applyTheme(localStorage.getItem("schoolTheme")||"auto");
+applyTheme(localStorage.getItem("schoolTheme")||"dark");
 document.getElementById("themeBtn").onclick=()=>applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark");
 document.getElementById("pushBtn").onclick=togglePushNotifications;
 updatePushButton();
