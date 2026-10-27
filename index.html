@@ -1164,6 +1164,24 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:1050px){.smart-stack-heading{grid-template-columns:minmax(0,1fr) minmax(350px,.95fr);gap:28px}.smart-stack-head-actions{width:100%;max-width:none;flex:none}.smart-stack-notification-line{grid-template-columns:max-content minmax(0,1fr)}}
 @media(max-width:760px){.smart-stack-heading{grid-template-columns:minmax(0,1fr);gap:18px}.smart-stack-head-actions{display:grid;width:100%;grid-template-columns:minmax(0,1fr);gap:12px}.smart-stack-notification-line{grid-template-columns:minmax(0,1fr);gap:8px}.smart-stack-notification-line .notify-btn{width:100%}.smart-stack-notification-line .notify-help{max-width:none}}
 
+
+/* Sidebar-free shell: the Smart Stack and topbar provide the main navigation. */
+.app-shell{display:block!important;min-height:100vh!important;grid-template-columns:minmax(0,1fr)!important;background:transparent!important}
+.main-shell{width:100%!important;min-width:0!important;grid-column:1/-1!important}
+.topbar{position:sticky!important;top:0!important;z-index:30!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;width:100%!important;height:76px!important;padding:0 clamp(18px,3vw,48px)!important}
+.topbar-left{display:flex!important;align-items:center!important;gap:26px!important;min-width:0!important;flex:1 1 auto!important}
+.topbar-home{display:flex;align-items:center;gap:11px;flex:none;min-height:46px;padding:5px 14px 5px 8px;border:1px solid rgba(143,190,246,.14);border-radius:15px;background:rgba(119,160,218,.06);color:var(--text);text-align:left;cursor:pointer;transition:all .2s}
+.topbar-home:hover{border-color:rgba(103,232,249,.28);background:rgba(103,232,249,.08);transform:translateY(-1px)}
+.topbar-home svg{width:30px;height:30px;padding:7px;border-radius:10px;background:linear-gradient(135deg,rgba(103,232,249,.16),rgba(139,156,255,.13));fill:none;stroke:#a5efff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.topbar-home-copy{display:flex;flex-direction:column;gap:3px}.topbar-home-copy b{font-size:12px;font-weight:850;white-space:nowrap}.topbar-home-copy small{font-size:8px;letter-spacing:.13em;color:var(--muted);white-space:nowrap}
+.topbar-date{display:flex;flex-direction:column;gap:3px;min-width:0}.topbar-date div:first-child{font-size:13px;font-weight:850;color:var(--text)}.topbar-date div:last-child{font-size:10px;color:var(--muted)}
+.topbar-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:9px!important;min-width:0!important;margin-left:auto!important}
+.topbar-utility{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 12px;border:1px solid rgba(151,184,232,.14);border-radius:13px;background:rgba(129,165,223,.06);color:var(--muted);font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;transition:all .2s}
+.topbar-utility:hover{border-color:rgba(103,232,249,.28);background:rgba(103,232,249,.08);color:var(--text)}
+.topbar-utility-icon{font-size:17px;color:#a9dff2}.topbar-utility svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.topbar-admin{border-color:rgba(119,178,244,.2);background:linear-gradient(130deg,rgba(60,118,179,.13),rgba(99,91,170,.12));color:#c4e4ff}
+@media(max-width:1050px){.topbar{height:68px!important;padding-inline:20px!important}.topbar-left{gap:18px!important}.topbar-home-copy small{display:none}}
+@media(max-width:760px){.topbar{height:64px!important;padding:0 12px!important;gap:8px!important}.topbar-left{display:flex!important;gap:8px!important;flex:0 1 auto!important}.topbar-home{width:40px;min-height:40px;justify-content:center;padding:4px;border-radius:13px}.topbar-home svg{width:30px;height:30px}.topbar-home-copy,.topbar-date{display:none!important}.topbar-actions{gap:5px!important}.topbar-utility{width:38px;min-width:38px;height:38px;min-height:38px;padding:0;border-radius:12px}.topbar-utility-label{display:none}.topbar-utility-icon{font-size:18px}.topbar .user-badge{max-width:138px!important;min-height:38px!important;padding:6px 9px 6px 28px!important}.topbar .user-badge-name{max-width:100px!important;font-size:10px!important}.topbar .user-badge-role{font-size:7px!important}.topbar .status-pill{display:none!important}.dashboard-main{padding-top:18px!important}}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1185,30 +1203,20 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 </head>
 <body>
 <div class="app-shell">
-  <aside class="sidebar">
-    <div class="sidebar-brand"><div><div class="brand-title">Orarul meu</div><div class="brand-sub">PROGRAM ȘCOLAR</div></div></div>
-    <nav class="side-nav">
-      <button class="side-link active" id="todayBtn" data-nav="home"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.8 12 3l9 7.8v9.2a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span><div><b>Acasă</b><small>Dashboard</small></div></button>
-      <button class="side-link" id="scheduleNav" data-nav="schedule"><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M8 2.5v3M16 2.5v3M4 9h16M8 13h2M14 13h2M8 17h2M14 17h2"/></svg></span><div><b>Orar</b><small>Programul săptămânii</small></div></button>
-      <button class="side-link" id="tasksNav" data-nav="tasks"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5h11M8 12h11M8 18.5h11"/><path d="m3.5 5.5 1.5 1.5 2.5-3M3.5 12l1.5 1.5 2.5-3M3.5 18.5 5 20l2.5-3"/></svg></span><div><b>Teme</b><small>Teme și proiecte</small></div></button>
-<button class="side-link" id="calendarBtn" data-nav="calendar"><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M7.5 3v4M16.5 3v4M3.5 9.5h17M8 13h.01M12 13h.01M16 13h.01M8 16.5h.01M12 16.5h.01M16 16.5h.01"/></svg></span><div><b>Calendar</b><small>Teme și vacanțe</small></div></button>
-            <button class="side-link" id="announcementsBtn" data-nav="announcements"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4M7 8.5v7l9 3V5.5zM16 8v8M18.5 9.5h2M18.5 14.5h2"/></svg></span><div><b>Anunțuri</b><small>Informații importante</small></div></button>
-      <button class="side-link" id="pollsBtn" data-nav="polls"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7"/><path d="M3 19.5h18"/></svg></span><div><b>Polluri</b><small>Votează</small></div></button>
-      <button class="side-link" id="chatBtn" data-nav="chat"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H11l-5 3v-3H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z"/></svg></span><div><b>Chat</b><small>Discuții publice</small></div></button>
-      <button class="side-link" id="changesBtn" data-nav="changes"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h11l-2.5-2.5M19 7l-2.5 2.5M19 17H8l2.5 2.5M5 17l2.5-2.5"/></svg></span><div><b>Schimbări</b><small>Modificări de program</small></div></button>
-    </nav>
-    <div class="sidebar-bottom">
-      <button class="side-link side-muted" id="themeBtn"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8 8 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5z"/></svg></span><div><b id="themeBtnLabel">Temă</b><small>Aspect</small></div></button>
-      <button class="side-link side-admin" id="adminBtn"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="m9.5 12 1.7 1.7 3.4-3.4"/></svg></span><div><b id="adminBtnLabel">Admin</b><small>Dashboard</small></div></button>
-    </div>
-  </aside>
+
 
   <div class="main-shell">
     <header class="topbar">
       <div class="topbar-left">
+        <button class="topbar-home" id="todayBtn" type="button" aria-label="Acasă">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10.8 9-7.8 9 7.8v9.1a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+          <span class="topbar-home-copy"><b>Orarul meu</b><small>PROGRAM ȘCOLAR</small></span>
+        </button>
         <div class="topbar-date"><div id="dayLabel"></div><div id="date"></div></div>
       </div>
       <div class="topbar-actions">
+        <button class="topbar-utility" id="themeBtn" type="button" title="Schimbă tema"><span class="topbar-utility-icon" aria-hidden="true">◐</span><span class="topbar-utility-label" id="themeBtnLabel">Temă</span></button>
+        <button class="topbar-utility topbar-admin" id="adminBtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 6v5.5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="m9.5 12 1.7 1.7 3.4-3.4"/></svg><span class="topbar-utility-label" id="adminBtnLabel">Admin</span></button>
         <div class="user-badge"><div class="user-badge-name" id="visitorDisplayName"></div><div class="user-badge-role" id="visitorDisplayRole">Elev</div></div>
         <div class="status-pill">Online</div>
       </div>
@@ -1239,14 +1247,14 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 
         <div class="smart-stack-toolbar">
           <nav class="smart-stack-tabs" role="tablist" aria-label="Funcțiile panoului">
-            <button class="smart-stack-tab" type="button" role="tab" aria-selected="true" aria-controls="scheduleSection" data-stack-target="scheduleSection">Program <span class="smart-stack-count" id="stackCountSchedule">0</span></button>
-            <button class="smart-stack-tab" type="button" role="tab" aria-selected="false" aria-controls="tasksSection" data-stack-target="tasksSection">Teme <span class="smart-stack-count" id="stackCountTasks">0</span></button>
-            <button class="smart-stack-tab" type="button" role="tab" aria-selected="false" aria-controls="announcementsSection" data-stack-target="announcementsSection">Anunțuri <span class="smart-stack-count" id="stackCountAnnouncements">0</span></button>
-            <button class="smart-stack-tab" type="button" role="tab" aria-selected="false" aria-controls="pollsSection" data-stack-target="pollsSection">Polluri <span class="smart-stack-count" id="stackCountPolls">0</span></button>
-            <button class="smart-stack-tab" type="button" role="tab" aria-selected="false" aria-controls="changesSection" data-stack-target="changesSection">Schimbări <span class="smart-stack-count" id="stackCountChanges">0</span></button>
+            <button class="smart-stack-tab" id="scheduleNav" type="button" role="tab" aria-selected="true" aria-controls="scheduleSection" data-stack-target="scheduleSection">Program <span class="smart-stack-count" id="stackCountSchedule">0</span></button>
+            <button class="smart-stack-tab" id="tasksNav" type="button" role="tab" aria-selected="false" aria-controls="tasksSection" data-stack-target="tasksSection">Teme <span class="smart-stack-count" id="stackCountTasks">0</span></button>
+            <button class="smart-stack-tab" id="announcementsBtn" type="button" role="tab" aria-selected="false" aria-controls="announcementsSection" data-stack-target="announcementsSection">Anunțuri <span class="smart-stack-count" id="stackCountAnnouncements">0</span></button>
+            <button class="smart-stack-tab" id="pollsBtn" type="button" role="tab" aria-selected="false" aria-controls="pollsSection" data-stack-target="pollsSection">Polluri <span class="smart-stack-count" id="stackCountPolls">0</span></button>
+            <button class="smart-stack-tab" id="changesBtn" type="button" role="tab" aria-selected="false" aria-controls="changesSection" data-stack-target="changesSection">Schimbări <span class="smart-stack-count" id="stackCountChanges">0</span></button>
           </nav>
           <div class="smart-stack-controls">
-            <div class="smart-stack-quick-actions"><button class="quick" id="smartStackCalendar" type="button">Calendar</button><button class="quick" id="smartStackChat" type="button">Chat</button></div>
+            <div class="smart-stack-quick-actions"><button class="quick" id="calendarBtn" type="button">Calendar</button><button class="quick" id="chatBtn" type="button">Chat</button></div>
             <div class="smart-stack-pager" aria-label="Navigare între pagini"><button class="stack-arrow" id="smartStackPrev" type="button" aria-label="Pagina anterioară">‹</button><span class="stack-position" id="smartStackPosition">1 / 5</span><button class="stack-arrow" id="smartStackNext" type="button" aria-label="Pagina următoare">›</button></div>
           </div>
         </div>
@@ -2307,8 +2315,6 @@ stackStage.addEventListener("pointerup",event=>{if(!stackPointer)return;const dx
 stackStage.addEventListener("pointercancel",()=>{stackPointer=null});
 
 document.querySelectorAll(".smart-stack-tab").forEach(button=>button.addEventListener("click",()=>setSmartStackPanel(button.dataset.stackTarget)));
-document.getElementById("smartStackCalendar").onclick=()=>document.getElementById("calendarBtn").click();
-document.getElementById("smartStackChat").onclick=()=>document.getElementById("chatBtn").click();
 function scrollToSection(sectionId,key){
   setSideNavActive(key);
   if(document.getElementById(sectionId)?.classList.contains("stack-panel"))setSmartStackPanel(sectionId);
@@ -2318,9 +2324,9 @@ function scrollToSection(sectionId,key){
 document.getElementById("todayBtn").onclick=()=>{showHomePage();setSmartStackPanel("scheduleSection");setSideNavActive("home");selected=days.includes(today)?today:"Luni";renderTabs();render();window.scrollTo({top:0,behavior:"smooth"})};
 document.getElementById("scheduleNav").onclick=()=>{showHomePage();scrollToSection("scheduleSection","schedule")};
 document.getElementById("tasksNav").onclick=()=>{showHomePage();scrollToSection("tasksSection","tasks")};
-document.getElementById("announcementsBtn").onclick=()=>{showHomePage();setSideNavActive("announcements");openList("ann")};
-document.getElementById("changesBtn").onclick=()=>{showHomePage();setSideNavActive("changes");openList("changes")};
-document.getElementById("pollsBtn").onclick=()=>{showHomePage();setSideNavActive("polls");openList("polls")};
+document.getElementById("announcementsBtn").onclick=()=>{showHomePage();scrollToSection("announcementsSection","announcements")};
+document.getElementById("changesBtn").onclick=()=>{showHomePage();scrollToSection("changesSection","changes")};
+document.getElementById("pollsBtn").onclick=()=>{showHomePage();scrollToSection("pollsSection","polls")};
 
 const calendarMonthFormat=new Intl.DateTimeFormat("ro-RO",{month:"long",year:"numeric"});
 const calendarDayFormat=new Intl.DateTimeFormat("ro-RO",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
