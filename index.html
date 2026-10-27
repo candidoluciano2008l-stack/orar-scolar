@@ -1303,6 +1303,48 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:900px){.admin-modern #tasksPanel.active,.admin-modern #changesPanel.active,.admin-modern #daysOffPanel.active,.admin-modern #announcementsPanel.active,.admin-modern #pollsPanel.active{grid-template-columns:minmax(0,1fr)}.admin-modern .dash-panel.active{padding:15px;border-radius:21px}}
 @media(max-width:600px){.admin-modern .dashboard-tabs{padding:7px}.admin-modern .dash-tab{min-height:46px;padding:6px 9px;gap:7px;border-radius:13px}.admin-modern .dash-tab-icon{width:30px;height:30px;border-radius:9px}.admin-modern .dash-tab-icon svg{width:17px;height:17px;stroke-width:2.5}.admin-modern .dash-panel.active{padding:12px;border-radius:18px}.admin-modern .dash-panel.active:before{font-size:9px;padding-bottom:10px}.admin-modern .dash-panel.active>.dash-list{padding:1px}}
 
+
+/* Give the two busiest admin tools more room and stronger visual grouping. */
+.admin-modern #changesPanel .change-builder{display:flex;flex-direction:column;gap:14px}
+.admin-modern #changesPanel .change-section{position:relative;display:grid;gap:11px;padding:18px 18px 17px;border:1.5px solid color-mix(in srgb,var(--panel-accent) 30%,rgba(145,181,234,.18));border-radius:19px;background:linear-gradient(145deg,rgba(25,38,66,.76),rgba(10,18,35,.82));box-shadow:inset 0 1px rgba(255,255,255,.065),0 10px 22px rgba(0,0,0,.12)}
+.admin-modern #changesPanel .change-section-title{display:flex;align-items:center;gap:10px;margin:0;color:#eaf3ff;font-size:12px;font-weight:950;letter-spacing:.055em}
+.admin-modern #changesPanel .change-section-title:before{content:"";width:9px;height:9px;flex:none;transform:rotate(45deg);border-radius:3px;background:linear-gradient(145deg,#8beaff,#a99cff);box-shadow:0 0 14px rgba(103,232,249,.42)}
+.admin-modern #changesPanel .change-section .grid{gap:11px}
+.admin-modern #changesPanel .change-section-sub{margin:0;color:#97aac9;font-size:11px;line-height:1.5}
+.admin-modern #changesPanel .readonly-input{font-weight:800;background:rgba(7,14,28,.58);border-color:rgba(114,179,227,.24)}
+.admin-modern #changesPanel .change-arrow{display:grid;place-items:center;width:34px;height:34px;margin:-1px auto;border:1.5px solid rgba(103,232,249,.22);border-radius:12px;color:#8cecf4;background:rgba(103,232,249,.07);font-size:20px;font-weight:900}
+.admin-modern #changesPanel #changeNote{min-height:94px;margin-top:2px;padding:14px}
+.admin-modern #changesPanel .actions{padding-top:4px}
+.admin-modern #changesPanel .change-section:first-child{border-color:rgba(135,166,235,.3);background:linear-gradient(120deg,rgba(55,85,140,.24),rgba(19,30,57,.72))}
+.admin-modern #pollsPanel>form{padding:24px!important;background:radial-gradient(ellipse at 100% 0%,rgba(167,123,255,.1),transparent 42%),linear-gradient(150deg,rgba(25,30,61,.94),rgba(10,17,35,.96))!important}
+.admin-modern #pollsPanel .field-wrap{display:grid;gap:9px}
+.admin-modern #pollsPanel #pollQuestion{min-height:48px;padding:13px 15px}
+.admin-modern #pollsPanel #pollOptionFields{display:flex;flex-direction:column;gap:10px;counter-reset:poll-option}
+.admin-modern #pollsPanel .poll-admin-option{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:11px;align-items:center;counter-increment:poll-option;padding:11px;border:1.5px solid rgba(177,148,255,.2);border-radius:17px;background:linear-gradient(120deg,rgba(112,83,179,.12),rgba(12,20,40,.58));transition:border-color .18s,background .18s,transform .18s}
+.admin-modern #pollsPanel .poll-admin-option:focus-within{border-color:rgba(194,168,255,.55);background:linear-gradient(120deg,rgba(112,83,179,.2),rgba(12,20,40,.72));transform:translateY(-1px)}
+.admin-modern #pollsPanel .poll-admin-option:before{content:counter(poll-option,decimal-leading-zero);display:grid;place-items:center;width:34px;height:34px;border:1.5px solid rgba(194,168,255,.25);border-radius:11px;color:#d7c7ff;background:rgba(160,122,255,.13);font-size:11px;font-weight:950}
+.admin-modern #pollsPanel .poll-admin-option .field-wrap{gap:6px;margin:0}
+.admin-modern #pollsPanel .poll-admin-option .field-label{color:#b8c5df;font-size:10px;font-weight:850;letter-spacing:.04em}
+.admin-modern #pollsPanel .poll-admin-option .input{min-height:43px}
+.admin-modern #pollsPanel .poll-remove-option{min-height:40px;padding:0 12px;border:1.5px solid rgba(255,129,150,.23);border-radius:12px;color:#ffadbb;background:rgba(255,129,150,.075);font-size:11px;font-weight:850;cursor:pointer;transition:background .18s,border-color .18s,transform .18s}
+.admin-modern #pollsPanel .poll-remove-option:hover{transform:translateY(-1px);border-color:rgba(255,129,150,.5);background:rgba(255,129,150,.14)}
+.admin-modern #pollsPanel .actions{align-items:center;gap:10px;padding-top:5px}
+.admin-modern #pollsPanel .actions .quick{min-height:44px}
+.admin-modern #pollsPanel .actions .send{min-height:44px;padding-inline:18px}
+.admin-modern #pollsPanel .hint{display:block;margin-top:12px;padding:11px 13px;border:1px solid rgba(177,148,255,.14);border-radius:13px;color:#aebbd5;background:rgba(140,105,219,.06);line-height:1.5}
+.admin-modern #pollsPanel .poll-card{padding:17px;border:1.5px solid rgba(177,148,255,.22);border-radius:18px;background:linear-gradient(145deg,rgba(25,30,61,.82),rgba(10,17,35,.88));box-shadow:inset 0 1px rgba(255,255,255,.05),0 12px 25px rgba(0,0,0,.14)}
+.admin-modern #pollsPanel .poll-question{font-size:15px;line-height:1.45}
+.admin-modern #pollsPanel .poll-meta{margin-top:12px}
+@media(max-width:600px){
+  .admin-modern #changesPanel .change-section{padding:14px;border-radius:16px;gap:9px}
+  .admin-modern #changesPanel .change-section .grid{grid-template-columns:1fr}
+  .admin-modern #pollsPanel>form{padding:16px!important}
+  .admin-modern #pollsPanel .poll-admin-option{grid-template-columns:32px minmax(0,1fr);gap:8px;padding:9px}
+  .admin-modern #pollsPanel .poll-admin-option:before{width:30px;height:30px}
+  .admin-modern #pollsPanel .poll-remove-option{grid-column:2;justify-self:start;min-height:34px}
+  .admin-modern #pollsPanel .actions{align-items:stretch;flex-direction:column}
+  .admin-modern #pollsPanel .actions .quick,.admin-modern #pollsPanel .actions .send{width:100%}
+}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
