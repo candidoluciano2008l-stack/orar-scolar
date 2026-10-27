@@ -1152,6 +1152,18 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:1050px){.smart-stack-heading{min-height:0;padding:24px;border-radius:24px}}
 @media(max-width:760px){.smart-stack-heading{margin:0 0 18px;padding:20px 18px;border-radius:22px}.smart-stack-heading>div:first-child{max-width:none}.smart-stack-title{font-size:32px}.smart-stack-head-actions{gap:12px}.smart-stack-notification-line{align-items:stretch;flex-direction:column;gap:8px}}
 
+
+/* Align every element in the hero on a stable two-column grid. */
+.smart-stack-heading{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(480px,.92fr);align-items:center;gap:clamp(32px,5vw,88px)}
+.smart-stack-heading>div:first-child{min-width:0;max-width:760px}
+.smart-stack-head-actions{display:grid;width:100%;max-width:none;flex:none;grid-template-columns:minmax(0,1fr);align-content:center;gap:14px}
+.smart-stack-notification-line{display:grid;grid-template-columns:max-content minmax(0,1fr);justify-content:initial;gap:18px;min-height:44px}
+.smart-stack-notification-line .notify-help{max-width:none}
+.smart-stack .stat-grid{display:flex;min-width:0}
+.smart-stack .stat-card#nextCard{width:100%;min-width:0}
+@media(max-width:1050px){.smart-stack-heading{grid-template-columns:minmax(0,1fr) minmax(350px,.95fr);gap:28px}.smart-stack-head-actions{width:100%;max-width:none;flex:none}.smart-stack-notification-line{grid-template-columns:max-content minmax(0,1fr)}}
+@media(max-width:760px){.smart-stack-heading{grid-template-columns:minmax(0,1fr);gap:18px}.smart-stack-head-actions{display:grid;width:100%;grid-template-columns:minmax(0,1fr);gap:12px}.smart-stack-notification-line{grid-template-columns:minmax(0,1fr);gap:8px}.smart-stack-notification-line .notify-btn{width:100%}.smart-stack-notification-line .notify-help{max-width:none}}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
