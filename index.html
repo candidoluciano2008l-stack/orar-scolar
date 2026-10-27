@@ -1189,6 +1189,92 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 .site-visit-row .dash-item-meta{font-variant-numeric:tabular-nums}
 #refreshSiteVisits{margin-top:12px}
 
+/* Admin command center refresh: glass surfaces, clear hierarchy, calmer responsive navigation. */
+#dashboardOverlay{align-items:center;padding:clamp(10px,2vw,28px);backdrop-filter:blur(18px);background:radial-gradient(ellipse at 18% 0%,rgba(66,190,236,.14),transparent 42%),rgba(3,7,19,.76)}
+.admin-modern{position:relative;width:min(1320px,100%);height:min(900px,94dvh);max-height:94dvh;border:1px solid rgba(147,193,255,.22);border-radius:30px;background:linear-gradient(155deg,rgba(13,21,40,.97),rgba(7,12,25,.985));box-shadow:0 36px 110px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.08);overflow:hidden;isolation:isolate}
+.admin-modern:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 100% 0%,rgba(105,91,228,.13),transparent 34%),radial-gradient(ellipse at 0% 65%,rgba(51,190,221,.08),transparent 38%)}
+.admin-modern-head{position:relative;isolation:isolate;overflow:hidden;flex:none;padding:26px 30px 23px;align-items:center;background:linear-gradient(108deg,rgba(12,28,52,.98),rgba(17,31,60,.91) 54%,rgba(36,35,76,.88));border-bottom:1px solid rgba(137,178,233,.16)}
+.admin-modern-head:after{content:"";position:absolute;z-index:-1;right:7%;top:-114px;width:315px;height:315px;border:1px solid rgba(103,232,249,.16);border-radius:50%;box-shadow:0 0 0 25px rgba(103,232,249,.035),0 0 0 58px rgba(139,156,255,.03),inset 0 0 55px rgba(103,232,249,.07);pointer-events:none}
+.admin-modern-head>div:first-child{max-width:680px}
+.admin-kicker{display:flex;align-items:center;gap:9px;color:#91ecff;opacity:1;font-size:10px;letter-spacing:.19em}
+.admin-kicker:before{content:"";width:7px;height:7px;border-radius:50%;background:#5fe7ea;box-shadow:0 0 14px #5fe7ea}
+.admin-modern-title{font-size:clamp(27px,3vw,37px);letter-spacing:-.045em;margin-top:9px;text-shadow:0 0 30px rgba(103,232,249,.12)}
+.admin-modern-sub{margin-top:8px;color:#aabbd7;font-size:13px;max-width:540px;line-height:1.5}
+.admin-head-actions{position:relative;z-index:1;gap:9px}
+.admin-user-chip{padding:10px 14px;color:#e7f4ff;background:rgba(255,255,255,.055);border-color:rgba(154,192,239,.17);backdrop-filter:blur(12px)}
+.admin-user-dot{background:#51e2b2;box-shadow:0 0 0 4px rgba(81,226,178,.12),0 0 16px rgba(81,226,178,.5)}
+.admin-head-actions #logoutBtn{color:#dae9fb;background:rgba(255,255,255,.06);border-color:rgba(154,192,239,.16)}
+.admin-head-actions #logoutBtn:hover{background:rgba(255,255,255,.12)}
+.admin-head-actions .close{color:#e9f3ff;background:rgba(255,255,255,.08);border:1px solid rgba(154,192,239,.14)}
+.admin-modern-body{flex:1;min-height:0;padding:22px clamp(16px,2.4vw,32px) 30px;background:transparent;overscroll-behavior:contain}
+.admin-overview-grid{gap:12px;margin-bottom:19px}
+.admin-overview-card{position:relative;min-height:86px;gap:13px;padding:16px 18px;border-radius:19px;background:linear-gradient(145deg,rgba(20,32,56,.78),rgba(11,19,36,.84));border-color:rgba(145,181,234,.13);box-shadow:inset 0 1px rgba(255,255,255,.055),0 12px 26px rgba(0,0,0,.12);transition:transform .2s,border-color .2s,background .2s}
+.admin-overview-card:hover{transform:translateY(-2px);border-color:rgba(103,232,249,.3);background:linear-gradient(145deg,rgba(23,43,69,.88),rgba(13,22,42,.92))}
+.admin-overview-icon{width:39px;height:39px;flex:none;border-radius:13px;color:#a5f3fc;background:linear-gradient(145deg,rgba(61,203,221,.2),rgba(109,114,239,.18));border:1px solid rgba(103,232,249,.16);font-size:15px}
+.admin-overview-value{font-size:25px;letter-spacing:-.04em;color:#f2f7ff}
+.admin-overview-label{margin-top:5px;color:#97a9c7;font-size:11px;letter-spacing:.025em}
+.admin-modern .dashboard-tabs{position:sticky;top:-22px;z-index:5;gap:6px;flex-wrap:nowrap;overflow:auto;padding:9px;margin:0 0 18px;border:1px solid rgba(145,181,234,.13);border-radius:17px;background:rgba(10,17,33,.84);box-shadow:0 12px 28px rgba(0,0,0,.16);backdrop-filter:blur(20px);scrollbar-width:none}
+.admin-modern .dashboard-tabs::-webkit-scrollbar{display:none}
+.admin-modern .dash-tab{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;padding:10px 13px;border:1px solid transparent;color:#9eafcb;border-radius:11px;font-size:12px;font-weight:800;transition:color .18s,background .18s,border-color .18s,transform .18s}
+.admin-modern .dash-tab:before{font-size:13px;line-height:1;opacity:.78}
+.admin-modern .dash-tab[data-panel="tasksPanel"]:before{content:"▤"}.admin-modern .dash-tab[data-panel="changesPanel"]:before{content:"⇄"}.admin-modern .dash-tab[data-panel="daysOffPanel"]:before{content:"▦"}.admin-modern .dash-tab[data-panel="announcementsPanel"]:before{content:"◉"}.admin-modern .dash-tab[data-panel="pollsPanel"]:before{content:"◌"}.admin-modern .dash-tab[data-panel="commentsPanel"]:before{content:"▱"}.admin-modern .dash-tab[data-panel="onlinePanel"]:before{content:"●"}.admin-modern .dash-tab[data-panel="siteVisitsPanel"]:before{content:"◷"}.admin-modern .dash-tab[data-panel="adminsPanel"]:before{content:"♙"}.admin-modern .dash-tab[data-panel="securityPanel"]:before{content:"◇"}
+.admin-modern .dash-tab:hover{color:#eaf6ff;background:rgba(255,255,255,.055);border-color:rgba(145,181,234,.13)}
+.admin-modern .dash-tab.active{color:#eaffff;background:linear-gradient(110deg,rgba(55,190,208,.2),rgba(109,115,239,.2));border-color:rgba(103,232,249,.28);box-shadow:inset 0 1px rgba(255,255,255,.07),0 5px 18px rgba(45,169,211,.08)}
+.admin-modern .dash-tab.active:before{color:#78eff0;opacity:1}
+.admin-modern .dash-panel{gap:18px;align-items:start}
+.admin-modern #tasksPanel.active,.admin-modern #changesPanel.active,.admin-modern #daysOffPanel.active,.admin-modern #announcementsPanel.active,.admin-modern #pollsPanel.active{display:grid;grid-template-columns:minmax(330px,.88fr) minmax(0,1.12fr);gap:18px;align-items:start}
+.admin-modern #tasksPanel>form,.admin-modern #changesPanel>form,.admin-modern #daysOffPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{min-width:0;padding:21px!important;border:1px solid rgba(145,181,234,.15)!important;border-radius:21px!important;background:linear-gradient(150deg,rgba(18,29,51,.88),rgba(10,17,32,.94))!important;box-shadow:inset 0 1px rgba(255,255,255,.055),0 16px 36px rgba(0,0,0,.16)!important}
+.admin-modern .dash-list{min-width:0;display:flex;flex-direction:column;gap:9px}
+.admin-modern .dash-item{border:1px solid rgba(145,181,234,.13);background:linear-gradient(145deg,rgba(18,29,51,.75),rgba(10,17,32,.86));border-radius:16px;padding:14px 15px;box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 20px rgba(0,0,0,.11)}
+.admin-modern .field-label,.admin-modern .change-section-title{color:#dceaff}
+.admin-modern .input,.admin-modern .select,.admin-modern .textarea{color:#eef6ff;background:rgba(5,11,23,.56);border-color:rgba(145,181,234,.17);border-radius:13px;transition:border-color .18s,box-shadow .18s,background .18s}
+.admin-modern .input:focus,.admin-modern .select:focus,.admin-modern .textarea:focus{border-color:rgba(103,232,249,.58);box-shadow:0 0 0 3px rgba(103,232,249,.1);background:rgba(5,11,23,.78)}
+.admin-modern .input::placeholder,.admin-modern .textarea::placeholder{color:#7385a4}
+.admin-modern .quick,.admin-modern .send{min-height:40px;border-radius:12px;font-weight:850;transition:transform .18s,filter .18s,box-shadow .18s}
+.admin-modern .send{color:#081421;background:linear-gradient(110deg,#67e8f9,#9c9bff);box-shadow:0 8px 24px rgba(83,195,229,.17)}
+.admin-modern .send:hover,.admin-modern .quick:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.admin-modern .quick{color:#dceaff;background:rgba(255,255,255,.055);border-color:rgba(145,181,234,.16)}
+.admin-modern .task-upload{border:1px dashed rgba(103,232,249,.24);background:rgba(103,232,249,.035)}
+.admin-modern .empty{border-color:rgba(145,181,234,.17);background:rgba(7,13,27,.3);color:#9eafcb}
+.admin-modern .online-summary{border-color:rgba(145,181,234,.15);border-radius:18px;background:linear-gradient(120deg,rgba(20,35,60,.8),rgba(12,20,39,.84))}
+.admin-modern .online-user{border-color:rgba(145,181,234,.14);border-radius:14px;background:rgba(15,24,44,.72)}
+.admin-modern .site-visit-note{margin:11px 2px 13px;padding:10px 12px;border-radius:12px;color:#9eafcb;background:rgba(103,232,249,.045)}
+.admin-modern .dash-panel#commentsPanel.active,.admin-modern .dash-panel#onlinePanel.active,.admin-modern .dash-panel#siteVisitsPanel.active{display:block}
+@media(max-width:900px){
+  .admin-modern{width:min(760px,100%);height:min(920px,95dvh);border-radius:24px}
+  .admin-modern-head{padding:21px 22px;flex-direction:row;align-items:center}
+  .admin-modern #tasksPanel.active,.admin-modern #changesPanel.active,.admin-modern #daysOffPanel.active,.admin-modern #announcementsPanel.active,.admin-modern #pollsPanel.active{grid-template-columns:1fr}
+  .admin-modern #tasksPanel>.dash-list,.admin-modern #changesPanel>.dash-list,.admin-modern #daysOffPanel>.dash-list,.admin-modern #announcementsPanel>.dash-list,.admin-modern #pollsPanel>.dash-list{max-height:34vh;overflow:auto;padding-right:2px}
+}
+@media(max-width:600px){
+  #dashboardOverlay{padding:0;align-items:stretch}
+  .admin-modern{width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0}
+  .admin-modern-head{align-items:flex-start;padding:calc(15px + env(safe-area-inset-top)) 16px 14px;gap:10px}
+  .admin-modern-head:after{right:-170px;top:-180px;width:285px;height:285px}
+  .admin-modern-head>div:first-child{min-width:0}
+  .admin-modern-title{font-size:25px;margin-top:7px}
+  .admin-modern-sub{max-width:290px;font-size:11px}
+  .admin-head-actions{gap:6px;flex-wrap:nowrap}
+  .admin-user-chip{max-width:140px;padding:8px 10px;font-size:10px}
+  .admin-head-actions #logoutBtn{padding:8px 9px;font-size:11px}
+  .admin-head-actions .close{width:34px;height:34px;flex:none}
+  .admin-modern-body{padding:13px 13px calc(24px + env(safe-area-inset-bottom))}
+  .admin-overview-grid{gap:8px;margin-bottom:13px}
+  .admin-overview-card{min-height:70px;gap:9px;padding:10px 11px;border-radius:15px}
+  .admin-overview-icon{width:31px;height:31px;border-radius:10px;font-size:12px}
+  .admin-overview-value{font-size:20px}
+  .admin-overview-label{font-size:9px;line-height:1.2}
+  .admin-modern .dashboard-tabs{top:-13px;gap:5px;padding:7px;margin:0 -1px 13px;border-radius:15px}
+  .admin-modern .dash-tab{min-height:37px;padding:8px 10px;font-size:11px}
+  .admin-modern .dash-panel.active{gap:12px}
+  .admin-modern #tasksPanel>form,.admin-modern #changesPanel>form,.admin-modern #daysOffPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{padding:15px!important;border-radius:17px!important}
+  .admin-modern .dash-list{gap:7px}
+  .admin-modern .grid{grid-template-columns:1fr}
+  .admin-modern .grid-3{grid-template-columns:1fr}
+  .admin-modern .actions{align-items:stretch}
+  .admin-modern .actions .send{flex:none}
+}
+@media(prefers-reduced-motion:reduce){.admin-overview-card,.admin-modern .dash-tab,.admin-modern .send,.admin-modern .quick{transition:none}.admin-modern .dash-panel.active{animation:none}}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1380,7 +1466,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 
 <div class="overlay" id="authOverlay"><section class="modal" role="dialog" aria-modal="true" style="max-width:520px"><div class="modal-head"><div class="modal-title">Administrator</div><button class="close" id="authClose">×</button></div><div class="modal-body"><div class="auth-help">Autentificare cu email și parolă. Nu este nevoie de Magic Link la fiecare conectare.</div><div id="authStatus" class="auth-help" style="margin-top:10px"></div></div><form class="form" id="authForm"><div class="grid"><input class="input" id="adminEmail" type="email" placeholder="adresa de email" autocomplete="email" required><input class="input" id="adminPassword" type="password" placeholder="Parolă" autocomplete="current-password" minlength="8" required></div><div class="actions"><div class="hint">Minim 8 caractere</div><button class="send" id="authSend" type="submit">Autentificare</button></div><div class="error" id="authError"></div></form></section></div>
 
-<div class="overlay" id="dashboardOverlay"><section class="modal full admin-modern"><div class="admin-modern-head"><div><div class="admin-kicker">ORARUL MEU · ADMIN</div><div class="admin-modern-title">Admin Dashboard</div><div class="admin-modern-sub">Controlează rapid temele, vacanțele, anunțurile, schimbările și activitatea site-ului.</div></div><div class="admin-head-actions"><div class="admin-user-chip"><span class="admin-user-dot"></span><span id="adminHeaderUser">—</span></div><button class="quick" id="logoutBtn">Delogare</button><button class="close" id="dashboardClose">×</button></div></div>
+<div class="overlay" id="dashboardOverlay"><section class="modal full admin-modern"><div class="admin-modern-head"><div><div class="admin-kicker">ORARUL MEU · CONTROL CENTER</div><div class="admin-modern-title">Centrul de control</div><div class="admin-modern-sub">Un spațiu clar și rapid pentru program, comunicare și administrarea site-ului.</div></div><div class="admin-head-actions"><div class="admin-user-chip"><span class="admin-user-dot"></span><span id="adminHeaderUser">—</span></div><button class="quick" id="logoutBtn">Delogare</button><button class="close" id="dashboardClose" aria-label="Închide dashboard">×</button></div></div>
 <div class="modal-body admin-modern-body">
 <div class="admin-overview-grid">
   <div class="admin-overview-card"><div class="admin-overview-icon">✓</div><div><div class="admin-overview-value" id="adminStatTasks">0</div><div class="admin-overview-label">Teme active</div></div></div>
