@@ -1110,6 +1110,21 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 @media(max-width:1050px){.smart-stack-heading{padding-bottom:25px}.smart-stack-title{font-size:34px}.smart-stack-controls{gap:5px}.smart-stack-tab{padding-inline:10px}.smart-stack-panels{min-height:480px}}
 @media(max-width:760px){.dashboard-main{padding:20px 14px calc(110px + env(safe-area-inset-bottom))}.smart-stack-heading{align-items:flex-start;flex-direction:column;gap:15px;padding:0 4px 18px}.smart-stack-title{font-size:32px}.smart-stack-subtitle{font-size:12px}.smart-stack-head-actions{width:100%;justify-content:space-between}.smart-stack-head-actions .notify-help{max-width:48%;font-size:9px}.smart-stack .stat-grid{justify-content:flex-start;padding:0 6px 19px}.smart-stack .stat-card#nextCard{min-width:min(255px,100%);min-height:66px}.smart-stack-toolbar{align-items:stretch;flex-direction:column;margin:0 0 18px;padding:9px;border-radius:16px}.smart-stack-tabs{width:100%;gap:3px}.smart-stack-tab{flex:0 0 auto;min-height:38px;padding:0 10px;font-size:10px}.smart-stack-controls{justify-content:space-between}.smart-stack-quick-actions .quick{min-height:34px}.smart-stack-stage{margin:0 8px 30px;padding:0 5px 10px}.smart-stack-stage:before{inset:9px 12px 0}.smart-stack-stage:after{inset:16px 24px 0}.smart-stack-panels{min-height:480px;padding:28px 20px;border-radius:24px}.smart-stack-panels>.stack-panel{min-height:430px}.smart-stack-panels .section-head{align-items:flex-start;gap:14px;margin-bottom:23px}.smart-stack-panels .section-title{font-size:21px}.smart-stack-panels .section-subtitle{font-size:11px}.smart-stack-panels .section-head>.quick{flex:none}.smart-stack-panels .tabs{overflow-x:auto}.smart-stack-panels .empty{min-height:110px}}
 @media(max-width:390px){.smart-stack-panels{padding:24px 16px}.smart-stack-title{font-size:29px}.smart-stack-head-actions{align-items:flex-start;flex-direction:column}.smart-stack-head-actions .notify-help{max-width:100%}.smart-stack-tab{padding-inline:8px}.smart-stack-tab:nth-child(4),.smart-stack-tab:nth-child(5){font-size:9px}.smart-stack-panels{padding:18px 13px}}
+
+/* Refined identity bar and unclipped daily glance card. */
+.smart-stack-heading .eyebrow{display:none}
+.smart-stack-title{margin:0 0 7px}
+.smart-stack .stat-card#nextCard{box-sizing:border-box;flex:0 1 430px;min-width:min(320px,42vw);min-height:104px!important;height:auto!important;overflow:visible;line-height:1.35}
+.smart-stack .stat-card#nextCard .stat-value,.smart-stack .stat-card#nextCard .stat-sub{max-width:100%;overflow:visible;white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+.smart-stack .stat-card#nextCard .stat-value{font-size:19px;margin-top:7px}
+.topbar .topbar-actions .user-badge{position:relative;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center;gap:3px!important;max-width:220px!important;min-height:42px;margin:0!important;padding:7px 14px 7px 34px!important;border:1px solid rgba(133,207,255,.19);border-radius:15px;background:linear-gradient(135deg,rgba(83,137,194,.18),rgba(105,93,181,.15));box-shadow:inset 0 1px rgba(255,255,255,.08),0 8px 24px rgba(0,0,0,.12);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.topbar .topbar-actions .user-badge:before{content:"";position:absolute;left:13px;top:50%;width:9px;height:9px;border-radius:50%;transform:translateY(-50%);background:linear-gradient(135deg,#73efff,#9b9fff);box-shadow:0 0 13px rgba(103,232,249,.72)}
+.topbar .user-badge-name{max-width:170px!important;font-size:12px!important;line-height:1.1;letter-spacing:.01em}
+.topbar .user-badge-role{font-size:9px!important;line-height:1.1!important;letter-spacing:.09em!important;text-transform:uppercase;color:#9fb8d8!important}
+:root[data-theme="light"] .topbar .topbar-actions .user-badge{border-color:rgba(69,117,185,.17);background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(225,234,255,.72));box-shadow:inset 0 1px rgba(255,255,255,.92),0 8px 22px rgba(42,66,112,.1)}
+:root[data-theme="light"] .topbar .user-badge-role{color:#647693!important}
+@media(max-width:760px){.smart-stack .stat-card#nextCard{flex:1 1 100%;min-width:0;min-height:94px!important}.topbar .topbar-actions .user-badge{max-width:155px!important;min-height:38px;padding:6px 10px 6px 29px!important;border-radius:13px}.topbar .topbar-actions .user-badge:before{left:11px;width:8px;height:8px}.topbar .user-badge-name{max-width:115px!important;font-size:11px!important}.topbar .user-badge-role{font-size:8px!important}}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -1164,8 +1179,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
       <section class="smart-stack" id="smartStack" aria-label="Panou interactiv">
         <header class="smart-stack-heading">
           <div>
-            <div class="eyebrow">ORARUL MEU · SPAȚIUL TĂU ȘCOLAR</div>
-            <h1 class="smart-stack-title">Panoul tău</h1>
+            <h1 class="smart-stack-title">Orarul tău</h1>
             <p class="smart-stack-subtitle" id="smartStackSubtitle">Orarul și activitatea clasei, într-o singură vedere.</p>
           </div>
           <div class="smart-stack-head-actions">
