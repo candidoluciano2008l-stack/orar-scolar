@@ -1345,6 +1345,25 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
   .admin-modern #pollsPanel .actions{align-items:stretch;flex-direction:column}
   .admin-modern #pollsPanel .actions .quick,.admin-modern #pollsPanel .actions .send{width:100%}
 }
+
+/* Correct the actual embedded mobile dashboard stylesheet. */
+@media (max-width: 760px) {
+  .dashboard-main {
+    padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  }
+  .smart-stack-stage {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .smart-stack-panels {
+    min-height: 0 !important;
+    padding-bottom: 16px !important;
+  }
+  .smart-stack-panels > .stack-panel {
+    min-height: 0 !important;
+  }
+}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
