@@ -749,3 +749,22 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .dashboard-card{padding:15px !important}
   .stat-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
 }
+
+
+/* Mobile timetable: let the active panel determine its own height. */
+@media (max-width: 760px) {
+  .dashboard-main {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+  }
+  .smart-stack-stage {
+    margin-bottom: 12px !important;
+    padding-bottom: 4px !important;
+  }
+  .smart-stack-panels {
+    min-height: 0 !important;
+    padding: 22px 16px 18px !important;
+  }
+  .smart-stack-panels > .stack-panel {
+    min-height: 0 !important;
+  }
+}
