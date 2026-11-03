@@ -1440,6 +1440,15 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
   }
 }
 
+
+/* Admin shortcut grid must scroll with the dashboard, not stick over content. */
+@media (max-width: 600px) {
+  .admin-modern .dashboard-tabs {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
