@@ -1364,6 +1364,82 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
   }
 }
 
+
+/* Mobile admin dashboard: stack the header and use a true two-column nav grid. */
+@media (max-width: 600px) {
+  .admin-modern-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    padding: calc(16px + env(safe-area-inset-top)) 16px 16px !important;
+  }
+  .admin-modern-head > div:first-child {
+    width: 100%;
+    max-width: none !important;
+  }
+  .admin-modern-title {
+    max-width: 100%;
+    font-size: 27px !important;
+    line-height: 1.08;
+  }
+  .admin-modern-sub {
+    max-width: 100% !important;
+  }
+  .admin-head-actions {
+    width: 100%;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+  }
+  .admin-user-chip {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none !important;
+    justify-content: flex-start;
+  }
+  .admin-head-actions #logoutBtn {
+    flex: 0 0 auto;
+  }
+  .admin-head-actions .close {
+    flex: 0 0 38px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+  .admin-modern .dashboard-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    overflow: visible !important;
+    padding: 9px !important;
+  }
+  .admin-modern .dash-tab {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 48px !important;
+    flex: initial !important;
+    align-items: center;
+    justify-content: flex-start !important;
+    gap: 9px !important;
+    padding: 7px 9px !important;
+    white-space: normal !important;
+    text-align: left;
+  }
+  .admin-modern .dash-tab-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+  }
+  .admin-modern .dash-tab-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+  }
+}
+
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
