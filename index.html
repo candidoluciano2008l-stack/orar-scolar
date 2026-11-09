@@ -72,6 +72,9 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .admin-modern #tasksPanel > .dash-list{margin-top:0;padding:4px 0}
 .admin-modern #changesPanel > form,.admin-modern #announcementsPanel > form,.admin-modern #pollsPanel > form,.admin-modern #securityPanel > form,.admin-modern #adminsPanel > form{border:1px solid var(--line)!important;border-radius:19px!important;background:var(--card)!important;box-shadow:var(--shadow)}
 .admin-modern .dash-item{background:var(--card);border-color:var(--line);border-radius:15px;padding:12px 13px;box-shadow:0 5px 18px rgba(17,38,63,.04)}
+.admin-modern #taskList .dash-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
+.admin-modern #taskList .dash-item-main{min-width:0;overflow-wrap:anywhere}
+.admin-modern #taskList .task-admin-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .admin-modern .quick{border-radius:10px}
 .admin-modern .send{border-radius:11px}
 .admin-modern .task-upload{background:rgba(127,150,180,.035);border-radius:13px}.admin-modern #tasksPanel .field-wrap{gap:6px}.admin-modern #tasksPanel .input,.admin-modern #tasksPanel .textarea,.admin-modern #tasksPanel .select{min-width:0}.admin-modern #tasksPanel .actions{padding-top:2px}
@@ -994,6 +997,10 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
   .admin-modern #tasksPanel>form{padding:14px!important;border-radius:14px!important}
   .admin-modern #changesPanel>form,.admin-modern #announcementsPanel>form,.admin-modern #pollsPanel>form,.admin-modern #securityPanel>form,.admin-modern #adminsPanel>form{border-radius:14px!important}
   .admin-modern .dash-item{padding:10px;border-radius:12px}
+  .admin-modern #taskList .dash-item{grid-template-columns:minmax(0,1fr);gap:9px}
+  .admin-modern #taskList .task-admin-actions{display:grid;grid-template-columns:1fr 1fr;justify-content:stretch}
+  .admin-modern #taskList .task-admin-actions button{min-height:44px;width:100%;touch-action:manipulation}
+  .admin-modern #taskList .task-preview-image-btn{width:64px;height:64px}
   .admin-modern .input,.admin-modern .select,.admin-modern .textarea{padding:9px 10px;border-radius:10px}
   .admin-modern .quick,.admin-modern .send{padding:9px 12px;border-radius:9px}
 }
@@ -2782,7 +2789,7 @@ function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>{
   const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
   const thumb=firstPath?"<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")' aria-label='Deschide pozele'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"'></button>":"";
-  return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div><div style='display:flex;gap:7px;flex-wrap:wrap'><button class='quick' onclick='editTask("+t.id+")'>Editează</button><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div></div>";
+  return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div><div class='task-admin-actions'><button class='quick' onclick='editTask("+t.id+")'>Editează</button><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div></div>";
 }).join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 window.editTask=async id=>{
   const task=tasks.find(t=>Number(t.id)===Number(id));
