@@ -1969,9 +1969,12 @@ async function loadData(){
     supabaseClient.from("polls").select("id,question,closed,created_at,poll_options(id,option_text,position)").order("created_at",{ascending:false}),
     supabaseClient.from("school_days_off").select("id,kind,title,start_date,end_date,note,author_name,created_at").order("start_date",{ascending:true})
   ]);
+  const failed=[a,b,c,p,d].find(r=>r.error);
+  if(failed){console.warn("Datele nu au putut fi actualizate; păstrez ultima versiune încărcată.",failed.error);return false}
   tasks=a.data||[];changes=b.data||[];announcements=c.data||[];
   polls=(p.data||[]).map(x=>({...x,poll_options:(x.poll_options||[]).sort((u,v)=>u.position-v.position)}));
   schoolDaysOff=d.data||[];
+  return true;
 }
 async function getCommentCounts(){
   const r=await supabaseClient.from("comments").select("subject");if(r.error)return {};
@@ -3167,7 +3170,7 @@ if("serviceWorker" in navigator){
       const registration=await navigator.serviceWorker.register("/sw.js",{updateViaCache:"none"});
       registration.update().catch(()=>{});
       updatePushButton();
-      navigator.serviceWorker.addEventListener("controllerchange",()=>window.location.reload());
+
     }catch(_){}
   });
 }
