@@ -1456,6 +1456,13 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
   }
 }
 
+
+/* Keep homework controls visible in the mobile admin list. */
+@media(max-width:600px){
+  #dashboardOverlay .admin-modern #taskList .dash-item{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:9px!important;height:auto!important;max-height:none!important;min-height:0!important;overflow:visible!important}
+  #dashboardOverlay .admin-modern #taskList .task-admin-actions{order:-1!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;width:100%!important}
+  #dashboardOverlay .admin-modern #taskList .task-admin-actions button{display:flex!important;align-items:center!important;justify-content:center!important;min-height:46px!important;width:100%!important;font-size:14px!important}
+}
 </style>
 
 <meta name="theme-color" content="#28577f" id="themeColor">
@@ -2789,7 +2796,7 @@ function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>{
   const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
   const thumb=firstPath?"<button type='button' class='task-preview-image-btn' onclick='openTaskImage("+JSON.stringify(firstPath)+","+JSON.stringify(t.image_paths||[])+")' aria-label='Deschide pozele'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(firstPath).data.publicUrl)+"' alt='Poză pentru "+escapeHtml(t.title||"tema")+"'></button>":"";
-  return "<div class='dash-item'>"+thumb+"<div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div><div class='task-admin-actions'><button class='quick' onclick='editTask("+t.id+")'>Editează</button><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div></div>";
+  return "<div class='dash-item'>"+thumb+"<div class='task-admin-actions'><button class='quick' onclick='editTask("+t.id+")'>Editează</button><button class='delete-btn' onclick='removeTask("+t.id+")'>Șterge</button></div><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title)+"</div><div class='dash-item-meta'>"+escapeHtml(t.type)+" · Deadline "+fmtDate(t.deadline)+(t.image_paths?.length?" · 📷 "+t.image_paths.length:"")+" · Postat de "+authorLabel(t)+"</div></div></div>";
 }).join(""):"<div class='empty'>Nu există teme/proiecte.</div>"}
 window.editTask=async id=>{
   const task=tasks.find(t=>Number(t.id)===Number(id));
