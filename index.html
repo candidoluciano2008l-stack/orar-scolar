@@ -2094,7 +2094,10 @@ function renderSchoolState(){
     nextTime.textContent=s.current[0]+"–"+s.current[1];
     count.textContent="În oră";
     state.textContent="";
-    ctx.textContent="Se termină la "+s.current[1];
+    const lessonRemaining=Math.max(0,mins(s.current[1])*60-(now.getHours()*3600+now.getMinutes()*60+now.getSeconds()));
+    const lessonMm=String(Math.floor(lessonRemaining/60)).padStart(2,"0");
+    const lessonSs=String(lessonRemaining%60).padStart(2,"0");
+    ctx.textContent="Se termină la "+s.current[1]+" · Mai sunt "+lessonMm+":"+lessonSs;
   }else if(s.kind==="break-or-before"){
     if(nextLabel)nextLabel.textContent="Următoarea oră";
     if(s.next){
