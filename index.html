@@ -49,6 +49,21 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .name-gate-error{min-height:18px;color:var(--danger);font-size:12px;margin-top:8px}
 .site-locked{overflow:hidden}
 @media(max-width:520px){.name-gate{padding:12px}.name-gate-card{padding:20px;border-radius:20px}.name-gate-title{font-size:24px}}
+.startup-splash{position:fixed;inset:0;z-index:200;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#0b2035 0%,#123957 52%,#1f5b82 100%);color:#f7fbff;opacity:1;visibility:visible;transition:opacity .5s ease,visibility .5s ease}
+.startup-splash::before,.startup-splash::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.08);border-radius:50%;width:min(82vw,680px);aspect-ratio:1;animation:splash-orbit 18s linear infinite}
+.startup-splash::after{width:min(110vw,900px);animation-duration:28s;animation-direction:reverse}
+.startup-splash.is-done{opacity:0;visibility:hidden;pointer-events:none}
+.startup-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;animation:splash-enter .75s cubic-bezier(.2,.75,.25,1) both}
+.startup-mark{width:76px;height:76px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.19),rgba(255,255,255,.06));box-shadow:0 18px 50px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.22);display:grid;place-items:center;position:relative}
+.startup-mark svg{width:40px;height:40px;fill:none;stroke:#fff;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.startup-mark::after{content:"";position:absolute;right:10px;top:10px;width:8px;height:8px;border-radius:50%;background:#42d6a0;box-shadow:0 0 0 5px rgba(66,214,160,.13);animation:splash-pulse 1.5s ease-in-out infinite}
+.startup-title{margin-top:20px;font-size:23px;font-weight:850;letter-spacing:-.035em}.startup-caption{margin-top:5px;font-size:10px;font-weight:800;letter-spacing:.2em;color:rgba(235,245,255,.62)}
+.startup-schedule{width:184px;margin-top:27px;padding:11px 12px;border:1px solid rgba(255,255,255,.13);border-radius:15px;background:rgba(255,255,255,.075);box-shadow:0 14px 40px rgba(0,0,0,.12);backdrop-filter:blur(8px)}
+.startup-row{height:20px;display:flex;align-items:center;gap:9px;opacity:0;animation:splash-row .42s ease forwards}.startup-row:nth-child(1){animation-delay:.22s}.startup-row:nth-child(2){animation-delay:.38s}.startup-row:nth-child(3){animation-delay:.54s}
+.startup-time{width:28px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}.startup-line{height:5px;border-radius:5px;background:rgba(255,255,255,.78);width:84px}.startup-row:nth-child(2) .startup-line{width:65px}.startup-row:nth-child(3) .startup-line{width:98px}.startup-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#49d5a1}
+.startup-progress{width:126px;height:2px;margin-top:23px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden}.startup-progress::after{content:"";display:block;width:42%;height:100%;border-radius:3px;background:#70d8b2;animation:splash-progress 1.05s ease-in-out both}
+@keyframes splash-enter{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}@keyframes splash-row{to{opacity:1;transform:translateX(0)}from{opacity:0;transform:translateX(-7px)}}@keyframes splash-progress{from{transform:translateX(-110%)}to{transform:translateX(240%)}}@keyframes splash-pulse{50%{box-shadow:0 0 0 8px rgba(66,214,160,.04);transform:scale(.85)}}@keyframes splash-orbit{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.startup-splash::before,.startup-splash::after,.startup-content,.startup-row,.startup-progress::after,.startup-mark::after{animation:none}.startup-row{opacity:1}.startup-splash{transition:opacity .2s ease,visibility .2s ease}}
 .overlay{position:fixed;inset:0;background:rgba(8,18,30,.58);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:12px}.overlay.open{display:flex}.modal{width:min(780px,100%);max-height:92vh;background:var(--card);border-radius:24px 24px 16px 16px;overflow:hidden;display:flex;flex-direction:column}.modal.full{width:min(1080px,100%);max-height:94vh}.modal-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-title{font-weight:800;font-size:21px}.close{border:0;background:rgba(127,150,180,.13);color:var(--text);border-radius:10px;width:38px;height:38px;font-size:22px;cursor:pointer}
 .modal-body{padding:15px 18px;overflow:auto}.comments{padding:14px 18px;overflow:auto;display:flex;flex-direction:column;gap:10px}.comment{border:1px solid var(--line);border-radius:15px;padding:12px 13px}.comment-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:5px}.comment-name{font-weight:800}.comment-time{font-size:12px;color:var(--muted)}.comment-message{white-space:pre-wrap;line-height:1.45}.no-comments{padding:25px 4px;text-align:center;color:var(--muted)}
 .form{border-top:1px solid var(--line);padding:14px 18px;background:rgba(127,150,180,.04)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}.row{display:grid;grid-template-columns:150px 1fr;gap:9px}.input,.textarea,.select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;outline:none;background:var(--card);color:var(--text)}.textarea{resize:vertical;min-height:84px}.actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.hint{font-size:12px;color:var(--muted)}.send{border:0;background:var(--blue);color:#fff;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer}.send:disabled{opacity:.55;cursor:not-allowed}.error{color:var(--danger);font-size:12px;margin-top:7px;min-height:16px}
@@ -1483,6 +1498,16 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 
 </head>
 <body>
+<div class="startup-splash" id="startupSplash" role="status" aria-label="Se încarcă Orarul meu">
+  <div class="startup-content">
+    <div class="startup-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="8" y="7" width="24" height="27" rx="5"/><path d="M14 5v5M26 5v5M8 14h24M14 20h4M22 20h4M14 26h4M22 26h4"/></svg></div>
+    <div class="startup-title">Orarul meu</div>
+    <div class="startup-caption">PROGRAMUL TĂU, PREGĂTIT</div>
+    <div class="startup-schedule" aria-hidden="true"><div class="startup-row"><span class="startup-time"></span><span class="startup-line"></span><i class="startup-dot"></i></div><div class="startup-row"><span class="startup-time"></span><span class="startup-line"></span><i class="startup-dot"></i></div><div class="startup-row"><span class="startup-time"></span><span class="startup-line"></span><i class="startup-dot"></i></div></div>
+    <div class="startup-progress" aria-hidden="true"></div>
+  </div>
+</div>
+
 <div class="app-shell">
 
 
@@ -3265,6 +3290,7 @@ function initNameGate(){
   });
 }
 initNameGate();
+window.setTimeout(()=>document.getElementById("startupSplash")?.classList.add("is-done"),1450);
 document.getElementById("date").textContent=welcomeDateFormat.format(now);
 document.getElementById("dayLabel").textContent=today;
 document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
