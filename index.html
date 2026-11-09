@@ -2097,6 +2097,7 @@ function renderSchoolState(){
     const lessonRemaining=Math.max(0,mins(s.current[1])*60-(now.getHours()*3600+now.getMinutes()*60+now.getSeconds()));
     const lessonMm=String(Math.floor(lessonRemaining/60)).padStart(2,"0");
     const lessonSs=String(lessonRemaining%60).padStart(2,"0");
+    nextTime.textContent=s.current[0]+"–"+s.current[1]+" · "+lessonMm+":"+lessonSs+" rămase";
     ctx.textContent="Se termină la "+s.current[1]+" · Mai sunt "+lessonMm+":"+lessonSs;
   }else if(s.kind==="break-or-before"){
     if(nextLabel)nextLabel.textContent="Următoarea oră";
@@ -2116,6 +2117,7 @@ function renderSchoolState(){
       const remaining=Math.max(0,nextSeconds-curSeconds);
       const mm=String(Math.floor(remaining/60)).padStart(2,"0");
       const ss=String(remaining%60).padStart(2,"0");
+      nextTime.textContent=s.next[0]+"–"+s.next[1]+(inBreak?" · Pauză "+mm+":"+ss:"");
       ctx.textContent=(inBreak?"Până la ":"Începe la ")+s.next[0]+" · Mai sunt "+mm+":"+ss;
     }else{next.textContent="—";nextTime.textContent="—";count.textContent="—";state.textContent="—";ctx.textContent=""}
   }else if(s.kind==="after"){
