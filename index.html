@@ -1502,7 +1502,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
   <div class="startup-content">
     <div class="startup-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><rect x="8" y="7" width="24" height="27" rx="5"/><path d="M14 5v5M26 5v5M8 14h24M14 20h4M22 20h4M14 26h4M22 26h4"/></svg></div>
     <div class="startup-title">Orarul meu</div>
-    <div class="startup-caption">PROGRAMUL TĂU, PREGĂTIT</div>
+    <div class="startup-caption" id="startupCaption">PROGRAMUL TĂU, PREGĂTIT</div>
     <div class="startup-schedule" aria-hidden="true"><div class="startup-row"><span class="startup-time"></span><span class="startup-line"></span><i class="startup-dot"></i></div><div class="startup-row"><span class="startup-time"></span><span class="startup-line"></span><i class="startup-dot"></i></div><div class="startup-row"><span class="startup-time"></span><span class="startup-line"></span><i class="startup-dot"></i></div></div>
     <div class="startup-progress" aria-hidden="true"></div>
   </div>
@@ -3290,12 +3290,37 @@ function initNameGate(){
   });
 }
 initNameGate();
-window.setTimeout(()=>document.getElementById("startupSplash")?.classList.add("is-done"),1450);
+const startupStartedAt=performance.now();
+let startupSplashFinishing=false;
+function finishStartupSplash(message=""){
+  if(startupSplashFinishing)return;
+  startupSplashFinishing=true;
+  const caption=document.getElementById("startupCaption");
+  if(message&&caption)caption.textContent=message;
+  const minimumDuration=message?1150:850;
+  const remaining=Math.max(0,minimumDuration-(performance.now()-startupStartedAt));
+  window.setTimeout(()=>document.getElementById("startupSplash")?.classList.add("is-done"),remaining);
+}
+const startupFallback=window.setTimeout(()=>finishStartupSplash("Conexiune lentă · se încarcă în fundal"),12000);
 document.getElementById("date").textContent=welcomeDateFormat.format(now);
 document.getElementById("dayLabel").textContent=today;
 document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);
 document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);
-setSideNavActive("home");refreshAuth();loadData().then(()=>{renderTabs();render();renderCalendar()});
+setSideNavActive("home");
+async function initializeApp(){
+  const [authResult,dataResult]=await Promise.allSettled([refreshAuth(),loadData()]);
+  renderTabs();
+  await render();
+  renderCalendar();
+  window.clearTimeout(startupFallback);
+  const hasLoadError=authResult.status==="rejected"||dataResult.status==="rejected"||dataResult.value===false;
+  finishStartupSplash(hasLoadError?"Unele informații nu s-au încărcat":"");
+}
+initializeApp().catch(error=>{
+  console.error("Aplicația nu a putut finaliza încărcarea inițială.",error);
+  window.clearTimeout(startupFallback);
+  finishStartupSplash("Nu s-au putut încărca toate informațiile");
+});
 setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderSchoolState();updateCurrentLessonHighlight()},1000);
 setInterval(()=>{now=new Date();today=names[now.getDay()];document.getElementById("date").textContent=welcomeDateFormat.format(now);document.getElementById("dayLabel").textContent=today;document.getElementById("welcomeDay").textContent=welcomeDayFormat.format(now);document.getElementById("welcomeDate").textContent=welcomeDateFormat.format(now);renderTabs();render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();},30000);
 </script>
