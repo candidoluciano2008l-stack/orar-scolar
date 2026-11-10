@@ -1507,6 +1507,10 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
     <div class="startup-progress" aria-hidden="true"></div>
   </div>
 </div>
+<script>
+  // Ensure a failed app script cannot leave the startup screen covering the page.
+  window.setTimeout(() => document.getElementById("startupSplash")?.classList.add("is-done"), 12000);
+</script>
 
 <div class="app-shell">
 
