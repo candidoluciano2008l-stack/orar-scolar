@@ -3489,10 +3489,12 @@ async function initializeApp(){
   renderTabs();
   await render();
   renderCalendar();
+  if(window.location.hash==="#materials")showMaterialsPage();
   window.clearTimeout(startupFallback);
   const hasLoadError=authResult.status==="rejected"||dataResult.status==="rejected"||dataResult.value===false;
   finishStartupSplash(hasLoadError?"Unele informații nu s-au încărcat":"");
 }
+window.addEventListener("hashchange",()=>{if(window.location.hash==="#materials")showMaterialsPage()});
 initializeApp().catch(error=>{
   console.error("Aplicația nu a putut finaliza încărcarea inițială.",error);
   window.clearTimeout(startupFallback);
