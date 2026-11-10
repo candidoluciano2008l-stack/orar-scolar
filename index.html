@@ -124,6 +124,13 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .attention-mini{display:none;margin-top:8px;padding:8px 9px;border:1px solid rgba(239,68,68,.45);border-radius:10px;background:rgba(239,68,68,.08);color:#b91c1c;font-size:11px;font-weight:800;line-height:1.3}
 .state-context{font-size:14px;font-weight:800;color:var(--text);margin-top:8px;line-height:1.35}
 @media(max-width:760px){.attention-alert{margin:10px 0 12px}.attention-alert div{font-size:13px}.attention-mini{font-size:10px}}
+.materials-page{display:none;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,32px);box-shadow:var(--shadow);min-height:calc(100vh - 130px)}
+.materials-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.materials-kicker{font-size:10px;font-weight:900;letter-spacing:.15em;color:var(--blue)}.materials-title{font-size:clamp(26px,4vw,38px);font-weight:950;line-height:1.05;margin:6px 0}.materials-subtitle{max-width:620px;color:var(--muted);font-size:13px;line-height:1.5;margin:0}
+.materials-subject-tabs{display:flex;gap:8px;overflow:auto;padding:18px 0 14px;scrollbar-width:none}.materials-subject-tabs::-webkit-scrollbar{display:none}.materials-subject-tab{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;padding:10px 16px;background:var(--card);color:var(--text);font-weight:850;cursor:pointer}.materials-subject-tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.materials-section{padding:20px 0;border-top:1px solid var(--line)}.materials-section:first-child{border-top:0}.materials-section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.materials-section-title{font-size:21px;font-weight:900;line-height:1.2}.materials-section-meta{font-size:11px;color:var(--muted);margin-top:5px}.materials-section-body{margin-top:10px;color:var(--text);font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.materials-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:10px;margin-top:14px}.materials-gallery button{padding:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:transparent;cursor:zoom-in;aspect-ratio:4/3}.materials-gallery img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .2s}.materials-gallery button:hover img{transform:scale(1.035)}.materials-upload input{display:none}
+.materials-editor{margin:18px 0 8px;padding:18px;border:1px solid color-mix(in srgb,var(--blue) 25%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--blue) 4%,var(--card))}.materials-editor[hidden]{display:none}.materials-editor-title{font-size:15px;font-weight:900;margin-bottom:12px}.materials-editor-grid{display:grid;grid-template-columns:minmax(150px,.4fr) minmax(0,1fr);gap:10px}.materials-editor .input,.materials-editor .textarea,.materials-editor .select{width:100%;margin:0}.materials-editor .textarea{min-height:92px}.materials-upload{margin-top:10px;padding:11px 12px;border:1px dashed var(--line);border-radius:12px;background:rgba(127,150,180,.03)}.materials-upload .task-upload-label{display:flex}.materials-upload .task-upload-help{line-height:1.4}.materials-editor-actions{display:flex;align-items:center;gap:12px;margin-top:12px}.materials-editor-error{color:var(--danger);font-size:12px;font-weight:750}.materials-delete{border:1px solid color-mix(in srgb,var(--danger) 28%,var(--line));border-radius:10px;padding:7px 10px;background:transparent;color:var(--danger);font-size:11px;font-weight:850;cursor:pointer}.materials-empty{padding:25px 14px;border:1px dashed var(--line);border-radius:15px;color:var(--muted);text-align:center;font-size:13px;line-height:1.5}
+@media(max-width:620px){.materials-page{padding:16px;border-radius:17px}.materials-head{flex-direction:column}.materials-subject-tabs{margin-right:-4px}.materials-editor-grid{grid-template-columns:1fr}.materials-section-title{font-size:18px}.materials-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}.stat-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px;min-height:108px;box-shadow:var(--shadow)}.stat-card.stat-primary{box-shadow:inset 4px 0 0 var(--blue),var(--shadow)}.stat-label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.stat-value{font-size:21px;font-weight:900;margin-top:8px}.stat-sub{font-size:13px;color:var(--muted);margin-top:4px}.stat-note{font-size:11px;color:var(--muted);margin-top:7px}
 .dashboard-grid{display:grid;gap:14px;margin-bottom:14px}.dashboard-grid-main{grid-template-columns:minmax(0,1.38fr) minmax(315px,.62fr)}.dashboard-grid-lower{grid-template-columns:1fr 1fr}.dashboard-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:var(--shadow)}.schedule-card{min-width:0}.section-subtitle{font-size:11px;color:var(--muted);margin-top:3px}.dashboard-card .section-head{margin-bottom:12px}.dashboard-card .section-title{font-size:17px}.schedule-card .tabs{margin-bottom:4px;padding-bottom:10px}
 .schedule-card .lesson{border-top:1px solid var(--line);padding:12px 8px;min-width:0}.schedule-card .lesson:first-of-type{border-top:0}.schedule-card .lesson:hover{background:rgba(127,150,180,.06)}.schedule-card .lesson > div{min-width:0}.schedule-card .subject{overflow-wrap:anywhere}
@@ -1564,7 +1571,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
             <button class="smart-stack-tab" id="changesBtn" type="button" role="tab" aria-selected="false" aria-controls="changesSection" data-stack-target="changesSection">Schimbări <span class="smart-stack-count" id="stackCountChanges">0</span></button>
           </nav>
           <div class="smart-stack-controls">
-            <div class="smart-stack-quick-actions"><button class="quick" id="calendarBtn" type="button">Calendar</button><button class="quick" id="chatBtn" type="button">Chat</button></div>
+            <div class="smart-stack-quick-actions"><button class="quick" id="calendarBtn" type="button">Calendar</button><button class="quick" id="materialsBtn" type="button">Materiale</button><button class="quick" id="chatBtn" type="button">Chat</button></div>
             <div class="smart-stack-pager" aria-label="Navigare între pagini"><button class="stack-arrow" id="smartStackPrev" type="button" aria-label="Pagina anterioară">‹</button><span class="stack-position" id="smartStackPosition">1 / 5</span><button class="stack-arrow" id="smartStackNext" type="button" aria-label="Pagina următoare">›</button></div>
           </div>
         </div>
@@ -1629,6 +1636,37 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
             <div class="calendar-upcoming-list" id="calendarUpcoming"></div>
           </section>
         </div>
+      </section>
+
+      <section class="materials-page" id="materialsPage" style="display:none">
+        <div class="materials-head">
+          <div>
+            <div class="materials-kicker">RESURSE PENTRU CLASĂ</div>
+            <h1 class="materials-title">Materiale</h1>
+            <p class="materials-subtitle">Note, explicații și imagini organizate pe materii. Alege o materie pentru a vedea materialele publicate.</p>
+          </div>
+        </div>
+        <nav class="materials-subject-tabs" id="materialsSubjectTabs" role="tablist" aria-label="Alege materia">
+          <button class="materials-subject-tab active" type="button" role="tab" aria-selected="true" data-subject="Română">Română</button>
+          <button class="materials-subject-tab" type="button" role="tab" aria-selected="false" data-subject="Matematică">Matematică</button>
+          <button class="materials-subject-tab" type="button" role="tab" aria-selected="false" data-subject="Geografie">Geografie</button>
+        </nav>
+        <form class="materials-editor" id="materialsForm" hidden>
+          <div class="materials-editor-title">Publică un material nou</div>
+          <div class="materials-editor-grid">
+            <select class="select" id="materialSubject" aria-label="Materia" required>
+              <option>Română</option><option>Matematică</option><option>Geografie</option>
+            </select>
+            <input class="input" id="materialSubtitle" maxlength="120" placeholder="Subtitlu, de exemplu: Figuri de stil" required>
+            <textarea class="textarea" id="materialBody" maxlength="4000" placeholder="Scrie aici informațiile pentru colegi (opțional). Poți folosi mai multe paragrafe."></textarea>
+            <div class="materials-upload">
+              <label class="task-upload-label"><span aria-hidden="true">📷</span><span>Adaugă fotografii</span><input id="materialImages" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+              <div class="task-upload-help">Poți selecta până la 20 de imagini JPG, PNG sau WEBP, de maximum 5 MB fiecare.</div>
+            </div>
+          </div>
+          <div class="materials-editor-actions"><button class="send" id="materialsSubmit" type="submit">Publică materialul</button><div class="materials-editor-error" id="materialsError" role="status"></div></div>
+        </form>
+        <div id="materialsContent" role="tabpanel" aria-live="polite"></div>
       </section>
 
       <section class="chat-page" id="chatPage" style="display:none">
@@ -1880,6 +1918,7 @@ const schedule={
 };
 const days=Object.keys(schedule),names=["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"];
 let now=new Date(),today=names[now.getDay()],selected=days.includes(today)?today:"Luni",selectedSubject=null,isAdmin=false,isSuperAdmin=false,currentUser=null,adminRole=null;
+let subjectMaterials=[],materialSubject="Română";
 let tasks=[],changes=[],announcements=[],polls=[],schoolDaysOff=[];
 let deferredPrompt=null;
 let onlineChannel=null;
@@ -1988,6 +2027,7 @@ async function refreshAuth(){
   if(onlineTab) onlineTab.style.display=isSuperAdmin?"inline-flex":"none";
   const visitsTab=document.getElementById("siteVisitsTab");
   if(visitsTab) visitsTab.style.display=isSuperAdmin?"inline-flex":"none";
+  if(document.getElementById("materialsPage")?.style.display!=="none")renderSubjectMaterials();
 }
 async function authenticateAdmin(){
   const status=document.getElementById("authStatus"),err=document.getElementById("authError"),btn=document.getElementById("authSend");
@@ -2763,7 +2803,7 @@ function showChatPage(){
 }
 function showHomePage(){
   closeNavigationOverlays();
-  document.querySelectorAll(".dashboard-main > *").forEach(el=>{if(el.id==="chatPage"||el.id==="calendarPage")el.style.display="none";else el.style.display=""});
+  document.querySelectorAll(".dashboard-main > *").forEach(el=>{if(el.id==="chatPage"||el.id==="calendarPage"||el.id==="materialsPage")el.style.display="none";else el.style.display=""});
 }
 function showCalendarPage(){
   closeNavigationOverlays();
@@ -2773,6 +2813,72 @@ function showCalendarPage(){
 }
 document.getElementById("calendarBtn").onclick=()=>{setSideNavActive("calendar");showCalendarPage()};
 document.getElementById("chatBtn").onclick=()=>{setSideNavActive("chat");showChatPage()};
+function renderSubjectMaterials(){
+  const form=document.getElementById("materialsForm"),content=document.getElementById("materialsContent");
+  if(!content)return;
+  if(form)form.hidden=!isAdmin;
+  document.querySelectorAll("#materialsSubjectTabs [data-subject]").forEach(button=>{
+    const active=button.dataset.subject===materialSubject;
+    button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active));
+  });
+  const entries=subjectMaterials.filter(item=>item.subject===materialSubject);
+  content.innerHTML=entries.length?entries.map(item=>{
+    const paths=Array.isArray(item.image_paths)?item.image_paths:[];
+    const images=paths.length?"<div class='materials-gallery'>"+paths.map((path,index)=>"<button type='button' data-material-image='"+item.id+"' data-image-index='"+index+"' aria-label='Deschide fotografia "+(index+1)+"'><img src='"+escapeHtml(supabaseClient.storage.from("task-images").getPublicUrl(path).data.publicUrl)+"' alt='Fotografie pentru "+escapeHtml(item.subtitle)+"' loading='lazy'></button>").join("")+"</div>":"";
+    const remove=isAdmin?"<button type='button' class='materials-delete' data-material-delete='"+item.id+"'>Șterge</button>":"";
+    return "<article class='materials-section'><div class='materials-section-head'><div><h2 class='materials-section-title'>"+escapeHtml(item.subtitle)+"</h2><div class='materials-section-meta'>Adăugat "+escapeHtml(formatTime(item.created_at))+" · "+(paths.length===1?"1 fotografie":paths.length+" fotografii")+"</div></div>"+remove+"</div>"+(item.body?"<div class='materials-section-body'>"+escapeHtml(item.body)+"</div>":"")+images+"</article>";
+  }).join("") : "<div class='materials-empty'>Încă nu există materiale pentru "+escapeHtml(materialSubject)+"."+(isAdmin?" Folosește formularul de mai sus pentru a publica primul material.":"")+"</div>";
+  content.querySelectorAll("[data-material-image]").forEach(button=>button.onclick=()=>{
+    const entry=subjectMaterials.find(item=>String(item.id)===button.dataset.materialImage),paths=Array.isArray(entry?.image_paths)?entry.image_paths:[],path=paths[Number(button.dataset.imageIndex)];
+    if(path)openTaskImage(path,paths);
+  });
+  content.querySelectorAll("[data-material-delete]").forEach(button=>button.onclick=()=>removeSubjectMaterial(button.dataset.materialDelete));
+}
+async function loadSubjectMaterials(){
+  const content=document.getElementById("materialsContent");if(content)content.innerHTML="<div class='materials-empty'>Se încarcă materialele…</div>";
+  const result=await supabaseClient.from("subject_materials").select("id,subject,subtitle,body,image_paths,author_name,created_at").order("created_at",{ascending:false});
+  if(result.error){if(content)content.innerHTML="<div class='materials-empty'>Materialele nu s-au putut încărca. Reîncarcă pagina și încearcă din nou.</div>";return}
+  subjectMaterials=result.data||[];renderSubjectMaterials();
+}
+async function removeSubjectMaterial(id){
+  if(!isAdmin)return;
+  const entry=subjectMaterials.find(item=>String(item.id)===String(id));if(!entry)return;
+  const result=await supabaseClient.from("subject_materials").delete().eq("id",id);
+  if(result.error){showLiveToast("Materialul nu a putut fi șters");return}
+  if(entry.image_paths?.length)await supabaseClient.storage.from("task-images").remove(entry.image_paths);
+  subjectMaterials=subjectMaterials.filter(item=>String(item.id)!==String(id));renderSubjectMaterials();
+}
+function showMaterialsPage(){
+  closeNavigationOverlays();
+  document.querySelectorAll(".dashboard-main > *").forEach(el=>{el.style.display=el.id==="materialsPage"?"block":"none"});
+  setSideNavActive("materials");window.scrollTo({top:0,behavior:"smooth"});loadSubjectMaterials();
+}
+document.getElementById("materialsBtn").onclick=showMaterialsPage;
+document.getElementById("materialsSubjectTabs").addEventListener("click",event=>{
+  const button=event.target.closest("[data-subject]");if(!button)return;
+  materialSubject=button.dataset.subject;document.getElementById("materialSubject").value=materialSubject;renderSubjectMaterials();
+});
+document.getElementById("materialSubject").addEventListener("change",event=>{materialSubject=event.target.value;renderSubjectMaterials()});
+document.getElementById("materialsForm").addEventListener("submit",async event=>{
+  event.preventDefault();if(!isAdmin)return;
+  const error=document.getElementById("materialsError"),button=document.getElementById("materialsSubmit"),files=[...document.getElementById("materialImages").files];
+  error.textContent="";
+  if(files.length>20){error.textContent="Poți adăuga maximum 20 de fotografii la un material.";return}
+  for(const file of files){if(!["image/jpeg","image/png","image/webp"].includes(file.type)){error.textContent="Sunt acceptate doar fotografii JPG, PNG sau WEBP.";return}if(file.size>5*1024*1024){error.textContent="Fiecare fotografie trebuie să aibă maximum 5 MB.";return}}
+  button.disabled=true;button.textContent="Se publică…";
+  const uploaded=[];
+  try{
+    for(let i=0;i<files.length;i++){
+      const file=files[i],extension={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"}[file.type],path="materials/"+({"Română":"romana","Matematică":"matematica","Geografie":"geografie"}[materialSubject])+"/"+(window.crypto?.randomUUID?.()||Date.now()+"-"+Math.random().toString(36).slice(2))+"-"+i+"."+extension;
+      const result=await supabaseClient.storage.from("task-images").upload(path,file,{contentType:file.type,upsert:false});
+      if(result.error)throw result.error;uploaded.push(path);
+    }
+    const result=await supabaseClient.from("subject_materials").insert({subject:materialSubject,subtitle:document.getElementById("materialSubtitle").value.trim(),body:document.getElementById("materialBody").value.trim()||null,image_paths:uploaded,author_name:getVisitorName()||"Administrator"});
+    if(result.error)throw result.error;
+    event.target.reset();document.getElementById("materialSubject").value=materialSubject;await loadSubjectMaterials();showLiveToast("Material publicat");
+  }catch(err){if(uploaded.length)await supabaseClient.storage.from("task-images").remove(uploaded);error.textContent=err?.message||"Materialul nu a putut fi publicat."}
+  finally{button.disabled=false;button.textContent="Publică materialul"}
+});
 document.getElementById("openAnnouncements").onclick=()=>{setSideNavActive("announcements");openList("ann")};
 document.getElementById("openChanges").onclick=()=>{setSideNavActive("changes");openList("changes")};
 document.getElementById("openPolls").onclick=()=>{setSideNavActive("polls");openList("polls")};
@@ -3204,7 +3310,8 @@ supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
 supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments();showLiveToast("Comentariu nou")}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none"){await loadChat();showLiveToast("Mesaj nou în chat")}}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)renderAdminOverviewStats();showLiveToast("Temă sau proiect nou")}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Schimbare de orar")}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Anunț nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls();showLiveToast("Poll nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"school_days_off"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)await renderAdminDaysOff()})
-.on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin){await renderAdminPolls();renderAdminOverviewStats()}}).subscribe();
+.on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin){await renderAdminPolls();renderAdminOverviewStats()}})
+.on("postgres_changes",{event:"*",schema:"public",table:"subject_materials"},async()=>{if(document.getElementById("materialsPage")?.style.display!=="none"){await loadSubjectMaterials();showLiveToast("Materialele au fost actualizate")}}).subscribe();
 
 
 if("serviceWorker" in navigator){
