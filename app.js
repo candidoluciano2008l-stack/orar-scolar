@@ -760,7 +760,7 @@ async function deleteChatMessage(id){
 }
 async // --- Navigation and panels ---
 async // --- Page navigation and overlays ---
-function openList(type){
+async function openList(type){
   document.getElementById("listOverlay").classList.add("open");document.body.style.overflow="hidden";const title=document.getElementById("listTitle"),body=document.getElementById("listBody");
   if(type==="ann"){
     title.textContent="Anunțuri importante";body.innerHTML=announcements.length?announcements.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
