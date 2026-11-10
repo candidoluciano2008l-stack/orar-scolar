@@ -622,7 +622,8 @@ function relativeDeadline(dateKey){
   if(daysLeft>1&&daysLeft<8)return "Peste "+daysLeft+" zile";
   return fmtDate(dateKey);
 }
-async function renderPreviews(){
+async // --- Task, announcement, and schedule previews ---
+function renderPreviews(){
   const ann=announcements.slice(0,3),ch=changes.filter(x=>x.change_date>=localDateKey()).slice(0,3);
   document.getElementById("announcementPreview").innerHTML=ann.length?ann.map(a=>"<article class='notice-card "+(a.pinned?"pinned ":"")+(a.attention?"attention-warning":"")+"'>"+(a.attention?"<div class='notice-type-badge attention'>ATENȚIE</div>":a.pinned?"<div class='notice-type-badge pinned'>FIXAT</div>":"<div class='notice-type-badge'>ANUNȚ</div>")+"<div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='author-meta'>Postat de "+authorLabel(a)+" · "+formatTime(a.created_at)+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
   document.getElementById("changePreview").innerHTML=ch.length?ch.map(c=>{const n=normalizeChange(c),replaced=destinationOriginalSubject(c);return "<article class='change-card'><div class='change-row'><div class='change-date'>"+fmtDate(n.from_date)+" · "+n.from_start+"–"+n.from_end+"</div><div class='change-flow'><span class='change-subject-old'>"+escapeHtml(n.from_subject)+"</span><span class='change-arrow-small'>→</span><span class='change-sub'>"+escapeHtml(n.to_subject)+"</span></div></div><div class='change-note'>"+(n.from_date===n.to_date?"Înlocuire în aceeași zi":"Mutată pe "+dayNameFromDate(n.to_date)+" · "+fmtDate(n.to_date)+" · "+n.to_start+"–"+n.to_end)+(replaced&&n.from_date!==n.to_date?" · În locul: "+escapeHtml(replaced):"")+(c.note?" · "+escapeHtml(c.note):"")+"</div><div class='author-meta'>Postat de "+authorLabel(c)+"</div></article>"}).join(""):"<div class='empty'>Nu există schimbări programate.</div>";
@@ -719,6 +720,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeTaskImage()});d
 document.getElementById("taskImageViewerClose").onclick=closeTaskImage;
 document.getElementById("taskImageViewer").addEventListener("click",e=>{if(e.target.id==="taskImageViewer")closeTaskImage()});
 
+// --- Public chat ---
 async function loadChat(){
   const body=document.getElementById("chatPageBody")||document.getElementById("listBody");
   const r=await supabaseClient.from("chat_messages").select("id,name,message,created_at").order("created_at",{ascending:true}).limit(200);
@@ -757,7 +759,8 @@ async function deleteChatMessage(id){
   if(document.getElementById("chatPage")?.style.display!=="none")await loadChat();
 }
 async // --- Navigation and panels ---
-async function openList(type){
+async // --- Page navigation and overlays ---
+function openList(type){
   document.getElementById("listOverlay").classList.add("open");document.body.style.overflow="hidden";const title=document.getElementById("listTitle"),body=document.getElementById("listBody");
   if(type==="ann"){
     title.textContent="Anunțuri importante";body.innerHTML=announcements.length?announcements.map(a=>"<article class='notice-card "+(a.pinned?"pinned":"")+"'><div class='notice-title'>"+escapeHtml(a.title)+"</div><div class='notice-message'>"+escapeHtml(a.message)+"</div><div class='notice-meta'>"+formatTime(a.created_at)+(a.pinned?" · Fixat":"")+"</div></article>").join(""):"<div class='empty'>Nu există anunțuri.</div>";
@@ -1345,6 +1348,7 @@ document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
   btn.classList.add("active");document.getElementById(btn.dataset.panel).classList.add("active");
 });
 
+// --- Realtime subscriptions ---
 supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
 supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments();showLiveToast("Comentariu nou")}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none"){await loadChat();showLiveToast("Mesaj nou în chat")}}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)renderAdminOverviewStats();showLiveToast("Temă sau proiect nou")}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Schimbare de orar")}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Anunț nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls();showLiveToast("Poll nou")})
@@ -1440,6 +1444,7 @@ function initNameGate(){
   });
 }
 initNameGate();
+// --- Startup and initial render ---
 const startupStartedAt=performance.now();
 let startupSplashFinishing=false;
 function finishStartupSplash(message=""){
