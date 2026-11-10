@@ -1,5 +1,5 @@
-const CACHE="orar-scolar-v16";
-const APP_SHELL=["/","/index.html","/manifest.json","/icon.svg"];
+const CACHE="orar-scolar-v17";
+const APP_SHELL=["/","/index.html","/styles.css","/app.js","/manifest.json","/icon.svg"];
 
 self.addEventListener("install",event=>{
   event.waitUntil(
