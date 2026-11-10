@@ -532,6 +532,7 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .calendar-events{display:flex;flex-direction:column;gap:4px;min-width:0}
 .calendar-event-chip{display:block;min-width:0;border-radius:7px;padding:4px 5px;font-size:9px;font-weight:800;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .calendar-event-chip.task{background:rgba(40,87,127,.11);color:var(--blue)}
+.calendar-event-chip.test{background:rgba(138,94,220,.13);color:#8b5edc}
 .calendar-event-chip.vacation{background:rgba(22,133,91,.12);color:var(--green)}
 .calendar-event-chip.day_off{background:rgba(22,133,91,.12);color:var(--green)}
 .calendar-event-chip.more{background:rgba(127,150,180,.1);color:var(--muted)}
@@ -545,12 +546,14 @@ header{padding:24px 18px 18px;background:linear-gradient(135deg,#102a43,#28577f)
 .calendar-detail-meta{margin-top:3px;color:var(--muted);font-size:11px}
 .calendar-detail-note{margin-top:5px;font-size:12px;line-height:1.4;white-space:pre-wrap}
 .calendar-detail.task{border-left:3px solid var(--blue)}
+.calendar-detail.test{border-left:3px solid #8b5edc}
 .calendar-detail.vacation{border-left:3px solid var(--green)}
 .calendar-detail.day_off{border-left:3px solid var(--green)}
 .calendar-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:10px;font-weight:800}
 .calendar-legend span{display:inline-flex;align-items:center;gap:5px}
 .calendar-legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
 .calendar-legend .task-dot{background:var(--blue)}
+.calendar-legend .test-dot{background:#8b5edc}
 .calendar-legend .vacation-dot{background:var(--green)}
 .calendar-upcoming-list{display:flex;flex-direction:column;gap:7px;margin-top:10px}
 .calendar-upcoming-item{display:flex;gap:8px;align-items:flex-start;padding:8px 9px;border:1px solid var(--line);border-radius:11px}
@@ -1613,7 +1616,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
           <div>
             <div class="calendar-kicker">PLANIFICARE</div>
             <div class="calendar-title">Calendar</div>
-            <p class="calendar-subtitle">Temele și proiectele cu deadline, vacanțele și zilele libere din anul școlar 2026–2027.</p>
+            <p class="calendar-subtitle">Teme, proiecte, teste, vacanțe și zile libere din anul școlar 2026–2027.</p>
             <div class="calendar-source">Calendar adaptat pentru filiera tehnologică/profesională · Ordinul nr. 3.194/2026.</div>
           </div>
           <div class="calendar-actions">
@@ -1632,12 +1635,13 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
             <div class="calendar-events-list" id="calendarSelectedEvents"></div>
             <div class="calendar-legend">
               <span><i class="task-dot"></i> Temă / proiect</span>
+              <span><i class="test-dot"></i> Test</span>
               <span><i class="vacation-dot"></i> Vacanță / zi liberă</span>
             </div>
           </section>
           <section class="calendar-upcoming-card">
-            <div class="calendar-selected-title">Următoarele deadline-uri</div>
-            <div class="calendar-selected-sub">Cele mai apropiate teme și proiecte.</div>
+            <div class="calendar-selected-title">Următoarele teme și teste</div>
+            <div class="calendar-selected-sub">Deadline-uri și date de test.</div>
             <div class="calendar-upcoming-list" id="calendarUpcoming"></div>
           </section>
         </div>
@@ -1743,6 +1747,7 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
 <button class="dash-tab active" data-panel="tasksPanel"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5h10a2 2 0 0 1 2 2v13H7a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z"/><path d="M8 8h7M8 12h7M8 16h4M5 7H4v10a2.5 2.5 0 0 0 2.5 2.5"/></svg></span><span class="dash-tab-label">Teme / Proiecte</span></button>
 <button class="dash-tab" data-panel="changesPanel"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8h14M15 4l4 4-4 4M20 16H6M9 12l-4 4 4 4"/></svg></span><span class="dash-tab-label">Schimbări</span></button>
 <button class="dash-tab" data-panel="daysOffPanel"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="15" rx="3"/><path d="M8 3.5v4M16 3.5v4M4 10h16M8 14h3M8 17h2"/></svg></span><span class="dash-tab-label">Vacanțe / Zile libere</span></button>
+<button class="dash-tab" data-panel="testsPanel"><span class="dash-tab-icon" aria-hidden="true">✓</span><span class="dash-tab-label">Teste</span></button>
 <button class="dash-tab" data-panel="announcementsPanel"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 13V9a2 2 0 0 1 2-2h3l9-3v14l-9-3H6a2 2 0 0 1-2-2Z"/><path d="m8 15 1.5 5h3L11 15M21 8v6"/></svg></span><span class="dash-tab-label">Anunțuri</span></button>
 <button class="dash-tab" data-panel="pollsPanel"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19V9M12 19V5M19 19v-7M3 19.5h18"/><circle cx="5" cy="6" r="1.4"/><circle cx="19" cy="8" r="1.4"/></svg></span><span class="dash-tab-label">Polluri</span></button>
 <button class="dash-tab" data-panel="commentsPanel"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5.5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5.5 3v-3H5a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Z"/><path d="M8 10h8M8 13.5h5"/></svg></span><span class="dash-tab-label">Comentarii</span></button>
@@ -1836,6 +1841,18 @@ input:focus,textarea:focus,select:focus,.input:focus,.select:focus,.textarea:foc
   <div class="error" id="daysOffError"></div>
 </form>
 <div class="dash-list" id="daysOffList"></div>
+</div>
+
+<div class="dash-panel" id="testsPanel">
+<form class="form" id="testAdminForm" style="border:0;padding:0;background:none">
+  <div class="field-wrap"><div class="field-label">Materia</div><select class="select" id="testSubject" required></select></div>
+  <div class="field-wrap" style="margin-top:9px"><div class="field-label">Data testului</div><input class="input" id="testDate" type="date" required></div>
+  <div class="field-wrap" style="margin-top:9px"><div class="field-label">Titlu sau capitol (opțional)</div><input class="input" id="testTitle" maxlength="120" placeholder="Ex.: Ecuații de gradul al doilea"></div>
+  <div class="field-wrap" style="margin-top:9px"><div class="field-label">Detalii (opțional)</div><textarea class="textarea" id="testNote" maxlength="500" placeholder="Ex.: Test din lecțiile 3–5"></textarea></div>
+  <div class="actions"><span></span><button class="send" id="testSubmit" type="submit">Adaugă testul</button></div>
+  <div class="error" id="testError"></div>
+</form>
+<div class="dash-list" id="testList"></div>
 </div>
 
 <div class="dash-panel" id="announcementsPanel">
@@ -1935,7 +1952,7 @@ function showLiveToast(message){
   if(liveToastTimer)clearTimeout(liveToastTimer);
   liveToastTimer=setTimeout(()=>toast.classList.remove("show"),3200);
 }
-let tasks=[],changes=[],announcements=[],polls=[],schoolDaysOff=[];
+let tasks=[],changes=[],announcements=[],polls=[],schoolDaysOff=[],subjectTests=[];
 let deferredPrompt=null;
 let onlineChannel=null;
 let onlineSessionId=sessionStorage.getItem("onlineSessionId");
@@ -2061,18 +2078,19 @@ async function authenticateAdmin(){
 }
 
 async function loadData(){
-  const [a,b,c,p,d]=await Promise.all([
+  const [a,b,c,p,d,t]=await Promise.all([
     supabaseClient.from("tasks").select("*").order("deadline",{ascending:true}),
     supabaseClient.from("schedule_changes").select("*").order("change_date",{ascending:true}).order("start_time",{ascending:true}),
     supabaseClient.from("announcements").select("*").order("pinned",{ascending:false}).order("created_at",{ascending:false}),
     supabaseClient.from("polls").select("id,question,closed,created_at,poll_options(id,option_text,position)").order("created_at",{ascending:false}),
-    supabaseClient.from("school_days_off").select("id,kind,title,start_date,end_date,note,author_name,created_at").order("start_date",{ascending:true})
+    supabaseClient.from("school_days_off").select("id,kind,title,start_date,end_date,note,author_name,created_at").order("start_date",{ascending:true}),
+    supabaseClient.from("subject_tests").select("id,subject,test_date,title,note,author_name,created_at").order("test_date",{ascending:true})
   ]);
-  const failed=[a,b,c,p,d].find(r=>r.error);
+  const failed=[a,b,c,p,d,t].find(r=>r.error);
   if(failed){console.warn("Datele nu au putut fi actualizate; păstrez ultima versiune încărcată.",failed.error);return false}
   tasks=a.data||[];changes=b.data||[];announcements=c.data||[];
   polls=(p.data||[]).map(x=>({...x,poll_options:(x.poll_options||[]).sort((u,v)=>u.position-v.position)}));
-  schoolDaysOff=d.data||[];
+  schoolDaysOff=d.data||[];subjectTests=t.data||[];
   return true;
 }
 async function getCommentCounts(){
@@ -2736,6 +2754,7 @@ function schoolDayOffForDate(dateKey){return schoolDaysOff.find(x=>dateInRange(d
 function calendarEventsForDate(dateKey){
   const events=[];
   tasks.filter(t=>String(t?.deadline||"")===dateKey).forEach(t=>events.push({kind:"task",title:t.title||"Temă / proiect",subject:t.subject||"",type:t.type||"Temă",author:authorLabel(t),description:t.description||""}));
+  subjectTests.filter(t=>String(t?.test_date||"")===dateKey).forEach(t=>events.push({kind:"test",title:t.title||"Test",subject:t.subject||"",type:"Test",author:t.author_name||"Administrator",description:t.note||""}));
   schoolDaysOff.filter(v=>dateInRange(dateKey,v.start_date,v.end_date)).forEach(v=>events.push({...v,kind:v.kind,title:v.title,subject:"",type:v.kind==="vacation"?"Vacanță":"Zi liberă",author:v.author_name||"Administrator"}));
   return events;
 }
@@ -2762,7 +2781,7 @@ function renderCalendar(){
     const key=localDateKey(cellDate),events=calendarEventsForDate(key),vac=vacationForDate(key);
     const isToday=key===localDateKey(now),selectedDay=key===calendarSelectedDate;
     const cls="calendar-day"+(outside?" outside":"")+(isToday?" today":"")+(selectedDay?" selected":"")+(vac?" vacation":"");
-    const chips=events.slice(0,3).map(ev=>"<span class='calendar-event-chip "+ev.kind+"'>"+escapeHtml(ev.kind==="vacation"?"Vacanță":ev.kind==="day_off"?"Zi liberă":(ev.type+" · "+ev.title))+"</span>").join("");
+    const chips=events.slice(0,3).map(ev=>"<span class='calendar-event-chip "+ev.kind+"'>"+escapeHtml(ev.kind==="vacation"?"Vacanță":ev.kind==="day_off"?"Zi liberă":ev.kind==="test"?("Test · "+ev.subject+(ev.title!=="Test"?" · "+ev.title:"")):(ev.type+" · "+ev.title))+"</span>").join("");
     const more=events.length>3?"<span class='calendar-event-chip more'>+"+(events.length-3)+" altele</span>":"";
     html+="<button type='button' class='"+cls+"' data-calendar-date='"+key+"' aria-label='"+escapeHtml(calendarDayFormat.format(cellDate))+"'><span class='calendar-day-head'><span class='calendar-day-number'>"+cellDate.getDate()+"</span><span class='calendar-day-count'>"+(events.length?events.length+" even.":"")+"</span></span><span class='calendar-events'>"+chips+more+"</span></button>";
   }
@@ -2783,11 +2802,11 @@ function renderCalendarSelected(){
   sub.textContent=events.length?(events.length===1?"1 eveniment":" "+events.length+" evenimente"):"Nu există evenimente pentru această zi.";
   box.innerHTML=events.length?events.map(ev=>{
     if(ev.kind==="vacation"||ev.kind==="day_off"){const label=ev.kind==="vacation"?"Vacanță":"Zi liberă",range=ev.start_date===ev.end_date?fmtDate(ev.start_date):fmtDate(ev.start_date)+" – "+fmtDate(ev.end_date);return "<article class='calendar-detail "+ev.kind+"'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>"+label+" · "+range+"</div>"+(ev.note?"<div class='calendar-detail-note'>"+escapeHtml(ev.note)+"</div>":"")+"</article>";}
-    return "<article class='calendar-detail task'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>"+escapeHtml(ev.type)+" · "+escapeHtml(ev.subject)+" · Postat de "+escapeHtml(ev.author||"Administrator")+"</div>"+(ev.description?"<div class='calendar-detail-note'>"+escapeHtml(ev.description)+"</div>":"")+"</article>";
+    return "<article class='calendar-detail "+(ev.kind==="test"?"test":"task")+"'><div class='calendar-detail-title'>"+escapeHtml(ev.title)+"</div><div class='calendar-detail-meta'>"+escapeHtml(ev.type)+" · "+escapeHtml(ev.subject)+" · Postat de "+escapeHtml(ev.author||"Administrator")+"</div>"+(ev.description?"<div class='calendar-detail-note'>"+escapeHtml(ev.description)+"</div>":"")+"</article>";
   }).join(""):"<div class='empty'>Alege o altă zi pentru a vedea teme, proiecte sau vacanțe.</div>";
   const todayKey=localDateKey(now);
-  const upcomingTasks=tasks.filter(t=>t?.deadline&&String(t.deadline)>=todayKey).slice().sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline))).slice(0,6);
-  upcoming.innerHTML=upcomingTasks.length?upcomingTasks.map(t=>"<div class='calendar-upcoming-item'><div class='calendar-upcoming-date'>"+escapeHtml(relativeDeadline(t.deadline))+"</div><div class='calendar-upcoming-main'><div class='calendar-upcoming-title'>"+escapeHtml(t.title)+"</div><div class='calendar-upcoming-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type||"Temă")+"</div></div></div>").join(""):"<div class='empty'>Nu există deadline-uri active.</div>";
+  const upcomingItems=[...tasks.filter(t=>t?.deadline&&String(t.deadline)>=todayKey).map(t=>({date:String(t.deadline),title:t.title,subject:t.subject,type:t.type||"Temă"})),...subjectTests.filter(t=>t?.test_date&&String(t.test_date)>=todayKey).map(t=>({date:String(t.test_date),title:t.title||"Test",subject:t.subject,type:"Test"}))].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  upcoming.innerHTML=upcomingItems.length?upcomingItems.map(t=>"<div class='calendar-upcoming-item'><div class='calendar-upcoming-date'>"+escapeHtml(relativeDeadline(t.date))+"</div><div class='calendar-upcoming-main'><div class='calendar-upcoming-title'>"+escapeHtml(t.title)+"</div><div class='calendar-upcoming-meta'>"+escapeHtml(t.subject)+" · "+escapeHtml(t.type)+"</div></div></div>").join(""):"<div class='empty'>Nu există teme sau teste programate.</div>";
 }
 function moveCalendarMonth(offset){
   calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+offset,1);
@@ -2985,14 +3004,16 @@ function renderAdminOverviewStats(){
 async function openDashboard(){
   await loadData();
   fillTaskSubjects();
+  fillTestSubjects();
   document.getElementById("adminsTab").style.display=isSuperAdmin?"inline-flex":"none";
   document.getElementById("onlineTab").style.display=isSuperAdmin?"inline-flex":"none";
   document.getElementById("siteVisitsTab").style.display=isSuperAdmin?"inline-flex":"none";
   resetPollOptionFields();
-  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminDaysOff(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers(),renderAdminSiteVisits()]);
+  await Promise.all([renderAdminTasks(),renderAdminChanges(),renderAdminDaysOff(),renderAdminTests(),renderAdminAnnouncements(),renderAdminPolls(),renderAdminComments(),renderAdminAdmins(),renderOnlineUsers(),renderAdminSiteVisits()]);
   renderAdminOverviewStats();
 }
 function fillTaskSubjects(){document.getElementById("taskSubject").innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option>"+escapeHtml(s)+"</option>").join("")}
+function fillTestSubjects(){const el=document.getElementById("testSubject");if(el)el.innerHTML=Array.from(new Set(Object.values(schedule).flat().map(x=>x[2]))).map(s=>"<option value='"+escapeHtml(s)+"'>"+escapeHtml(s)+"</option>").join("")}
 function adminDelete(table,id){return supabaseClient.from(table).delete().eq("id",id)}
 async function renderAdminTasks(){document.getElementById("taskList").innerHTML=tasks.length?tasks.map(t=>{
   const firstPath=Array.isArray(t.image_paths)&&t.image_paths.length?t.image_paths[0]:"";
@@ -3024,6 +3045,11 @@ async function renderAdminDaysOff(){
     const label=x.kind==="vacation"?"Vacanță":"Zi liberă",range=x.start_date===x.end_date?fmtDate(x.start_date):fmtDate(x.start_date)+" – "+fmtDate(x.end_date);
     return "<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(x.title)+"</div><div class='dash-item-meta'>"+label+" · "+range+(x.note?" · "+escapeHtml(x.note):"")+" · Adăugat de "+escapeHtml(x.author_name||"Administrator")+"</div></div><button class='delete-btn' onclick='removeSchoolDayOff("+x.id+")'>Șterge</button></div>";
   }).join(""):"<div class='empty'>Nu există vacanțe sau zile libere adăugate.</div>";
+}
+async function renderAdminTests(){
+  const box=document.getElementById("testList");if(!box)return;
+  const sorted=subjectTests.slice().sort((a,b)=>String(a.test_date).localeCompare(String(b.test_date)));
+  box.innerHTML=sorted.length?sorted.map(t=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+escapeHtml(t.subject)+" — "+escapeHtml(t.title||"Test")+"</div><div class='dash-item-meta'>"+fmtDate(t.test_date)+(t.note?" · "+escapeHtml(t.note):"")+" · Adăugat de "+escapeHtml(t.author_name||"Administrator")+"</div></div><button class='delete-btn' onclick='removeTest("+t.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există teste programate.</div>";
 }
 async function renderAdminAnnouncements(){document.getElementById("announcementList").innerHTML=announcements.length?announcements.map(a=>"<div class='dash-item'><div class='dash-item-main'><div class='dash-item-title'>"+(a.attention?"<span style='color:#b91c1c'>[ATENȚIE] </span>":"")+escapeHtml(a.title)+"</div><div class='dash-item-meta'>"+(a.pinned?"Fixat · ":"")+formatTime(a.created_at)+" · Postat de "+authorLabel(a)+"</div></div><button class='delete-btn' onclick='removeAnnouncement("+a.id+")'>Șterge</button></div>").join(""):"<div class='empty'>Nu există anunțuri.</div>"}
 function addPollOptionInput(value=""){
@@ -3101,6 +3127,7 @@ window.removeTask=async id=>{
 };
 window.removeChange=async id=>{await adminDelete("schedule_changes",id);await loadData();await render();await renderAdminChanges()};
 window.removeSchoolDayOff=async id=>{if(!isAdmin)return;const r=await adminDelete("school_days_off",id);if(r.error){document.getElementById("daysOffError").textContent="Nu s-a putut șterge. Încearcă din nou.";return}await loadData();await render();renderCalendar();await renderAdminDaysOff()};
+window.removeTest=async id=>{if(!isAdmin)return;const r=await adminDelete("subject_tests",id);if(r.error){showLiveToast("Nu s-a putut șterge testul");return}await loadData();renderCalendar();await renderAdminTests()};
 window.removeAnnouncement=async id=>{await adminDelete("announcements",id);await loadData();await render();await renderAdminAnnouncements()};
 window.removeCommentAdmin=async id=>{await adminDelete("comments",id);await loadData();await render();await renderAdminComments()};
 
@@ -3365,6 +3392,17 @@ document.getElementById("daysOffAdminForm").addEventListener("submit",async e=>{
   if(r.error){err.textContent="Nu s-a putut salva. Verifică datele și încearcă din nou.";return}
   e.target.reset();updateDaysOffFormKind();await loadData();await render();renderCalendar();await renderAdminDaysOff();
 });
+document.getElementById("testAdminForm").addEventListener("submit",async e=>{
+  e.preventDefault();if(!isAdmin)return;
+  const err=document.getElementById("testError"),button=document.getElementById("testSubmit");
+  const subject=document.getElementById("testSubject").value,date=document.getElementById("testDate").value,title=document.getElementById("testTitle").value.trim(),note=document.getElementById("testNote").value.trim();
+  err.textContent="";if(!subject||!date){err.textContent="Alege materia și data testului.";return}
+  button.disabled=true;
+  const r=await supabaseClient.from("subject_tests").insert({subject,test_date:date,title:title||null,note:note||null,author_name:getVisitorName()||"Administrator"});
+  button.disabled=false;
+  if(r.error){err.textContent="Nu s-a putut salva testul. Încearcă din nou.";return}
+  e.target.reset();await loadData();await render();renderCalendar();await renderAdminTests();
+});
 document.querySelectorAll(".dash-tab").forEach(btn=>btn.onclick=()=>{
   if((btn.id==="adminsTab"||btn.id==="onlineTab"||btn.id==="siteVisitsTab")&&!isSuperAdmin)return;
   document.querySelectorAll(".dash-tab").forEach(x=>x.classList.remove("active"));
@@ -3376,6 +3414,7 @@ supabaseClient.auth.onAuthStateChange(async()=>{await refreshAuth()});
 supabaseClient.channel("school-live").on("postgres_changes",{event:"*",schema:"public",table:"comments"},async()=>{await render();if(selectedSubject)await loadComments();showLiveToast("Comentariu nou")}).on("postgres_changes",{event:"*",schema:"public",table:"chat_messages"},async()=>{if(document.getElementById("chatPage")?.style.display!=="none"){await loadChat();showLiveToast("Mesaj nou în chat")}}).on("postgres_changes",{event:"*",schema:"public",table:"tasks"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)renderAdminOverviewStats();showLiveToast("Temă sau proiect nou")}).on("postgres_changes",{event:"*",schema:"public",table:"schedule_changes"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Schimbare de orar")}).on("postgres_changes",{event:"*",schema:"public",table:"announcements"},async()=>{await loadData();await render();if(isAdmin)renderAdminOverviewStats();showLiveToast("Anunț nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"polls"},async()=>{await loadData();await render();if(isAdmin)await renderAdminPolls();showLiveToast("Poll nou")})
 .on("postgres_changes",{event:"*",schema:"public",table:"school_days_off"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)await renderAdminDaysOff()})
+.on("postgres_changes",{event:"*",schema:"public",table:"subject_tests"},async()=>{await loadData();await render();if(document.getElementById("calendarPage")?.style.display!=="none")renderCalendar();if(isAdmin)await renderAdminTests();showLiveToast("Programul testelor a fost actualizat")})
 .on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},async()=>{await loadData();await render();if(isAdmin){await renderAdminPolls();renderAdminOverviewStats()}})
 .on("postgres_changes",{event:"*",schema:"public",table:"subject_materials"},async()=>{if(document.getElementById("materialsPage")?.style.display!=="none"){await loadSubjectMaterials();showLiveToast("Materialele au fost actualizate")}}).subscribe();
 
