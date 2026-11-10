@@ -34,6 +34,10 @@
     <div class="startup-progress" aria-hidden="true"></div>
   </div>
 </div>
+<script>
+  // Keep a failed app script from trapping visitors behind the startup screen.
+  window.setTimeout(() => document.getElementById("startupSplash")?.classList.add("is-done"), 12000);
+</script>
 
 <div class="app-shell">
 
